@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监测日报 - 2026-05-18 | 境外涉藏信息监测平台</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header a{color:var(--gray-300)}
+.top-header a:hover{color:var(--white);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
+.news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
+.news-card:hover{box-shadow:var(--shadow-lg)}
+.news-card-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400);align-items:center}
+.news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.9;color:var(--gray-700)}
+.source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
+.source-tag.tibet{background:#dbeafe;color:#1d4ed8}
+.source-tag.vot{background:#fce7f3;color:#be185d}
+.report-paper{line-height:2;font-size:.95rem}
+.report-paper p{margin-bottom:14px;text-indent:2em}
+.report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
+.report-paper .sub-title{font-weight:600;color:var(--gray-700);margin:12px 0 8px;text-indent:0}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
+.archive-list{display:flex;flex-direction:column;gap:8px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.archive-item:hover{box-shadow:var(--shadow-lg)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--accent);min-width:120px}
+.archive-info{font-size:.8rem;color:var(--gray-500);flex:1}
+.archive-btn{font-size:.8rem}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="top-header">
+    <h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-05-18</h1>
+    <div class="meta">
+        <span><span class="live-dot"></span> 数据已同步</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">5</div>
+            <div class="stat-sub">tibet.com: 4 | cn.vot.org: 1</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">日期范围</div>
+            <div class="stat-value">05-18</div>
+            <div class="stat-sub">近3天监测</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">威胁等级</div>
+            <div class="stat-value">中高</div>
+            <div class="stat-sub">多维联动施压</div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">分析研判日报</div>
+      <div class="report-paper">
+        <p>2026年05月18日，针对涉藏关键字"境外涉藏网站"的信息，经过全网搜索梳理，参考2个网站，现将有关情况报告如下：</p><p>境外敌媒炒作涉藏宗教文化保护及转世认定权力，恐引发我国民族政策认同度下降</p><p>2026年05月15日至16日，《图伯特之页》、《西藏之声》等媒体报道称中国通过《民族团结进步促进法》削弱民族认同，并干预高僧转世认定。当前境外势力正通过宗教仪式、国际组织会议等平台强化其政治主张，分析认为，对方试图将我国的行政管理定义为强制干预，以削弱我方对宗教事务的管辖权。</p><h3 class="section-title">一、基本概述</h3><p>2026年5月中旬，境外涉藏网站在宗教教育、国际游说等维度密集发声。5月15日，藏人行政中央司政在格尔登寺毕业典礼上公开抨击我国民族政策；5月16日，《西藏之声》报道欧洲佛教联盟在布鲁塞尔会议上对转世认定问题表达关切。这些活动旨在通过宗教传承和国际组织压力，在国际社会构建其所谓“文化清洗”的叙事逻辑。</p><h3 class="section-title">二、事件详情</h3><p class="sub-title">（一）在宗教教育与认同领域制造对立。一是司政边巴次仁在格尔登寺毕业典礼上称境内寺院遭到毁坏，试图将宗教传承与政治对抗挂钩。二是将格尔登地区自焚事件解读为“政治意识”体现，旨在引导民众产生民族责任感。三是攻击《民族团结进步促进法》，将其定义为推动汉化的制度化工具，试图抹除民族认同。</p><p class="sub-title">（二）在国际组织与社群层面拓展联盟。一是欧洲佛教联盟年度大会呼吁国际社会拒绝承认由我国单方面任命的宗教领袖，敦促恢复对话。二是驻北美联络官在明尼苏达州活动中试图拉拢华人社群，将“中间道路”理念包装成普适价值。三是通过与欧洲议会等机构联动，将制度化的文化同化作为谴责我国的切入点。</p><h3 class="section-title">三、分析研判</h3><p class="sub-title">（一）利用宗教转世权力进行政治博弈。一是将转世认定界定为纯粹的宗教事务，以此否认我国在行政管理上的合法性。二是利用国际佛教组织的认可度，试图在宗教界建立一套独立于我国之外的认定标准。三是通过强调“免受强制干预”，在心理层面对境内宗教人士产生影响。</p><p class="sub-title">（二）采取多维度外交策略实施精准干扰。一是针对西方民主国家，将民族政策与人权、民主挂钩。二是利用欧洲议会的决议为背书，将个别政策细节放大为制度性缺陷。三是通过区分体制与人民的叙事，降低华人社区的抵触感，试图在基层构建潜在的合作伙伴网络。</p><p>分析认为，上述事件为境外势力对我进行意识形态炒作，恐将对我产生影响民族凝聚力和国际形象的负面作用，由宗教转世认定及法律实施解读问题引发，下一步，我单位将持续关注藏人行政中央及其驻外办事处动向，对关键人物及组织活动进一步研判，加强对涉藏议题趋势分析。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">新闻报道汇总</div>
+      
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政边巴次仁出席格尔登寺高级佛学院毕业典礼</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-15</span>
+            </div>
+          </div>
+          <div class="news-card-body">藏人行政中央司政兼宗教与文化部长边巴次仁于 5 月 14 日应邀出席印北达兰萨拉的格尔登寺杰巴扎仓高级佛学院毕业典礼，期间为格尔登寺律学硕士、中观佛学硕士及因明学学位毕业僧众颁发证书。司政在致辞中勉励毕业僧众善用所学知识，服务社会大众，为弘扬图伯特（西藏）宗教与文化作出贡献。司政指出，尽管图伯特境内众多寺院在中国占领后遭到毁坏，但流亡藏人社区成功重建并延续了完整的宗教传统。他特别提到，许多自焚事件发生于格尔登地区，反映出当地藏人高度的政治意识与民族责任感。此外，司政重点阐述当前图伯特宗教、文化与语言保护所面临的严峻挑战，特别提及中国通过的《民族团结进步促进法》，指出该法正被用作削弱图伯特民族认同、限制藏语与藏文化发展的政策工具。他强调，藏语是维护图伯特民族身份、宗教与文化传承的重要根基。</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">驻北美华人事务联络官出席明尼苏达「中间道路青年组织」成立十一周年庆典</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-15</span>
+            </div>
+          </div>
+          <div class="news-card-body">藏人行政中央驻北美华人事务联络官慈诚嘉措于 5 月 12 日赴明尼苏达州，出席由当地藏人青年发起的「中间道路青年组织」成立十一周年庆祝活动。美国联邦众议员贝蒂·麦科勒姆助理丹增巴桑也应邀出席。在此期间，慈诚嘉措与当地华人民主活动人士施明磊举行交流座谈，围绕人权议题、民主价值及社区合作展开交流。在庆祝活动上，慈诚嘉措全面介绍「中间道路」政策的发展历程，指出该政策始终是图伯特自由运动中坚持非暴力与对话原则的核心框架。他强调应区分中国共产党政治体制与广大中国人民，鼓励藏人青年加强与华人社区交流合作，将华人群体视为推动共同价值及争取自由与正义事业中的潜在伙伴。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">“欧洲佛教联盟”关注中共对达赖喇嘛转世的干涉企图</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-16</span>
+            </div>
+          </div>
+          <div class="news-card-body">欧洲佛教联盟年度大会近日在布鲁塞尔举行，藏人行政中央驻布鲁塞尔办事处代表仁增根康受邀出席。大会呼吁国际社会拒绝承认任何由中国政府单方面任命的西藏宗教领袖，敦促中共恢复藏中对话。仁增根康在致辞时警示国际社会，中共政府正加大力度企图通过《民族团结法》等法规，操控包括达赖喇嘛尊者在内的西藏高僧大德的转世事务，并指出宗教领袖的选择纯属宗教事务，必须免受国家权力的强制干预。此外，欧洲议会于4月28日通过谴责中共《民族团结进步促进法》的动议，认为该法是以“民族团结”为名实施制度化的文化清洗与意识形态同化。</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">欧盟敦促尼泊尔保障藏人难民基本权利</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">欧盟及其国际伙伴「难民核心小组」近日正式向尼泊尔政府施压，敦促尼泊尔尽快解决其境内藏人难民长期面临的人道主义困境，尤其是多数难民至今仍缺乏合法身份文件的问题。 为改善这一现状，欧盟正极力推动尼泊尔政府向藏人难民发放“个人账户号码卡”（PAN Card）。该文件对藏人（尤其是青年群体）至关重要，是其开设银行账户、进入劳动力市场以及处理日常行政事务的必备凭证。 除了促进经济融入，欧盟还强烈呼吁尼泊尔保障藏人的基本公民与文化权利，确保其能够不受限制地和平举办各类重要宗教及文化活动。 此外，欧盟也要求尼泊尔为已获得第三国安置资格、或希望返回原籍国的难民，提供签证豁免及出境许可的便利。 上述建议已于 2025 年底正式提交给尼泊尔内政部，并持续被列为欧盟的外交优先事项。欧洲对外行动署（EEAS）已明确表示，在 2026 年下半年举行的年度“欧盟—尼泊尔联合委员会”会议上，这些藏人权利议题将被列为核心议程。 据悉，欧盟此次发表强硬立场，是对欧洲议会跨党派支持图伯特（西藏）小组共同主席戴纽斯·扎利马斯（Dainius Zalimas）与汉内斯·海德（Hannes Heide）此前提出的议会质询所做出的正式回应。该质询对尼泊尔境内藏人难民长期面临的不稳定处境表达了高度关注。 记者：次仁 责编：蒋扬 来源：驻布鲁塞尔办事处 《图伯特之页》首发，转载请注明出处 The post 欧盟敦促尼泊尔保障藏人难民基本权利 first appeared on CTA Official Site in Chinese.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">堪培拉藏人社区举行烛光守夜活动   纪念十一世班禅喇嘛失踪 31 周年</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">堪培拉藏人社区于 5 月 17 日晚举行烛光守夜活动，纪念第十一世班禅喇嘛根敦确吉尼玛失踪 3 1周年，并悼念所有藏人政治犯。 活动期间，多名发言人对图伯特（西藏）人权现状表达深切关切，呼吁国际社会加大对图伯特宗教与文化自由的关注，并警惕中国政府“民族团结”政策对藏人及其他群体造成的影响。 澳大利亚首都领地反对党多元文化事务影子部长彼得·凯恩（Peter Cain）与绿党耶拉比选区议员安德鲁·布拉多克（Andrew Braddock）等多名政界人士及人权代表出席活动并发表讲话，对第十一世班禅喇嘛根敦确吉尼玛表达声援，并重申对人权与宗教自由的支持。 国际特赦组织澳大利亚分部代表斯蒂芬·罗（Stephen Rowe）呼吁国际社会进一步关注图伯特的宗教、文化及语言所面临的系统性打压。 此外，藏人行政中央驻澳洲代表噶玛森格在发言中特别指出，中国政府试图干预下一世达赖喇嘛的转世事务，其所谓的“民族团结”政策正持续侵蚀藏人的民族身份认同。 活动尾声，全体与会者共同祈愿第十一世班禅喇嘛及所有藏人政治犯早日重获自由，并祝愿达赖喇嘛尊者长久住世。 记者：次仁 责编：蒋扬 来源：驻澳洲办事处 《图伯特之页》首发，转载请注明出处 The post 堪培拉藏人社区举行烛光守夜活动 纪念十一世班禅喇嘛失踪 31 周年 first appeared on CTA Official Site in Chinese.</div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="2026-05-17.html" class="btn btn-outline">← 前一天</a>
+        <a href="../index.html" class="btn btn-primary">返回首页</a>
+        <a href="2026-05-19.html" class="btn btn-outline">后一天 →</a>
+    </div>
+</div>
+
+</body>
+</html>

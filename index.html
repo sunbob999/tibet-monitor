@@ -5,293 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>境外涉藏信息监测平台</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
-            --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
-            --green:#10b981;--green-light:#d1fae5;
-            --amber:#f59e0b;--amber-light:#fef3c7;
-            --red:#ef4444;--red-light:#fee2e2;
-            --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
-            --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
-            --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
-            --gray-800:#1e293b;--gray-900:#0f172a;
-            --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
-            --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
-            --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
-        }
-        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
-        .top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
-        .top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
-        .top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
-        .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .layout{display:flex;min-height:calc(100vh - 56px)}
-        .sidebar{width:260px;background:var(--white);border-right:1px solid var(--gray-200);overflow-y:auto;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px)}
-        .sidebar-section{padding:16px 0}
-        .sidebar-label{padding:0 20px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:8px}
-        .sidebar-item{padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-600);transition:all .15s;border-left:3px solid transparent}
-        .sidebar-item:hover{background:var(--gray-50);color:var(--gray-800)}
-        .sidebar-item.active{background:var(--accent-light);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-        .sidebar-item .badge{margin-left:auto;font-size:.7rem;padding:2px 8px;border-radius:10px;background:var(--gray-200);color:var(--gray-500)}
-        .sidebar-item.active .badge{background:var(--accent);color:var(--white)}
-        .sidebar-item .icon{width:20px;text-align:center;font-size:1rem}
-        .main{flex:1;overflow-y:auto;padding:24px 32px}
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-        .stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
-        .stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
-        .stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
-        .stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
-        .stat-card.accent .stat-value{color:var(--accent)}
-        .stat-card.green .stat-value{color:var(--green)}
-        .stat-card.amber .stat-value{color:var(--amber)}
-        .stat-card.red .stat-value{color:var(--red)}
-        .panel{display:none}
-        .panel.active{display:block}
-        .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-        .panel-title{font-size:1.1rem;font-weight:600;color:var(--gray-800)}
-        .btn{padding:6px 14px;border-radius:6px;font-size:.8rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
-        .btn-primary{background:var(--accent);color:var(--white)}
-        .btn-primary:hover{background:var(--accent-hover)}
-        .btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
-        .btn-outline:hover{background:var(--gray-50)}
-        .report-paper{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:48px 56px;box-shadow:var(--shadow-md);max-width:860px;line-height:2;font-size:.95rem}
-        .report-paper p{margin-bottom:12px;text-indent:2em}
-        .report-paper p.no-indent{text-indent:0}
-        .report-paper h3{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent)}
-        .report-paper .highlight{background:var(--amber-light);padding:2px 6px;border-radius:3px;font-weight:500}
-        .news-list{display:flex;flex-direction:column;gap:16px}
-        .news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s}
-        .news-card:hover{box-shadow:var(--shadow-lg)}
-        .news-card-header{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
-        .news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800)}
-        .news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400)}
-        .news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.8;color:var(--gray-700)}
-        .source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
-        .source-tag.tibet{background:#dbeafe;color:#1d4ed8}
-        .source-tag.vot{background:#fce7f3;color:#be185d}
-        .search-bar{display:flex;gap:8px;margin-bottom:20px}
-        .search-bar input{flex:1;padding:8px 14px;border:1px solid var(--gray-300);border-radius:6px;font-size:.875rem;outline:none;transition:border .15s}
-        .search-bar input:focus{border-color:var(--accent)}
-        @media print{
-            .top-header,.sidebar,.stats-row,.panel-header,.search-bar,.no-print{display:none!important}
-            .main{padding:0!important}
-            .report-paper{border:none;box-shadow:none;padding:20px;max-width:100%}
-            .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
-        }
-        @media(max-width:768px){
-            .sidebar{display:none}
-            .stats-row{grid-template-columns:repeat(2,1fr)}
-            .report-paper{padding:24px 20px}
-            .main{padding:16px}
-        }
-    </style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header a{color:var(--gray-300)}
+.top-header a:hover{color:var(--white);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
+.news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
+.news-card:hover{box-shadow:var(--shadow-lg)}
+.news-card-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400);align-items:center}
+.news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.9;color:var(--gray-700)}
+.source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
+.source-tag.tibet{background:#dbeafe;color:#1d4ed8}
+.source-tag.vot{background:#fce7f3;color:#be185d}
+.report-paper{line-height:2;font-size:.95rem}
+.report-paper p{margin-bottom:14px;text-indent:2em}
+.report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
+.report-paper .sub-title{font-weight:600;color:var(--gray-700);margin:12px 0 8px;text-indent:0}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
+.archive-list{display:flex;flex-direction:column;gap:8px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.archive-item:hover{box-shadow:var(--shadow-lg)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--accent);min-width:120px}
+.archive-info{font-size:.8rem;color:var(--gray-500);flex:1}
+.archive-btn{font-size:.8rem}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
+</style>
 </head>
 <body>
-
 <div class="top-header">
     <h1>境外涉藏信息监测平台</h1>
     <div class="meta">
-        <span>        <span class="live-dot"></span> 数据已同步</span>
-        <span>更新时间: 2026-05-25 08:31</span>
+        <span><span class="live-dot"></span> 数据已同步</span>
+        <span>更新时间: 2026-05-25</span>
     </div>
 </div>
 
-<div class="layout">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-section">
-            <div class="sidebar-label">报告中心</div>
-            <div class="sidebar-item active" onclick="switchPanel('report',this)">
-                <span class="icon">&#128196;</span> 分析研判日报 <span class="badge">05-25</span>
-            </div>
-            <div class="sidebar-item" onclick="switchPanel('news',this)">
-                <span class="icon">&#128240;</span> 新闻报道汇总 <span class="badge">10</span>
-            </div>
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
         </div>
-        <div class="sidebar-section" style="border-top:1px solid var(--gray-200)">
-            <div class="sidebar-label">数据源</div>
-            <div class="sidebar-item" onclick="switchPanel('news',this);filterBySource('tibet.com')">
-                <span class="icon">&#127760;</span> tibet.com <span class="badge">10</span>
-            </div>
-            <div class="sidebar-item" onclick="switchPanel('news',this);filterBySource('cn.vot.org')">
-                <span class="icon">&#127760;</span> cn.vot.org <span class="badge">0</span>
-            </div>
+        <div class="stat-card green">
+            <div class="stat-label">累计收录报道</div>
+            <div class="stat-value">29</div>
+            <div class="stat-sub">覆盖所有监测日期</div>
         </div>
-        <div class="sidebar-section" style="border-top:1px solid var(--gray-200)">
-            <div class="sidebar-label">快捷操作</div>
-            <div class="sidebar-item" onclick="window.print()">
-                <span class="icon">&#128424;</span> 打印当前页
-            </div>
+        <div class="stat-card amber">
+            <div class="stat-label">已生成日报</div>
+            <div class="stat-value">5</div>
+            <div class="stat-sub">份分析研判报告</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">监测状态</div>
+            <div class="stat-value">运行中</div>
+            <div class="stat-sub">每日自动更新</div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main">
-
-        <!-- Panel: Analysis Report -->
-        <div id="panel-report" class="panel active">
-            <div class="stats-row">
-                <div class="stat-card accent">
-                    <div class="stat-label">监测网站数</div>
-                    <div class="stat-value">2</div>
-                    <div class="stat-sub">tibet.com / cn.vot.org</div>
-                </div>
-                <div class="stat-card green">
-                    <div class="stat-label">收录报道数</div>
-                    <div class="stat-value">10</div>
-                    <div class="stat-sub">2026-05-13 ~ 2026-05-22</div>
-                </div>
-                <div class="stat-card amber">
-                    <div class="stat-label">研判维度</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-sub">宗教领袖 / 数字化管控 / 汉化政策</div>
-                </div>
-                <div class="stat-card red">
-                    <div class="stat-label">威胁等级</div>
-                    <div class="stat-value">中高</div>
-                    <div class="stat-sub">多维联动施压</div>
-                </div>
-            </div>
-
-            <div class="panel-header">
-                <div class="panel-title">深度研判分析报告</div>
-                <button class="btn btn-outline no-print" onclick="window.print()">&#128424; 打印报告</button>
-            </div>
-
-            <div class="report-paper">
-
-</div>
+    
+        <div class="card">
+          <div class="card-title">最新日报 - 2026-05-25</div>
+          <div class="report-paper" style="max-height:300px;overflow:hidden;position:relative;">
+            <p>2026年05月25日，针对涉藏关键字"藏人行政中央"的信息，经过全网搜索梳理，参考1个网站，现将有关情况报告如下：<br>境外势力通过举办学术研讨会等形式，持续推动藏传佛教女性地位提升及制度化改革，旨在增强流亡社区的凝聚力与国际影响力。<br>2026年05月22日，《藏人行政中央官网》报道“司政边巴次仁出席藏传佛教女性赋权研讨会闭幕式”，分析认为，此举意在通过强调宗教改革成果，塑造其在文化与教育领域的领先形象。</p><h3 class="section-title">一、基本概述</h3><p>近期，藏人行政中央在印度达兰萨拉举办了为期两天的“藏传佛教女性赋权研讨会”。会议聚焦于佛教女性教育、受戒制度及地位提升，重点探讨了格西玛学位的制度化以及恢复比丘尼戒制度的可能性，旨在通过宗教内部改革维持其精神影响力。</p><h3 class="section-title">二、事件详情</h3><p class="sub-title">（一）推动女性宗教地位制度化</p><p>一是通过举办研讨会，系统总结达赖喇嘛在推动佛教女性教育方面的贡献，试图将其塑造为宗教改革的推动者。二是重点讨论格西玛学位的制度化，以增强女性僧侣在社会和寺院机构中的领导角色。三是探讨在律宗传统中恢复比丘尼戒制度，以填补制度空白。</p><p class="sub-title">（二）关注僧伽群体构成变化</p><p>一是司政边巴次仁在讲话中对藏人出家人数减少表示关切。二是强调来自喜马拉雅地区的僧尼人数增加，试图以此证明其宗教影响力的跨地域延伸。三是将宗教学习与藏语延续挂钩，强化民族认同。</p><h3 class="section-title">三、分析研判</h3><p class="sub-title">（一）宗教改革的政治意图</p><p>一是通过赋予女性更高宗教地位，尝试吸引国际社会尤其是西方女性主义群体的关注与支持。二是利用“制度化”改革，在流亡社区内部建立新的权威体系，以应对传统结构的松动。</p><p class="sub-title">（二）潜在影响与趋势</p><p>一是未来将进一步推动宗教教育与主流教育体系接轨，提高其对年轻一代的吸引力。二是将继续利用宗教活动作为外交筹码，在国际场合宣扬其“文化保护”叙事。</p><p>分析认为，此次研讨会为藏人行政中央对我进行文化与宗教认同竞争的一环，恐将通过提升国际认可度对我产生软实力压力，由其试图维持精神领袖权威的深层原因引发。下一步，我单位将持续关注藏人行政中央动态，对宗教改革动向进一步研判，加强对女性赋权议题的趋势分析。</p>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,var(--white));pointer-events:none;"></div>
+          </div>
+          <div style="text-align:center;margin-top:12px;">
+            <a href="reports/2026-05-25.html" class="btn btn-primary">查看完整报告</a>
+          </div>
         </div>
 
-        <!-- Panel: News Summary -->
-        <div id="panel-news" class="panel">
-            <div class="panel-header">
-                <div class="panel-title">新闻报道汇总</div>
-                <div style="display:flex;gap:8px" class="no-print">
-                    <button class="btn btn-outline" onclick="filterBySource('all')">全部</button>
-                    <button class="btn btn-outline" onclick="filterBySource('tibet.com')">tibet.com</button>
-                    <button class="btn btn-outline" onclick="filterBySource('cn.vot.org')">cn.vot.org</button>
-                </div>
-            </div>
-
-            <div class="search-bar no-print">
-                <input type="text" id="searchInput" placeholder="输入关键词搜索报道内容..." oninput="searchNews(this.value)">
-            </div>
-
-            <div class="news-list">
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">司政边巴次仁出席藏传佛教女性赋权研讨会闭幕式</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-22</span></div>
-  </div>
-  <div class="news-card-body">为期两天的「藏传佛教女性赋权研讨会」于 5 月 21 日在印度北部达兰萨拉图伯特图书与文献档案馆礼堂圆满闭幕，藏人行政中央司政兼宗教与文化部长边巴次仁出席闭幕仪式并发表讲话。 本次研讨会于 5 月 20 日隆重开幕，主要嘉宾第十三世功德林达察仁波切莅临主礼。会议旨在彰显图伯特（（西藏））精神领袖第十四世达赖喇嘛尊者在推动佛教女性教育、受戒及提升女性地位方面所展现的远见，并系统总结尊者通过制度与宗教改革所作出的重要贡献。 会议期间，与会代表围绕格西玛学位制度化、认定 21 位、名藏印女性大成就者，以及在藏传佛教根本说一切有部律宗传统中恢复建立比丘尼戒制度的可能性等核心议题展开深入探讨。此外，会议还就尼寺课程建设、对「图伯特尼师计划」的制度性支持、格西玛在社会与寺院机构中的领导角色，以及提升佛教女性国际影响力等议题交换意见。 此次研讨会由藏人行政中央宗教与文化部及达赖喇嘛信托基金会联合主办，并获得「图伯特尼师计划」与「图伯特妇女协会」的支持。来自印度与尼泊尔 13 所尼寺的 86 名代表出席会议，涵盖藏传佛教各大教派及雍仲苯教。 出席闭幕式的嘉宾包括：藏人行政中央前部长仁青堪卓、第十七届图伯特人民议会议员兼「图伯特尼师计划」主任吾嘎仓·玉珍、宗教与文化部秘书长顿堆多杰、达赖喇嘛信托基金会秘书长蒋培伦珠、达赖喇嘛尊者首席英文翻译格西图丹晋巴、图伯特图书与文献档案馆馆长格西拉多、西藏妇女协...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">达赖喇嘛尊者出席「多康四水六岗总会」与「喜马拉雅佛教文化协会」举办的长寿法会</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-21</span></div>
-  </div>
-  <div class="news-card-body">图伯特精神领袖第十四世达赖喇嘛尊者于 5 月 20 日上午在印度北部达兰萨拉的大乘法苑，出席了由「多康四水六岗」和「喜马拉雅佛教文化协会」共同举办的长寿法会。 当天上午约 8 时 15 分，尊者从达兰萨拉驻锡寝宫启程前往大乘法苑主寺。当尊者乘坐高尔夫球车抵达寝宫大门时，由朗杰寺僧众吹奏的法号迎请，并由「喜马拉雅佛教文化协会」的代表哲蚌寺果芒学院前任堪布洛桑嘉措、上密院前任堪布洛桑克珠、「多康四水六岗总会」主席格西洛桑年扎，以及「多康四水六岗」长寿法会筹委会主席白玛竹旺等，手持藏香和哈达恭敬迎接。当高尔夫球车驶入大乘法苑的庭院时，数千名民众身着盛装在道路两旁迎接尊者莅临，而尊者也面带笑容向大家挥手致意。 在大乘法苑主殿内，尊者法座装饰着华丽的万寿菊花环，前方供桌则摆放着一串串白色栀子花。面向尊者并主法的金刚上师为藏传佛教格鲁派高僧第十三世功德林仁达察仁波切。其右侧依次为朗杰寺堪布、甘丹夏孜寺堪布、上密院前任堪布洛桑克珠、哲蚌寺果芒学院前任堪布洛桑嘉措，以及现任「国际佛教联合会」秘书长强曲曲丹。功德林仁波切左侧则坐有甘丹寺北顶学院堪布、不丹的吉美朗桑，以及甘丹寺东顶学院的堪布强曲桑杰。此外，还有宁玛、萨迦、噶举及苯教的高僧大德出席了法会。 随后，达赖喇嘛尊者在随侍的陪同下步入电梯，然后绕行大乘法苑前往主殿。尊者的脸上充满喜悦频频向民众挥手致意。在尊者步入大乘法苑的主殿并登上宝座，向与会...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">驻日内瓦代表赤列曲吉会晤台湾外交部长林佳龙</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-19</span></div>
-  </div>
-  <div class="news-card-body">应台湾驻外机构的邀请，藏人行政中央驻日内瓦代表赤列曲吉于 5 月 17 日在日内瓦出席台湾官方活动期间，正式会晤了台湾外交部长林佳龙及多名高级官员。 当天下午，驻日内瓦代表赤列曲吉与驻欧洲华人事务联络官桑杰嘉，共同出席了在威尔逊总统酒店举行的「台湾智慧医疗与健康产业展」开幕式。该展览会集中展示了台湾在医疗保健与科技领域的最新创新成果，吸引了台湾外交部长、卫生福利部长、驻外代表、媒体及公众广泛参与。 当晚 7 时，主办方举行贵宾招待晚宴。期间，代表赤列曲吉与台湾外交部长林佳龙进行了正式会晤。双方互致问候，并就共同关心的议题交换了意见。此外，代表赤列曲吉还与多名台湾驻外代表及外交部高级官员进行了互动交流。 据悉，此次科技博览会及相关交流活动，是台湾当前争取国际社会支持、持续推动加入世界卫生组织（WHO）全球倡议行动的一部分。 记者：次仁 责编：蒋扬 来源：驻日内瓦办事处 《图伯特之页》首发，转载请注明出处 The post 驻日内瓦代表赤列曲吉会晤台湾外交部长林佳龙 first appeared on CTA Official Site in Chinese.</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">驻布鲁塞尔办事处开展外交倡议   聚焦班禅喇嘛失踪 31 周年</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-19</span></div>
-  </div>
-  <div class="news-card-body">继去年发起为期一个月的「全球关注十一世班禅喇嘛下落」宣传活动后，藏人行政中央驻布鲁塞尔办事处今年继续深化外交倡议，纪念第十一世班禅喇嘛根敦确吉尼玛 37 岁华诞，并强烈谴责中国政府强迫失踪班禅喇嘛达 31 年。 在本轮活动中，驻布鲁塞尔办事处积极与多国领袖及欧洲议会议员展开密集接触，促请各方代表向北京当局施压，要求中方提供关于十一世班禅喇嘛当前生存与健康状况的可核实证明，并呼吁立即恢复他的自由。 为进一步提升宣传声势，驻布鲁塞尔办事处特别发布了一份定制宣传册。该册收录了三名前图伯特政治犯的亲历证言，他们通过讲述自身在中国统治下遭受的苦难，呼吁世界各国领导人共同支持寻找第十一世班禅喇嘛的下落。 此外，欧洲议会已于 4 月 30 日通过了具有里程碑意义的《关于中国新版「民族团结进步法」及其加剧打压民族身份认同问题》决议。该决议不仅特别要求中国政府立即释放第十一世班禅喇嘛根敦确吉尼玛，还聚焦了图伯特（西藏）其他紧迫的人权议题，包括谴责中国政府试图干预包括第十四世达赖喇嘛尊者在内的藏传佛教高僧转世事务。 欧洲委员会委员哈贾·拉赫比卜（Hadja Lahbib）在欧洲议会全体会议辩论后的发言中也重申，欧盟将继续坚定要求中方提供关于第十一世班禅喇嘛下落及健康状况的可信信息。这一表态为此次外交倡议增添了重要分量。 作为驻布鲁塞尔办事处系列倡议行动的一部分，5 月 17 日，比利时多个藏人协会、「...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">欧盟敦促尼泊尔保障藏人难民基本权利</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-18</span></div>
-  </div>
-  <div class="news-card-body">欧盟及其国际伙伴「难民核心小组」近日正式向尼泊尔政府施压，敦促尼泊尔尽快解决其境内藏人难民长期面临的人道主义困境，尤其是多数难民至今仍缺乏合法身份文件的问题。 为改善这一现状，欧盟正极力推动尼泊尔政府向藏人难民发放“个人账户号码卡”（PAN Card）。该文件对藏人（尤其是青年群体）至关重要，是其开设银行账户、进入劳动力市场以及处理日常行政事务的必备凭证。 除了促进经济融入，欧盟还强烈呼吁尼泊尔保障藏人的基本公民与文化权利，确保其能够不受限制地和平举办各类重要宗教及文化活动。 此外，欧盟也要求尼泊尔为已获得第三国安置资格、或希望返回原籍国的难民，提供签证豁免及出境许可的便利。 上述建议已于 2025 年底正式提交给尼泊尔内政部，并持续被列为欧盟的外交优先事项。欧洲对外行动署（EEAS）已明确表示，在 2026 年下半年举行的年度“欧盟—尼泊尔联合委员会”会议上，这些藏人权利议题将被列为核心议程。 据悉，欧盟此次发表强硬立场，是对欧洲议会跨党派支持图伯特（西藏）小组共同主席戴纽斯·扎利马斯（Dainius Zalimas）与汉内斯·海德（Hannes Heide）此前提出的议会质询所做出的正式回应。该质询对尼泊尔境内藏人难民长期面临的不稳定处境表达了高度关注。 记者：次仁 责编：蒋扬 来源：驻布鲁塞尔办事处 《图伯特之页》首发，转载请注明出处 The post 欧盟敦促尼泊尔保障藏人...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">堪培拉藏人社区举行烛光守夜活动   纪念十一世班禅喇嘛失踪 31 周年</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-18</span></div>
-  </div>
-  <div class="news-card-body">堪培拉藏人社区于 5 月 17 日晚举行烛光守夜活动，纪念第十一世班禅喇嘛根敦确吉尼玛失踪 3 1周年，并悼念所有藏人政治犯。 活动期间，多名发言人对图伯特（西藏）人权现状表达深切关切，呼吁国际社会加大对图伯特宗教与文化自由的关注，并警惕中国政府“民族团结”政策对藏人及其他群体造成的影响。 澳大利亚首都领地反对党多元文化事务影子部长彼得·凯恩（Peter Cain）与绿党耶拉比选区议员安德鲁·布拉多克（Andrew Braddock）等多名政界人士及人权代表出席活动并发表讲话，对第十一世班禅喇嘛根敦确吉尼玛表达声援，并重申对人权与宗教自由的支持。 国际特赦组织澳大利亚分部代表斯蒂芬·罗（Stephen Rowe）呼吁国际社会进一步关注图伯特的宗教、文化及语言所面临的系统性打压。 此外，藏人行政中央驻澳洲代表噶玛森格在发言中特别指出，中国政府试图干预下一世达赖喇嘛的转世事务，其所谓的“民族团结”政策正持续侵蚀藏人的民族身份认同。 活动尾声，全体与会者共同祈愿第十一世班禅喇嘛及所有藏人政治犯早日重获自由，并祝愿达赖喇嘛尊者长久住世。 记者：次仁 责编：蒋扬 来源：驻澳洲办事处 《图伯特之页》首发，转载请注明出处 The post 堪培拉藏人社区举行烛光守夜活动 纪念十一世班禅喇嘛失踪 31 周年 first appeared on CTA Official Site in Chines...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">司政边巴次仁出席格尔登寺高级佛学院毕业典礼</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-15</span></div>
-  </div>
-  <div class="news-card-body">藏人行政中央司政兼宗教与文化部长边巴次仁于 5 月 14 日应邀出席印北达兰萨拉的格尔登寺杰巴扎仓高级佛学院毕业典礼，期间为格尔登寺律学硕士、中观佛学硕士及因明学学位毕业僧众颁发证书。 典礼伊始，由主宾敬献酥油灯，随后全体僧众诵经祈福。接着，格尔登寺校长兼教师索如达吉致欢迎辞，并简要介绍格尔登高级佛学院的发展历程。 他介绍称，该学院在格尔登仁波切加持与指导下创立，首期建设工程始于 1988 年 4 月，并于 1990 年迎来首批堪布与教师开展教学工作。他在回顾历史时表示，首届毕业典礼于 1996 年 5 月 9 日在达赖喇嘛尊者的加持下举行，自此以来已有众多僧人顺利完成学业。 他进一步介绍，自 1990 年正式开展教学以来，约有 700 名僧人曾于该学院学习。目前寺院共有 109 名僧人、16 名教师，以及包括管理人员在内共 186 名僧职人员。同时，他还简要汇报学院自成立以来的出版成果及各项学修成就。 随后，副校长贡确沃色宣读了 23 名毕业僧人的名单，司政边巴次仁向毕业僧众颁发毕业证书并敬献哈达。 司政在致辞中，向全体教师、寺院行政人员以及长期培育和指导学生学修的相关人士表达诚挚感谢，并勉励毕业僧众善用所学知识，服务社会大众，为弘扬图伯特（西藏）宗教与文化作出贡献。 司政表示，能够举办此类毕业典礼，皆有赖于达赖喇嘛尊者的恩德与慈悲。他指出，尽管图伯特境内众多寺院在中国占领后遭到...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">驻北美华人事务联络官出席明尼苏达「中间道路青年组织」成立十一周年庆典</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-15</span></div>
-  </div>
-  <div class="news-card-body">藏人行政中央驻北美华人事务联络官慈诚嘉措于 5 月 12日赴明尼苏达州，出席由当地藏人青年发起的「中间道路青年组织」成立十一周年庆祝活动。 美国联邦众议员贝蒂·麦科勒姆（Betty McCollum）助理丹增巴桑也应邀出席，并就公民参与在政策倡议工作中的重要性发表讲话。当地藏人社区成员共同参与活动，见证这一由青年主导、持续推动中间道路理念的重要里程碑。 在成立日庆祝活动前夕，驻北美华人事务联络官慈诚嘉措安排该组织理事会成员与当地华人民主活动人士、知名中国人权捍卫者程渊之妻施明磊举行交流座谈。 双方围绕人权议题、民主价值及社区合作展开深入交流，并分享在高压统治环境下倡导人权与民主自由的相关经验。此次交流进一步促进流亡藏人与华人民主社群之间的基层联系，并为深化相互理解与团结合作创造积极条件。 在庆祝活动上发表演讲时，慈诚嘉措全面介绍「中间道路」政策的发展历程。并结合当代中共统治下政治格局的变化，梳理了该政策的历史演变。他指出，“中间道路”始终是图伯特自由运动中一项坚持非暴力与对话原则、兼具韧性与原则性的核心框架。他重点阐述了加强与全球华人群体的交流与沟通工作的重要意义，并明确指出应区分中国共产党政治体制与广大中国人民，不应将二者混为一谈。 他还鼓励与会藏人青年积极加强与华人社区交流合作，并强调不应将华人群体视为对立方，而应成为推动共同价值及争取自由与正义事业中的潜在伙伴。 在致辞结束时...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">驻日本代表率团赴日本国会举行专题说明会</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-14</span></div>
-  </div>
-  <div class="news-card-body">藏人行政中央驻日本代表次旺嘉波·阿若亚博士率图伯特代表团，于 5 月12 日在东京永田町日本众议院议会大楼会议厅向日本国会跨党派支持图伯特小组议员成员举行专题说明会，重点介绍中共对图伯特宗教自由的打压及其干预藏传佛教高僧转世、殖民式寄宿制学校、近期出台的《民族团结进步促进法》，以及对图伯特生态环境的破坏和大规模修筑水坝等议题。 图伯特代表团由驻日本代表次旺嘉波·阿若亚博士、图伯特（西藏）行动中心研究员嘉洛博士、图伯特人民议会前议员多吉次丹、国际图伯特网络研究员洛桑央措博士、日本自由图伯特学生运动成员次仁多吉、闭门咨询机构（Closed Door Consulting）的成员乔萨娜·梅赫拉（Ms. Jyotsana Mehra），以及驻日本办事处秘书长扎西央宗与长谷川直子组成。叶森（Sam Yip）与土岐莉莉子（Ririko Toki）担任随团翻译。 日本国会跨党派支持图伯特小组主席山谷惠里子议员（Yamatani Eriko）主持会议，秘书长石川昭政（Ishikawa Akimasa）负责会议协调。约 24 名日本国会议员及其代表出席会议，部分媒体人士也到场采访报道。 代表阿若亚博士在会议上致词时，感谢日本议员们提供此次说明机会，并向与会者详细介绍了当前图伯特境内的严峻局势，指出中共正强力推行严厉政策，试图切断境内外藏人之间的一切联系。他进一步表示，中共干预图伯特宗教事务，企图操控...</div>
-</div>
-<div class="news-card">
-  <div class="news-card-header">
-    <div class="news-card-title">选举委员会公布第十八届图伯特人民议会议员当选名单</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-13</span></div>
-  </div>
-  <div class="news-card-body">在 2025 – 26 年度流亡藏人普选的两轮选举顺利完成后，藏人行政中央选举委员会于今天（5 月 13 日）在外交与新闻部拉巴次仁纪念厅举行记者会，正式公布第十八届图伯特人民议会议员当选名单。 在当选的第十八届图伯特人民人议会 45 名议员中，有 17 人为首次当选、未曾在第十七届图伯特人民议会任职的新议员。初选与终选分别于 2026 年 2 月 1 日及 4 月 26 日举行，共有来自 27 个国家的 1,737 名选务人员，在 309 个投票站负责选举工作。初选投票率为 56.25%（51,140 人投票），终选投票率为 45.71%（41,638 人投票），总登记选民人数为 91,073 人。在终选计票过程中，共有 570 张选票被判定为无效票。 在记者会上，选举委员会主席洛桑益西透露，在整个选举期间，选举委员会与区域选举官员及观察员共举行了 100 场会议，涵盖七个国家的 55 个不同地点。此外，选举委员会还在达兰萨拉为印度境内的地方选举委员及选务人员举办了选举意识与培训说明会。 选举委员会主席在两名选举专员朗萨曲珍与次仁玉珍的陪同下，还就选举过程中的相关事务与问题进行了说明，包括选举委员会为确保选举顺利与成功举行而采取的多项措施。这些措施包括：研究如何协助在军队服役的藏人参与选举；在藏人毛衣销售旺季期间增设 31 个投票站；在相关藏人的协助下，成功为居住在俄罗斯的藏人举...</div>
-</div>
-</div>            </div>
-        </div>
-
+    <div class="card">
+      <div class="card-title">日报归档</div>
+      <div class="archive-list">
+        
+        <a href="reports/2026-05-25.html" style="text-decoration:none;color:inherit">
+          <div class="archive-item">
+            <span class="archive-date">2026-05-25</span>
+            <span class="archive-info">1 条报道 | 来源：cn.vot.org, tibet.com</span>
+            <span class="archive-btn btn btn-outline">查看日报</span>
+          </div>
+        </a>
+        <a href="reports/2026-05-22.html" style="text-decoration:none;color:inherit">
+          <div class="archive-item">
+            <span class="archive-date">2026-05-22</span>
+            <span class="archive-info">10 条报道 | 来源：cn.vot.org, tibet.com</span>
+            <span class="archive-btn btn btn-outline">查看日报</span>
+          </div>
+        </a>
+        <a href="reports/2026-05-21.html" style="text-decoration:none;color:inherit">
+          <div class="archive-item">
+            <span class="archive-date">2026-05-21</span>
+            <span class="archive-info">5 条报道 | 来源：tibet.com</span>
+            <span class="archive-btn btn btn-outline">查看日报</span>
+          </div>
+        </a>
+        <a href="reports/2026-05-20.html" style="text-decoration:none;color:inherit">
+          <div class="archive-item">
+            <span class="archive-date">2026-05-20</span>
+            <span class="archive-info">8 条报道 | 来源：cn.vot.org</span>
+            <span class="archive-btn btn btn-outline">查看日报</span>
+          </div>
+        </a>
+        <a href="reports/2026-05-18.html" style="text-decoration:none;color:inherit">
+          <div class="archive-item">
+            <span class="archive-date">2026-05-18</span>
+            <span class="archive-info">5 条报道 | 来源：cn.vot.org, tibet.com</span>
+            <span class="archive-btn btn btn-outline">查看日报</span>
+          </div>
+        </a>
+      </div>
     </div>
 </div>
 
-<script>
-function switchPanel(name, el) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('panel-' + name).classList.add('active');
-    if (el) el.classList.add('active');
-}
-
-function filterBySource(source) {
-    const cards = document.querySelectorAll('.news-card');
-    cards.forEach(card => {
-        if (source === 'all' || card.dataset.source === source) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('panel-news').classList.add('active');
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    document.querySelectorAll('.sidebar-item')[1].classList.add('active');
-}
-
-function searchNews(keyword) {
-    const cards = document.querySelectorAll('.news-card');
-    keyword = keyword.toLowerCase();
-    cards.forEach(card => {
-        const title = (card.dataset.title || '').toLowerCase();
-        const body = card.querySelector('.news-card-body').textContent.toLowerCase();
-        if (title.includes(keyword) || body.includes(keyword)) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-</script>
 </body>
 </html>

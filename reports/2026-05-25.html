@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监测日报 - 2026-05-25 | 境外涉藏信息监测平台</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header a{color:var(--gray-300)}
+.top-header a:hover{color:var(--white);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
+.news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
+.news-card:hover{box-shadow:var(--shadow-lg)}
+.news-card-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400);align-items:center}
+.news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.9;color:var(--gray-700)}
+.source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
+.source-tag.tibet{background:#dbeafe;color:#1d4ed8}
+.source-tag.vot{background:#fce7f3;color:#be185d}
+.report-paper{line-height:2;font-size:.95rem}
+.report-paper p{margin-bottom:14px;text-indent:2em}
+.report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
+.report-paper .sub-title{font-weight:600;color:var(--gray-700);margin:12px 0 8px;text-indent:0}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
+.archive-list{display:flex;flex-direction:column;gap:8px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.archive-item:hover{box-shadow:var(--shadow-lg)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--accent);min-width:120px}
+.archive-info{font-size:.8rem;color:var(--gray-500);flex:1}
+.archive-btn{font-size:.8rem}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="top-header">
+    <h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-05-25</h1>
+    <div class="meta">
+        <span><span class="live-dot"></span> 数据已同步</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">1</div>
+            <div class="stat-sub">tibet.com: 1 | cn.vot.org: 0</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">日期范围</div>
+            <div class="stat-value">05-25</div>
+            <div class="stat-sub">近3天监测</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">威胁等级</div>
+            <div class="stat-value">中高</div>
+            <div class="stat-sub">多维联动施压</div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">分析研判日报</div>
+      <div class="report-paper">
+        <p>2026年05月25日，针对涉藏关键字"藏人行政中央"的信息，经过全网搜索梳理，参考1个网站，现将有关情况报告如下：<br>境外势力通过举办学术研讨会等形式，持续推动藏传佛教女性地位提升及制度化改革，旨在增强流亡社区的凝聚力与国际影响力。<br>2026年05月22日，《藏人行政中央官网》报道“司政边巴次仁出席藏传佛教女性赋权研讨会闭幕式”，分析认为，此举意在通过强调宗教改革成果，塑造其在文化与教育领域的领先形象。</p><h3 class="section-title">一、基本概述</h3><p>近期，藏人行政中央在印度达兰萨拉举办了为期两天的“藏传佛教女性赋权研讨会”。会议聚焦于佛教女性教育、受戒制度及地位提升，重点探讨了格西玛学位的制度化以及恢复比丘尼戒制度的可能性，旨在通过宗教内部改革维持其精神影响力。</p><h3 class="section-title">二、事件详情</h3><p class="sub-title">（一）推动女性宗教地位制度化</p><p>一是通过举办研讨会，系统总结达赖喇嘛在推动佛教女性教育方面的贡献，试图将其塑造为宗教改革的推动者。二是重点讨论格西玛学位的制度化，以增强女性僧侣在社会和寺院机构中的领导角色。三是探讨在律宗传统中恢复比丘尼戒制度，以填补制度空白。</p><p class="sub-title">（二）关注僧伽群体构成变化</p><p>一是司政边巴次仁在讲话中对藏人出家人数减少表示关切。二是强调来自喜马拉雅地区的僧尼人数增加，试图以此证明其宗教影响力的跨地域延伸。三是将宗教学习与藏语延续挂钩，强化民族认同。</p><h3 class="section-title">三、分析研判</h3><p class="sub-title">（一）宗教改革的政治意图</p><p>一是通过赋予女性更高宗教地位，尝试吸引国际社会尤其是西方女性主义群体的关注与支持。二是利用“制度化”改革，在流亡社区内部建立新的权威体系，以应对传统结构的松动。</p><p class="sub-title">（二）潜在影响与趋势</p><p>一是未来将进一步推动宗教教育与主流教育体系接轨，提高其对年轻一代的吸引力。二是将继续利用宗教活动作为外交筹码，在国际场合宣扬其“文化保护”叙事。</p><p>分析认为，此次研讨会为藏人行政中央对我进行文化与宗教认同竞争的一环，恐将通过提升国际认可度对我产生软实力压力，由其试图维持精神领袖权威的深层原因引发。下一步，我单位将持续关注藏人行政中央动态，对宗教改革动向进一步研判，加强对女性赋权议题的趋势分析。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">新闻报道汇总</div>
+      
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政边巴次仁出席藏传佛教女性赋权研讨会闭幕式</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-22</span>
+            </div>
+          </div>
+          <div class="news-card-body">为期两天的「藏传佛教女性赋权研讨会」于 5 月 21 日在印度北部达兰萨拉图伯特图书与文献档案馆礼堂圆满闭幕，藏人行政中央司政兼宗教与文化部长边巴次仁出席闭幕仪式并发表讲话。 本次研讨会于 5 月 20 日隆重开幕，主要嘉宾第十三世功德林达察仁波切莅临主礼。会议旨在彰显图伯特（（西藏））精神领袖第十四世达赖喇嘛尊者在推动佛教女性教育、受戒及提升女性地位方面所展现的远见，并系统总结尊者通过制度与宗教改革所作出的重要贡献。 会议期间，与会代表围绕格西玛学位制度化、认定 21 位、名藏印女性大成就者，以及在藏传佛教根本说一切有部律宗传统中恢复建立比丘尼戒制度的可能性等核心议题展开深入探讨。此外，会议还就尼寺课程建设、对「图伯特尼师计划」的制度性支持、格西玛在社会与寺院机构中的领导角色，以及提升佛教女性国际影响力等议题交换意见。 此次研讨会由藏人行政中央宗教与文化部及达赖喇嘛信托基金会联合主办，并获得「图伯特尼师计划」与「图伯特妇女协会」的支持。来自印度与尼泊尔 13 所尼寺的 86 名代表出席会议，涵盖藏传佛教各大教派及雍仲苯教。 出席闭幕式的嘉宾包括：藏人行政中央前部长仁青堪卓、第十七届图伯特人民议会议员兼「图伯特尼师计划」主任吾嘎仓·玉珍、宗教与文化部秘书长顿堆多杰、达赖喇嘛信托基金会秘书长蒋培伦珠、达赖喇嘛尊者首席英文翻译格西图丹晋巴、图伯特图书与文献档案馆馆长格西拉多、西藏妇女协会主席次仁卓玛、朗杰寺彭德列谢林学校校长图丹亚培、卓玛林尼寺与学院教务长格西玛德勒旺姆、教育部副秘书长丹增白玛，以及财政部妇女赋权办公室负责人丹增卓嘎等人士。 司政边巴次仁在闭幕式上发表讲话时强调，藏传佛教能够在流亡中得以保存与弘扬，完全归功于达赖喇嘛尊者高瞻远瞩的领导。其中，正式授予女性「格西玛」学位，被视为藏传佛教历史上具有里程碑意义的重要改革。 针对当前藏人出家人数逐渐减少的现状，司政表达关切的同时，也指出其中的积极趋势，即来自喜马拉雅地区的僧尼人数持续增加，并逐渐在宗教机构中担任领导职务。例如，第 102 任甘丹赤巴日宗赤列仁波切即为拉达克裔人士。司政指出，这一趋势亦有助于推动藏语的延续与使用，因为藏语始终是学习与研究藏传佛教的重要基础。 最后，谈及僧伽教育体系时，司政强调，应推动尼寺课程与学位制度逐步与主流教育体系接轨，从而为那些因各种原因无法继续僧侣生涯者，创造更广泛的发展空间与生计保障。</div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="2026-05-24.html" class="btn btn-outline">← 前一天</a>
+        <a href="../index.html" class="btn btn-primary">返回首页</a>
+        <a href="2026-05-26.html" class="btn btn-outline">后一天 →</a>
+    </div>
+</div>
+
+</body>
+</html>

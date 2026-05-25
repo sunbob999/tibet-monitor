@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监测日报 - 2026-05-20 | 境外涉藏信息监测平台</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header a{color:var(--gray-300)}
+.top-header a:hover{color:var(--white);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
+.news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
+.news-card:hover{box-shadow:var(--shadow-lg)}
+.news-card-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400);align-items:center}
+.news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.9;color:var(--gray-700)}
+.source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
+.source-tag.tibet{background:#dbeafe;color:#1d4ed8}
+.source-tag.vot{background:#fce7f3;color:#be185d}
+.report-paper{line-height:2;font-size:.95rem}
+.report-paper p{margin-bottom:14px;text-indent:2em}
+.report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
+.report-paper .sub-title{font-weight:600;color:var(--gray-700);margin:12px 0 8px;text-indent:0}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
+.archive-list{display:flex;flex-direction:column;gap:8px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.archive-item:hover{box-shadow:var(--shadow-lg)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--accent);min-width:120px}
+.archive-info{font-size:.8rem;color:var(--gray-500);flex:1}
+.archive-btn{font-size:.8rem}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="top-header">
+    <h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-05-20</h1>
+    <div class="meta">
+        <span><span class="live-dot"></span> 数据已同步</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">8</div>
+            <div class="stat-sub">tibet.com: 0 | cn.vot.org: 8</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">日期范围</div>
+            <div class="stat-value">05-20</div>
+            <div class="stat-sub">近3天监测</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">威胁等级</div>
+            <div class="stat-value">中高</div>
+            <div class="stat-sub">多维联动施压</div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">分析研判日报</div>
+      <div class="report-paper">
+        <p>2026年05月20日，针对涉藏关键字"境外涉藏网站"的信息，经过全网搜索梳理，参考1个网站（cn.vot.org），现将有关情况报告如下：</p><p>境外敌媒在班禅喇嘛失踪31周年节点密集炒作宗教干预与政治诉求，配合美国国务院、欧盟等国际机构同步发声，形成多维度联动施压格局，恐对我国际舆论空间及宗教事务管辖权形成持续冲击。</p><p>2026年05月17日至19日，《西藏之声》密集报道班禅喇嘛失踪31周年、美国国务院发表声明、藏维团体赴美游说及欧盟向尼泊尔施压等一系列事件，当前境外势力正借助宗教纪念节点与外交渠道实施多路并进策略，分析认为，对方试图通过美国国务院背书与欧洲议会决议联动，将宗教领袖转世认定议题推向国际法律框架，以压缩我对藏宗教事务的合法管辖空间。</p><h3 class="section-title">一、基本概述</h3><p class="sub-title">（一）以宗教纪念节点为切入口集中造势。</p><p>2026年5月17日，第十一世班禅喇嘛根敦确吉尼玛被绑架失踪满31周年，境外势力将这一节点作为集中造势的窗口期。一是西藏青年会、西藏妇女会在达兰萨拉举行抗议与烛光游行，西藏青年会纽约与新泽西分会在纽约联合国总部大楼前举行纪念活动。二是美国国务院于5月18日发表官方声明，敦促我方释放根敦确吉尼玛及其家人，明确将转世认定定性为"纯粹的宗教事务"，反对"党国势力"干涉。三是达赖喇嘛于5月17日在达兰萨拉主持"萨嘎达瓦亿遍六字真言持诵法会"，藏历圣月期间的法会活动与政治事件相互叠加，形成较强舆论合力。</p><p class="sub-title">（二）境内事件与境外报道相互配合。</p><p>《西藏之声》同期聚焦境内事件，将两类报道交叉呈现。一是5月18日报道索县赞丹寺发生焚烧国旗事件，当局拘捕僧人格顿扎巴，并对虫草采挖季节实施政治审查，《西藏之声》以此渲染"宗教迫害持续"叙事。二是5月19日报道果洛门堂寺在"萨嘎达瓦"期间遭警方进驻管控，高僧多杰旦仁波切下落不明，进一步烘托境内"高压"氛围。三是5月16日迪庆地区逾百名藏人就水闸蓄水问题发起和平抗议，被《西藏之声》纳入"境内抗议"叙事，扩大舆论覆盖面。</p><h3 class="section-title">二、事件详情</h3><p class="sub-title">（一）美国政府就转世问题正式表态，树立国际先例。</p><p>一是美国国务院在声明中明确援引"党国势力"（Party-State）表述，将宗教领袖认定定性为纯粹宗教事务，为境外势力今后在国际场合援引美国官方立场提供了背书依据。二是声明要求我方立即释放根敦确吉尼玛及其家人，并停止对藏传佛教徒的迫害，构成对我内政的直接干涉。三是此次表态与欧洲议会此前于4月28日通过谴责《民族团结进步促进法》的动议相互呼应，使西方国家在涉藏宗教议题上逐渐形成协调一致的外交立场。</p><p class="sub-title">（二）藏维联合游说在美升级，推动独立诉求显性化。</p><p>一是"西藏独立爱国运动"与多个维吾尔团体于5月15日在美国国会联合游说，拜会六位参议员和二十多位众议员，要求支持西藏独立并承认"西藏独立日"，突破了以往"中间道路"框架下的自治诉求底线。二是维吾尔代表萨利赫·胡达亚尔明确将中国定性为"殖民帝国"，通过与新疆议题捆绑，试图在更宽泛的国际人权话语体系中实现涉藏议题的增信借势。三是藏人团体提交请愿书，要求国会支持西藏独立并保护宗教、文化、语言和环境，将多类诉求打包推进，意图影响美国涉藏立法走向。</p><h3 class="section-title">三、分析研判</h3><p class="sub-title">（一）多节点共振形成阶段性舆论峰值。</p><p>一是班禅喇嘛失踪31周年、萨嘎达瓦宗教圣月与美国国务院声明三者在时间上高度重叠，短期内集中放大了境外涉藏议题的能见度。二是境外媒体通过境内管控事件与境外政治活动的交叉报道，构建出"境内持续受压—境外持续抗争"的完整叙事链条，增强了国际受众的信息接收黏性。三是《西藏之声》报道覆盖达兰萨拉、纽约、多伦多、布鲁塞尔等多地，显示境外涉藏舆论的地理覆盖面正在系统性扩展。</p><p class="sub-title">（二）美国人权议题"降温"背后的结构性隐患不容忽视。</p><p>一是据《西藏之声》报道，川普访华期间人权议题低调处理，藏人行政中央司政坦承人权议题的优先地位正在下降，这一判断来自境外渠道，折射出境外势力对美国涉藏政策走向的担忧与调适意愿。二是尽管美中峰会的人权表态趋于保守，但美国国务院就班禅喇嘛问题单独发表官方声明，显示对藏政策的机制性表态仍在维系，并未随外交气候整体收缩。三是欧盟同期向尼泊尔施压，要求保障流亡藏人的公民权利与文化权利，并将相关议题列入正式双边机制，形成与美国的梯次接力，弥补了美方短期内表态趋缓留下的空间。</p><p>分析认为，上述事件为境外势力对我进行宗教领域舆论施压，恐将对我宗教事务管辖合法性的国际认知及藏区社会稳定产生持续影响，由班禅喇嘛转世认定争议及境内宗教管控政策引发，下一步，我单位将持续关注美国国务院涉藏表态及欧洲议会相关立法动向，对藏维联合游说活动进一步研判，加强对萨嘎达瓦节点期间境外舆论峰值规律的趋势分析。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">新闻报道汇总</div>
+      
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">美国敦促中共释放班禅喇嘛，重申反对"党国"干涉西藏宗教领袖转世事务</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月19日报道】西藏第十一世班禅喇嘛根敦确吉尼玛被强迫失踪31周年之际，美国国务院发表声明，再次敦促中国政府立即公开其下落并释放其本人及家人，同时强调藏传佛教徒应有权依照自身传统自主决定宗教领袖转世事务，反对任何"党国势力"干预西藏宗教自由。
+5月18日，美国国务院发言人办公室发表题为《纪念班禅喇嘛失踪31周年》的官方声明。美国国务院发言人汤米·皮戈特（Tommy Pigott）在声明中对被强迫失踪长达31年的第十一世班禅喇嘛根敦确吉尼玛表达了持续关切，并再次强烈敦促中国政府立即公开其下落，释放其本人及家人。
+1995年5月14日，年仅六岁的根敦确吉尼玛被达赖喇嘛尊者正式认定为第十一世班禅喇嘛。然而，在获得认定的仅仅三天后，中国当局便将其带走。自此，根敦确吉尼玛及其家人从公众视野中彻底消失，迄今已长达三十一年，他也成为了世界上最年轻、且失踪时间最长的政治犯之一。
+美国国务院在声明中明确指出，美方坚定不移地支持西藏人民维护其独特的宗教、文化和语言认同。声明说，中国当局应立即释放根敦确吉尼玛及其家人，并停止因宗教信仰而迫害西藏人或其他群体。
+声明进一步阐明了美国在西藏宗教领袖转世问题上的原则立场。美方重申，藏传佛教徒与世界上所有的信仰群体一样，应当拥有完全的自主权，能够按照其自身的传统和历史仪轨来选择、教育和尊奉其宗教领袖。
+美国国务院指出，包括达赖喇嘛和班禅喇嘛在内的西藏精神领袖的确认与产生，属于纯粹的宗教事务，应当由藏传佛教信徒自主决定，而不应受到中共及其中央政府等任何外部"党国势力"（Party-State）的干涉。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">藏人和维吾尔团体呼吁美国支持西藏与东突厥斯坦恢复独立</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月19日报道】藏人与维吾尔团体近日在美国国会举办游说活动，会见数十位国会议员，呼吁美国支持西藏和东突厥斯坦恢复独立。藏人团体代表丹增旺堆说，西藏在历史上是一个独立且拥有主权的国家，拥有自己的政府、语言、文化、宗教、货币和民族认同。他敦促国会议员支持恢复西藏独立。
+西藏和维吾尔团体的代表于5月15日在美国国会联合举行了游说活动，呼吁美国支持西藏和东突厥斯坦独立。
+据东突厥斯坦民族运动团体（ETNM）发布的消息，"西藏独立爱国运动"（Tibetan Patriots for Independence）的代表与来自"东突厥斯坦流亡政府"、"东突厥斯坦民族运动"以及"东突厥斯坦民族基金"的代表一道，拜会了六位美国参议员和二十多位众议员。
+这场为期一天的游说活动在国会参议院办公大楼举行。西藏和维吾尔团体的代表在会上呼吁美国国会议员们支持恢复西藏与东突厥斯坦的独立。
+藏人团体代表丹增旺堆说，在历史上，西藏是一个独立且拥有主权的国家，拥有自己的政府、语言、文化、宗教、货币和民族认同。他敦促国会议员支持自由、人权、宗教自由以及恢复西藏的独立。
+维吾尔团队代表萨利赫·胡达亚尔（Salih Hudayar）在讲话中表示，中国应该被视为一个"殖民帝国"，而不是一个民族国家。他认为，国际社会仅关注人权不足以解决中国对东突厥斯坦和西藏的占领问题。
+藏人团体同时向议员们提交了一份请愿书，敦促他们支持西藏独立、呼吁美国官方承认2月13日为"西藏独立日"、反对中国的同化政策，并保护西藏的宗教、文化、语言和环境。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">中共在"萨嘎达瓦"期间对西藏果洛门堂寺实施严格管控</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月19日报道】藏历"萨嘎达瓦"圣月期间，中共当局对西藏果洛州久治县门堂寺实施严格管控，派驻警员进驻寺院，并严禁当地僧俗传播该寺高僧多杰旦仁波切失踪的相关消息。此外，西藏迪庆地区逾百名藏人民众于本月16日和平抗议当地相关部门长期违规关闸蓄水，致使周边村庄道路被淹、农田绝收。
+藏历4月是西藏传统宗教节庆"萨嘎达瓦"，被视为佛祖释迦牟尼诞生、成道、涅槃的殊胜月份。然而，值此圣月之际，中共当局却对西藏果洛州久治县门堂寺实施严格管控。
+据消息人士向西藏之声透露，当局已派驻警员进驻门堂寺，规定除本寺僧侣外，任何人不得在寺内长期居住。与此同时，当局严禁任何人传播有关门堂寺高僧多杰旦仁波切失踪的相关消息，并警告称一旦发现对外泄露，将予以惩处。
+门堂寺高僧多杰旦仁波切是西藏果洛州久治县多杰旦民族职业技能学校负责人，疑因长期致力保护与传承西藏文化而引发中共当局不满，于去年遭警方拘押，此后下落不明。
+此外，本月16日，西藏迪庆地区逾百名藏人民众聚集于纳帕海水闸附近，就当地相关部门长期违规关闸蓄水一事发起和平抗议。抗议民众反映，相关部门的蓄水行为已持续约两年，官方给出的理由为"水质检测"。长期蓄水已造成当地道路被淹、房屋受浸、农田颗粒无收、牲畜大量死亡，民众损失极为惨重。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">欧盟联合国际伙伴敦促尼泊尔改善流亡藏人处境</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月19日报道】近日，欧盟联合国际伙伴正式向尼泊尔施压，要求当局切实保障流亡藏人的基本公民权利与文化权利，包括保障藏人在不受干预和限制的情况下，和平纪念重要宗教与文化节日的自由。此外，第十一世班禅喇嘛根敦确吉尼玛遭中共绑架失踪满31周年之际，美国政府发表声明，要求中共当局立即释放其及家人，并停止对藏传佛教徒及其他宗教群体的迫害。
+欧盟与其他"难民核心小组"（Refugee Core Group）成员联合敦促尼泊尔政府，解决该国流亡藏人长期面临的困境。
+藏人行政中央官网于本月18日发布了这份联署呼吁声明。声明指出，目前许多生活在尼泊尔的流亡藏人仍处于无证件状态。为此，欧盟呼吁尼泊尔当局为他们签发个人账户号码（PAN）卡。
+在经济融合之外，欧盟还呼吁尼泊尔切实保障流亡藏人的基本公民权利与文化权利，包括保障藏人在不受干预和限制的情况下，和平纪念重要宗教与文化节日的自由。
+声明指出，上述建议已于2025年底正式提交尼泊尔内政部，目前仍是欧盟的重要外交优先议题。欧盟对外行动署也已确认将相关问题列入2026年下半年欧盟与尼泊尔年度联合委员会会议议程。
+欧洲议会支持西藏小组联合主席戴纽斯·扎里马斯（Dainius Zalimas）与汉内斯·海德（Hannes Heide）就流亡藏人在尼泊尔所处困境，向欧盟贸易委员马罗斯·塞夫科维奇（Maros Šefčovič）提出正式议会质询后，促成欧盟发布本次声明。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">西藏索县赞丹寺发生焚烧中国国旗事件后当地藏人遭当局骚扰</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月18日报道】西藏索县赞丹寺上月发生焚烧中国国旗事件，并出现"西藏独立"标语。当局随后拘捕了该寺僧人格顿扎巴等人，同时逐一盘查当地藏人。
+据消息人士向西藏之声透露，上个月西藏索县赞丹寺发生焚烧中国国旗事件，同时出现"西藏独立"标语。当局随后逮捕了该寺僧人格顿扎巴等人，并开始严密管控整个赞丹寺，来自其他地区的访客也受到严格盘问。
+目前正值当地的冬虫夏草采挖季节，当局对采挖虫草的藏人也进行严格核查，重点审查是否存在政治问题。消息人士指出，以往牧区民众采挖虫草时，当局并不会实施管控措施，买卖虫草也无需向当地申请许可。然而从今年起，地方政府大幅加强管控，无故盘问的情况日益增多。
+据介绍，近年来西藏那曲索县赞丹寺有多名僧人遭捕。其中，遭警方传唤与拘留的僧人曲英噶旦、南杰次城等人，被指在短信中向朋友及寺院管理人员转发了一篇"反对中国政府"的文章。此外，索县赤多乡扎尔玛寺的僧人仓扬嘉措、次旺、阿次、坚赞等人也无故遭中共当局拘押。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">达赖喇嘛主持"萨嘎达瓦亿遍六字真言持诵法会"</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月18日报道】达赖喇嘛尊者于昨天（藏历4月初一）在达兰萨拉大乘法苑主持了"亿遍六字真言持诵法会"。藏历4月是西藏传统宗教节日"萨嘎达瓦"，被藏传佛教信众视为是佛祖释迦牟尼诞生、成佛、涅槃的殊胜月份。法会主办方表示，"亿遍六字真言持诵法会"主要是为了祈祷达赖喇嘛尊者长久住世，西藏早日迎来自由，同时也祈祷世界和平。
+西藏人民至高无上的领袖达赖喇嘛尊者于藏历4月初一，按照惯例在大乘法苑主持了"亿遍六字真言持诵法会"，上千僧俗信众参加。
+"亿遍六字真言持诵法会"为期一周，通常都会在藏历4月初一至初七举行，在此期间，达兰萨拉僧俗民众将会一同持诵亿遍的六字真言，以纪念这一殊胜的月份。
+印北朗杰寺住持格西洛桑萨丹在接受西藏之声采访时表示，今天是萨嘎达瓦初一，"亿遍六字真言持诵法会"主要是为了祈祷达赖喇嘛尊者长久住世，所愿之事皆能如愿，西藏早日迎来自由，境内外藏人能够早日团圆，同时也祈祷世界和平。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">美中首脑峰会结束，人权议题低调处理引发外界关注</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月18日报道】美国总统川普近日对中国进行了国事访问，谈及多项内容，包括贸易、安全与地缘政治竞争等议题，但人权议题不再被优先提及。藏人行政中央司政表示，尽管人权议题似乎不是此次峰会的主要关注点，但美国目前对西藏议题的立场呈现的仍是正面。
+美国总统川普近日在北京与中国国家主席习近平会晤期间，对中国人权问题采取了低调态度，引发外界关注。英国媒体《卫报》分析认为，这标志着美国对中国的外交重点正在发生明显变化。
+川普在启程前曾表示，会向习近平提及香港民主派人士黎智英案件，但在结束访问回国时又称此事"很棘手"，并以美国前联邦调查局局长科米（Comey）作类比，淡化外界期待。
+与历届美国政府相比，此届政府在人权问题上的公开施压明显减少。过去，无论是美国前总统小布什还是奥巴马，都曾在访中期间公开谈及宗教自由、西藏及异见人士等议题，并对中国维权人士表达支持。
+分析认为，美中关系如今更聚焦贸易、安全与地缘政治竞争，人权议题的重要性正在下降，这也反映出中国国际影响力增强以及美国外交政策方向的调整。
+藏人行政中央司政边巴次仁在"川习会"期间向本台表示，当前由于世界处于动荡时期，人权议题的优先地位正在下降。司政还表示，尽管此次峰会的主要关注点不在于人权议题上，但从整体美国对西藏议题的态度来看，美国目前对西藏问题的立场依然呈现的是正面。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">流亡藏人纪念班禅喇嘛遭中共绑架失踪31周年：不获释放、绝不停歇</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月18日报道】5月17日，是第十一世班禅喇嘛根敦确吉尼玛遭中共当局强行绑架失踪31周年。世界各地流亡藏人纷纷以抗议、烛光游行及展览等多种形式，呼吁国际社会施压中共，促使北京立即释放班禅喇嘛。
+第十一世班禅喇嘛根敦确吉尼玛于1989年4月25日出生在西藏那曲。1995年5月14日，根敦确吉尼玛被达赖喇嘛尊者认证为第十世班禅喇嘛的转世灵童。同年5月17日，年仅6岁的根敦确吉尼玛与其家属一同遭中共当局绑架后失踪。在过去31年中，中共当局一直拒绝透露有关班禅喇嘛的任何信息。
+昨天（5月17日），班禅喇嘛遭中共绑架失踪满31周年之际，流亡藏人在世界各地举办各种形式的活动，要求中共释放班禅喇嘛。
+流亡藏人团体"西藏青年会"在印北达兰萨拉举办抗议活动，并发表声明要求中共交代十一世班禅喇嘛根敦确吉尼玛的下落。西藏青年会副主席扎西达杰在活动上致辞表示，尽管班禅仁波切遭中共当局绑架失踪已有31年，但西藏青年会与各方始终满怀希望，誓言在班禅仁波切获释之前、在中共就其下落及现状作出公开透明的说明之前，将坚定不移地持续开展营救行动。
+除了西藏青年会以外，西藏妇女会也于5月17日在印北达兰萨拉举办烛光游行活动，以纪念班禅喇嘛失踪31周年。此外，西藏青年会纽约与新泽西分会于当地时间5月17日，在纽约联合国总部大楼前举行了班禅喇嘛失踪31周年纪念活动，呼吁联合国关注班禅喇嘛的遭遇。流亡藏人在加拿大多伦多中共领事馆前也举行了抗议活动，要求中共立即释放班禅喇嘛。</div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="2026-05-19.html" class="btn btn-outline">← 前一天</a>
+        <a href="../index.html" class="btn btn-primary">返回首页</a>
+        <a href="2026-05-21.html" class="btn btn-outline">后一天 →</a>
+    </div>
+</div>
+
+</body>
+</html>

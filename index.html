@@ -5,282 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>境外涉藏信息监测平台</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
-            --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
-            --green:#10b981;--green-light:#d1fae5;
-            --amber:#f59e0b;--amber-light:#fef3c7;
-            --red:#ef4444;--red-light:#fee2e2;
-            --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
-            --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
-            --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
-            --gray-800:#1e293b;--gray-900:#0f172a;
-            --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
-            --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
-            --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
-        }
-        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
-        .top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
-        .top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
-        .top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
-        .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .layout{display:flex;min-height:calc(100vh - 56px)}
-        .sidebar{width:260px;background:var(--white);border-right:1px solid var(--gray-200);overflow-y:auto;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px)}
-        .sidebar-section{padding:16px 0}
-        .sidebar-label{padding:0 20px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:8px}
-        .sidebar-item{padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-600);transition:all .15s;border-left:3px solid transparent}
-        .sidebar-item:hover{background:var(--gray-50);color:var(--gray-800)}
-        .sidebar-item.active{background:var(--accent-light);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-        .sidebar-item .badge{margin-left:auto;font-size:.7rem;padding:2px 8px;border-radius:10px;background:var(--gray-200);color:var(--gray-500)}
-        .sidebar-item.active .badge{background:var(--accent);color:var(--white)}
-        .sidebar-item .icon{width:20px;text-align:center;font-size:1rem}
-        .main{flex:1;overflow-y:auto;padding:24px 32px}
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-        .stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
-        .stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
-        .stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
-        .stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
-        .stat-card.accent .stat-value{color:var(--accent)}
-        .stat-card.green .stat-value{color:var(--green)}
-        .stat-card.amber .stat-value{color:var(--amber)}
-        .stat-card.red .stat-value{color:var(--red)}
-        .panel{display:none}
-        .panel.active{display:block}
-        .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-        .panel-title{font-size:1.1rem;font-weight:600;color:var(--gray-800)}
-        .btn{padding:6px 14px;border-radius:6px;font-size:.8rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
-        .btn-primary{background:var(--accent);color:var(--white)}
-        .btn-primary:hover{background:var(--accent-hover)}
-        .btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
-        .btn-outline:hover{background:var(--gray-50)}
-        .report-paper{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:48px 56px;box-shadow:var(--shadow-md);max-width:860px;line-height:2;font-size:.95rem}
-        .report-paper p{margin-bottom:12px;text-indent:2em}
-        .report-paper p.no-indent{text-indent:0}
-        .report-paper h3{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent)}
-        .report-paper .highlight{background:var(--amber-light);padding:2px 6px;border-radius:3px;font-weight:500}
-        .news-list{display:flex;flex-direction:column;gap:16px}
-        .news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s}
-        .news-card:hover{box-shadow:var(--shadow-lg)}
-        .news-card-header{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
-        .news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800)}
-        .news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400)}
-        .news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.8;color:var(--gray-700)}
-        .source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
-        .source-tag.tibet{background:#dbeafe;color:#1d4ed8}
-        .source-tag.vot{background:#fce7f3;color:#be185d}
-        .search-bar{display:flex;gap:8px;margin-bottom:20px}
-        .search-bar input{flex:1;padding:8px 14px;border:1px solid var(--gray-300);border-radius:6px;font-size:.875rem;outline:none;transition:border .15s}
-        .search-bar input:focus{border-color:var(--accent)}
-        @media print{
-            .top-header,.sidebar,.stats-row,.panel-header,.search-bar,.no-print{display:none!important}
-            .main{padding:0!important}
-            .report-paper{border:none;box-shadow:none;padding:20px;max-width:100%}
-            .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
-        }
-        @media(max-width:768px){
-            .sidebar{display:none}
-            .stats-row{grid-template-columns:repeat(2,1fr)}
-            .report-paper{padding:24px 20px}
-            .main{padding:16px}
-        }
-    </style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+
+/* Stats Row */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+
+/* Section */
+.section{margin-bottom:28px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:1.1rem;font-weight:600;color:var(--gray-800);display:flex;align-items:center;gap:8px}
+.section-title .icon{font-size:1.2rem}
+
+/* Latest Report Highlight */
+.latest-highlight{background:var(--white);border:2px solid var(--accent);border-radius:10px;padding:24px 28px;box-shadow:var(--shadow-md);margin-bottom:28px;position:relative;overflow:hidden}
+.latest-highlight::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--green))}
+.latest-highlight .lh-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.latest-highlight .lh-date{font-size:1.2rem;font-weight:700;color:var(--accent)}
+.latest-highlight .lh-badge{font-size:.7rem;padding:4px 12px;border-radius:20px;background:var(--accent-light);color:var(--accent);font-weight:600}
+.latest-highlight .lh-stats{display:flex;gap:20px;margin-bottom:14px;font-size:.85rem;color:var(--gray-500)}
+.latest-highlight .lh-stats span{display:flex;align-items:center;gap:4px}
+.latest-highlight .lh-summary{font-size:.9rem;line-height:1.8;color:var(--gray-700);margin-bottom:16px}
+.latest-highlight .lh-actions{display:flex;gap:10px}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.btn-sm{padding:5px 12px;font-size:.8rem}
+
+/* Report List */
+.report-list{display:flex;flex-direction:column;gap:10px}
+.report-item{display:flex;align-items:center;padding:16px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:all .2s;text-decoration:none;color:inherit}
+.report-item:hover{box-shadow:var(--shadow-md);border-color:var(--accent);transform:translateY(-1px);text-decoration:none;color:inherit}
+.report-item.latest-item{border-left:4px solid var(--accent)}
+.report-item .ri-date{font-size:1rem;font-weight:700;color:var(--accent);min-width:110px;flex-shrink:0}
+.report-item .ri-info{flex:1;padding:0 16px}
+.report-item .ri-meta{font-size:.75rem;color:var(--gray-400);margin-top:2px}
+.report-item .ri-arrow{font-size:1.2rem;color:var(--gray-300);flex-shrink:0}
+.report-item:hover .ri-arrow{color:var(--accent)}
+
+/* Source tags in list */
+.source-tags{display:flex;gap:6px;margin-top:4px}
+.source-tags .st{font-size:.65rem;padding:2px 8px;border-radius:4px;font-weight:500}
+.source-tags .st.t{background:#dbeafe;color:#1d4ed8}
+.source-tags .st.v{background:#fce7f3;color:#be185d}
+
+/* Threat indicator */
+.threat-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.threat-high{background:var(--red)}
+.threat-medium{background:var(--amber)}
+.threat-low{background:var(--green)}
+
+@media print{
+    .top-header{display:none!important}
+    .container{padding:0!important}
+    .report-item{box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+    .latest-highlight .lh-header{flex-direction:column;align-items:flex-start}
+}
+</style>
 </head>
 <body>
 
 <div class="top-header">
     <h1>境外涉藏信息监测平台</h1>
     <div class="meta">
-        <span>        <span class="live-dot"></span> 数据已同步</span>
-        <span>更新时间: 2026-05-26 09:53</span>
+        <span><span class="live-dot"></span> 数据已同步</span>
+        <span>更新时间: 2026-05-26 10:18</span>
     </div>
 </div>
 
-<div class="layout">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-section">
-            <div class="sidebar-label">报告中心</div>
-            <div class="sidebar-item active" onclick="switchPanel('report',this)">
-                <span class="icon">&#128196;</span> 分析研判日报 <span class="badge">05-26</span>
-            </div>
-            <div class="sidebar-item" onclick="switchPanel('news',this)">
-                <span class="icon">&#128240;</span> 新闻报道汇总 <span class="badge">6</span>
-            </div>
+<div class="container">
+
+    <!-- Overview Stats -->
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
         </div>
-        <div class="sidebar-section" style="border-top:1px solid var(--gray-200)">
-            <div class="sidebar-label">数据源</div>
-            <div class="sidebar-item" onclick="switchPanel('news',this);filterBySource('tibet.com')">
-                <span class="icon">&#127760;</span> tibet.com <span class="badge">3</span>
-            </div>
-            <div class="sidebar-item" onclick="switchPanel('news',this);filterBySource('cn.vot.org')">
-                <span class="icon">&#127760;</span> cn.vot.org <span class="badge">3</span>
-            </div>
+        <div class="stat-card green">
+            <div class="stat-label">累计收录报道</div>
+            <div class="stat-value">39</div>
+            <div class="stat-sub">6 期日报汇总</div>
         </div>
-        <div class="sidebar-section" style="border-top:1px solid var(--gray-200)">
-            <div class="sidebar-label">快捷操作</div>
-            <div class="sidebar-item" onclick="window.print()">
-                <span class="icon">&#128424;</span> 打印当前页
-            </div>
+        <div class="stat-card amber">
+            <div class="stat-label">已生成日报</div>
+            <div class="stat-value">6</div>
+            <div class="stat-sub">2026-05-18 至今</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">当前威胁等级</div>
+            <div class="stat-value">中高</div>
+            <div class="stat-sub">外交立法双轨施压</div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main">
-
-        <!-- Panel: Analysis Report -->
-        <div id="panel-report" class="panel active">
-            <div class="stats-row">
-                <div class="stat-card accent">
-                    <div class="stat-label">监测网站数</div>
-                    <div class="stat-value">2</div>
-                    <div class="stat-sub">tibet.com / cn.vot.org</div>
-                </div>
-                <div class="stat-card green">
-                    <div class="stat-label">收录报道数</div>
-                    <div class="stat-value">6</div>
-                    <div class="stat-sub">2026-05-24 ~ 2026-05-26</div>
-                </div>
-                <div class="stat-card amber">
-                    <div class="stat-label">研判维度</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-sub">美涉藏立法 / 对美外交 / 转世权博弈</div>
-                </div>
-                <div class="stat-card red">
-                    <div class="stat-label">威胁等级</div>
-                    <div class="stat-value">中高</div>
-                    <div class="stat-sub">外交立法双轨施压</div>
-                </div>
-            </div>
-
-            <div class="panel-header">
-                <div class="panel-title">深度研判分析报告</div>
-                <button class="btn btn-outline no-print" onclick="window.print()">&#128424; 打印报告</button>
-            </div>
-
-            <div class="report-paper">
-<p>2026年5月26日，针对涉藏关键字"藏人行政中央"的信息，经过全网搜索梳理，参考2个网站（tibet.com、cn.vot.org），现将有关情况报告如下：</p>
-<p>近三日，藏人行政中央密集开展对美外交活动，美国会涉藏立法进程加速推进，达赖喇嘛转世问题再度成为中外博弈焦点。两大涉藏来源共刊载6篇相关报道，集中围绕美印外交互动、涉藏法案推进及转世权争议展开。</p>
-<h3>一、基本概述</h3>
-<p>2026年5月21日至25日，涉藏动态集中呈现在三个方向。一是藏人行政中央司政边巴次仁应美国驻印大使馆邀请出席美国独立250周年招待会，与美印高层同场互动。二是美国会众议院外交事务委员会主席麦克考与众议员麦戈文于5月21日提出涉藏法案，要求国务院推动对藏人行政中央的承认。三是中国驻印度大使馆发言人于静于5月23日在社交媒体平台X发文，警告印度不要干涉达赖喇嘛转世问题，称此属于中国"内政"。</p>
-<h3>（一）美国涉藏立法与外交联动加速</h3>
-<p>一是美国会提出涉藏承认法案。5月21日，麦克·麦克考与吉姆·麦戈文共同提出法案，要求国务院推动对藏人行政中央的承认，目前已提交至众议院外交事务委员会审议。该提案延续了2024年《促进解决西藏-中国争端法案》的政策方向。</p>
-<p>二是美方高规格邀请藏人行政中央出席外交活动。5月24日，美国国务卿马可·卢比奥、印度外长苏杰生出席的新德里美国独立250周年招待会上，边巴次仁受邀出席。据西藏之声援引印度媒体WION分析，此举被解读为美国在美中关系复杂背景下持续关注西藏议题的信号。</p>
-<h3>（二）达赖喇嘛转世争议再起</h3>
-<p>一是中方警告印度不得干预转世事务。中国驻印使馆发言人于静5月23日在X平台发文，强调转世须经中国中央政府批准，称藏人行政中央"无权就转世问题作出主张"，并要求印度不为"西藏独立"活动提供平台。</p>
-<p>二是达赖喇嘛方面坚持独立转世机制。达赖喇嘛尊者去年7月已声明转世体系将延续，认证工作由其信托基金董事会负责。近年来多国及佛教团体亦敦促中共不要干涉转世事务。</p>
-<h3>二、分析研判</h3>
-<h3>（一）美国涉藏政策进入立法推进阶段</h3>
-<p>一是此次法案提出标志着美方涉藏议题从声明层面转向制度性推动，若法案进入全院表决，将对中美关系及涉藏议题产生实质性影响。</p>
-<p>二是美方在接待藏人行政中央高层出席官方活动的同时推进立法，形成外交与立法双轨施压态势，意在提升涉藏议题在美中战略竞争中的权重。</p>
-<h3>（二）转世权博弈持续升温</h3>
-<p>值得注意的是，中方选择在美印涉藏外交活动密集期间通过社交媒体释放强硬立场，时机敏感。达赖喇嘛转世问题已超越宗教范畴，成为中美印多方地缘博弈的核心议题之一。</p>
-<p>分析认为，近三日涉藏动态呈现美方"外交+立法"双轨推进与中方社交媒体外交回应的博弈格局，达赖喇嘛转世权争议正在加速国际化。下一步，我单位将持续跟踪美国会涉藏法案审议进展，关注美印涉藏外交互动升级态势，加强对达赖喇嘛转世议题多方博弈走向的研判分析。</p>
-</div>
+    <!-- Latest Report Highlight -->
+    <div class="latest-highlight">
+        <div class="lh-header">
+            <span class="lh-date">2026-05-26</span>
+            <span class="lh-badge">LATEST</span>
         </div>
-
-        <!-- Panel: News Summary -->
-        <div id="panel-news" class="panel">
-            <div class="panel-header">
-                <div class="panel-title">新闻报道汇总</div>
-                <div style="display:flex;gap:8px" class="no-print">
-                    <button class="btn btn-outline" onclick="filterBySource('all')">全部</button>
-                    <button class="btn btn-outline" onclick="filterBySource('tibet.com')">tibet.com</button>
-                    <button class="btn btn-outline" onclick="filterBySource('cn.vot.org')">cn.vot.org</button>
-                </div>
-            </div>
-
-            <div class="search-bar no-print">
-                <input type="text" id="searchInput" placeholder="输入关键词搜索报道内容..." oninput="searchNews(this.value)">
-            </div>
-
-            <div class="news-list">
-<div class="news-card" data-source="tibet.com" data-title="司政与外交部长在新德里出席美国独立250周年招待会">
-  <div class="news-card-header">
-    <div class="news-card-title">司政与外交部长在新德里出席美国独立 250 周年招待会</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">应美国驻印度大使塞尔吉奥・戈尔的邀请，藏人行政中央司政边巴次仁、外交与新闻部部长诺增卓玛于 5 月 24 日同来自多个国家的代表一道出席了在新德里举行的「自由 250：独立日招待会」。美国驻印度大使馆于当天在印度首都新德里举办庆祝美国独立 250 周年招待会。期间，美国国务卿马可·卢比奥（Marco Rubio）、印度外交部长苏杰生（Subrahmanyam Jaishankar）、美国驻印度大使塞尔吉奥·戈尔（Sergio Gor）分别发表讲话。此外，多国驻印使馆代表等嘉宾共同出席了活动，印度知名音乐家A.R. 拉赫曼也于现场带来音乐演出。藏人行政中央驻新德里办事处代表晋炯乃与秘书长扎西德吉也陪同司政及部长出席了此次活动。</div>
-</div>
-<div class="news-card" data-source="tibet.com" data-title="司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世">
-  <div class="news-card-header">
-    <div class="news-card-title">司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">藏人行政中央司政边巴次仁于 5 月 22 日致函悼念美国前国会议员巴尼·弗兰克辞世。巴尼·弗兰克长期坚定支持图伯特自由事业，是图博人民真正的挚友。他于美国缅因州逝世，享年 86 岁。司政在致给逝者遗孀吉姆·雷迪（Jim Ready）的吊唁信中写道："获悉您的丈夫、前众议员巴尼·弗兰克逝世的消息，我们深感悲痛。我谨代表藏人行政中央与全体藏人，向您及您的亲人致以最诚挚的哀悼。"在回顾弗兰克议员生前对图伯特（西藏）事业的长期支持时，司政指出，他在藏人难民安置美国的过程中发挥了至关重要的作用。他因发起并推动《1990 年移民法案》中的相关条款而将永远被人们铭记，该条款使 1000 名藏人难民得以在美国开启新生活并建立家园。司政进一步写道，正是得益于弗兰克议员富有远见的慷慨支持，许多藏人家庭才能够让子女接受优质教育，送他们进入顶尖大学深造，并赋能他们实现自立。</div>
-</div>
-<div class="news-card" data-source="tibet.com" data-title="驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节">
-  <div class="news-card-header">
-    <div class="news-card-title">驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节</div>
-    <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">台湾玄奘大学与新竹市佛教会共同主办的「浴佛・感恩・传爱520—佛诞国际文化节」于 5 月 20 日在玄奘大学隆重登场，达赖喇嘛西藏宗教基金会暨藏人行政中央驻台湾代表格桑坚参与佛学导师丹增南卓仁波切应邀出席并致词祝贺。此次盛会汇聚了来自各地的信众，涵盖汉传、藏传及南传三大佛教传统的僧伽代表，以及当地政府和相关机构的代表。此外，玄奘大学校长、副校长、全体教职员工及学生也共同出席了活动。活动内容包括传统的释迦牟尼佛像浴佛仪式以及多场精彩的文化表演。期间，台湾国际藏传佛教研究会会长堪布慈旺仁珍、格西拉让巴哈欣仁波切，以及来自藏传佛教不同教派的 50 多名僧众也齐聚一堂。堪布慈旺仁珍用中文致欢迎词。现场还通过神圣的金刚宝舞表演和诵经祈祷，生动展现了藏传佛教的独特文化内涵。玄奘大学是台湾藏传佛教僧众深造的重要高等学府之一，校内设有藏传佛教相关课程。此外，该校藏传佛教研究中心每年都会与藏人行政中央驻台湾办事处及该校藏传佛教研究中心合作举办相关论坛，共同探讨藏传佛教在台湾的发展现状，并致力于推动相关学术与宗教研究的发展。</div>
-</div>
-<div class="news-card" data-source="cn.vot.org" data-title="藏人司政受邀出席美驻印大使馆美国独立日250周年招待会">
-  <div class="news-card-header">
-    <div class="news-card-title">藏人司政受邀出席美驻印大使馆"美国独立日"250周年招待会</div>
-    <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">【西藏之声2026年5月25日报道】藏人行政中央司政边巴次仁受邀出席美国驻新德里大使馆举行的美国独立日250周年招待会，引发外界对美方在西藏议题上外交立场的关注。此次活动有美国国务卿马可·鲁比奥及印度外交部长苏杰生等出席，被认为具有一定意义。藏人行政中央司政边巴次仁于5月24日受邀出席美国驻新德里大使馆举行的美国独立日250周年招待会。正在印度访问的美国国务卿马可·鲁比奥（Marco Rubio）以及印度外交部长苏杰生（S. Jaishankar）等也出席了该活动。据印度媒体WION报道，美国方面此次邀请边巴次仁出席高规格外交活动，被外界解读为在当前美中关系复杂背景下，美国对西藏议题持续保持关注与一定程度外交支持的信号。报道指出，尽管美国总统川普近期对华政策互动频繁，美中关系有所升温，但华盛顿在西藏问题上的基本立场并未发生明显变化，仍通过多种外交与立法渠道表达关切。对于自1959年达赖喇嘛尊者流亡以来主要居住在印度的藏人社区而言，此次受邀被认为具有象征意义，也体现出其在国际场合中的能见度。司政边巴次仁经常提到美国国会及政府通过相关立法持续关注西藏议题，包括宗教自由保障以及反对中国干预达赖喇嘛尊者转世事务等内容。报道还提到，美国对西藏问题的政策框架可追溯至多项立法与政策文件，其中包括《西藏政策与支持法案》（Tibet Policy and Support Act），强调国际社会与藏人行政中央的接触，以及对西藏人权与宗教状况的关注。分析认为，在中国对涉藏议题高度敏感的背景下，此类外交互动往往会引发北京方面的反应。中国政府长期将流亡藏人政府的国际接触视为对其内政的干涉，并在宗教与历史叙事，尤其是达赖喇嘛尊者转世问题上保持高度管控。报道表示，对于流亡藏人政治运动而言，此次出席活动被视为在国际关注度波动之际的一次重要曝光，也为其在全球外交场域中提供了新的象征性平台。</div>
-</div>
-<div class="news-card" data-source="cn.vot.org" data-title="美国提出涉西藏法案要求国务院推动对藏人行政中央的承认">
-  <div class="news-card-header">
-    <div class="news-card-title">美国提出涉西藏法案，要求国务院推动对藏人行政中央的承认</div>
-    <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">【西藏之声2026年5月25日报道】美国国会众议院外交事务委员会主席麦克考与众议员麦戈文在众议院共同提出一项决议，要求国务院推动对藏人行政中央的承认。该议案已被提交至众议院外交事务委员会审议。相关信息已发布于美国国会官网。美国国会众议院5月21日正式提出一项法案，内容要求国务院推动对藏人行政中央的承认。根据国会官网记录，该法案被正式提交至众议院，并随后转交众议院外交事务委员会审议，进入立法程序。该法案由国会众议院外交事务委员会主席麦克·麦克考（Michael T. McCaul）与众议员吉姆·麦戈文（Jim McGovern）提出。目前法案尚处于委员会审查阶段，后续是否进入全院表决仍有待进一步推进。该提案被视为美国国会涉藏议题立法进程中的最新动作之一。2024年，美国通过了《促进解决西藏-中国争端法案》，否定了西藏自古以来就是中国一部分的中共说法，将西藏议题仍未解决设为美国的官方立场与政策。</div>
-</div>
-<div class="news-card" data-source="cn.vot.org" data-title="中共警告印度不要干涉达赖喇嘛转世称此属于中国内政">
-  <div class="news-card-header">
-    <div class="news-card-title">中共警告印度不要干涉达赖喇嘛转世，称此属于中国"内政"</div>
-    <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
-  </div>
-  <div class="news-card-body">【西藏之声2026年5月25日报道】中共近日警告印度，不要干预达赖喇嘛尊者的转世问题，称此事属于中国"内政"。中国同时称，希望印度不要为支持"西藏独立"的活动提供平台。中国驻印度大使馆发言人于静于5月23日在社交媒体平台 X（原推特）上发表了上述立场。她称，达赖喇嘛的转世遵循"长期确立的宗教仪轨和历史传统"，几个世纪以来都需要中国中央政府的批准，并称现任第14世达赖喇嘛本人也是通过这一"既定程序"被认定的。她写道："达赖喇嘛转世问题纯属中国内政，不应受到外部干涉。"她还表示，"所谓藏人行政中央并未得到任何主权国家承认，其领导层既无代表西藏人民的合法性，也无权就转世问题作出主张。"该帖子还称，印度在涉藏问题上已有明确承诺，并希望印度继续履行这些承诺，不要为"西藏独立"活动提供任何平台，也不要干预达赖喇嘛转世问题。于静表示，这样的做法将有助于促进中印双边关系的整体稳定与建设性发展。达赖喇嘛尊者于去年7月2日发布公开声明宣布其转世体系将延续，并强调"寻找、认证转世之重任将由达赖喇嘛的喇章-噶丹颇章信托基金之董事会负责，除此机制以外，任谁皆不具备认证转世的正当性"。近年来，以美国为首的许多国家、非政府机构、佛教团体也先后敦促中共不要干涉达赖喇嘛尊者的转世事务。</div>
-</div>
-</div>
-            </div>
+        <div class="lh-stats">
+            <span>收录 6 篇报道</span>
+            <span>3 个研判维度</span>
+            <span><span class="threat-dot threat-medium"></span>威胁等级：中高</span>
         </div>
-
+        <div class="lh-summary">
+            藏人行政中央密集开展对美外交活动，美国会涉藏立法进程加速推进，达赖喇嘛转世问题再度成为中外博弈焦点。美方形成"外交+立法"双轨施压态势，中方通过社交媒体释放强硬立场。
+        </div>
+        <div class="lh-actions">
+            <a href="reports/2026-05-26.html" class="btn btn-primary">查看完整日报</a>
+            <a href="reports/2026-05-26.html" class="btn btn-outline" onclick="event.preventDefault();window.print()">&#128424; 打印</a>
+        </div>
     </div>
+
+    <!-- Historical Reports -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title"><span class="icon">&#128203;</span> 历史日报</div>
+            <span style="font-size:.8rem;color:var(--gray-400)">共 6 期 | 点击查看完整内容</span>
+        </div>
+        <div class="report-list">
+            <a href="reports/2026-05-25.html" class="report-item">
+                <div class="ri-date">2026-05-25</div>
+                <div class="ri-info">
+                    <div>涉藏信息监测日报 &mdash; 收录 5 篇报道</div>
+                    <div class="ri-meta">藏传佛教女性赋权研讨会 | 美印外交互动 | 青年赋权 | "十七条协议"新书</div>
+                    <div class="source-tags"><span class="st t">tibet.com: 1</span><span class="st v">cn.vot.org: 4</span></div>
+                </div>
+                <div class="ri-arrow">&rarr;</div>
+            </a>
+            <a href="reports/2026-05-22.html" class="report-item">
+                <div class="ri-date">2026-05-22</div>
+                <div class="ri-info">
+                    <div>涉藏信息监测日报 &mdash; 收录 10 篇报道</div>
+                    <div class="ri-meta">藏传佛教女性赋权 | 青年赋权研讨会 | 美国务卿鲁比奥访印 | "十七条协议"新书</div>
+                    <div class="source-tags"><span class="st t">tibet.com: 2</span><span class="st v">cn.vot.org: 8</span></div>
+                </div>
+                <div class="ri-arrow">&rarr;</div>
+            </a>
+            <a href="reports/2026-05-21.html" class="report-item">
+                <div class="ri-date">2026-05-21</div>
+                <div class="ri-info">
+                    <div>涉藏信息监测日报 &mdash; 收录 5 篇报道</div>
+                    <div class="ri-meta">藏人行政中央活动动态</div>
+                    <div class="source-tags"><span class="st t">tibet.com: 5</span></div>
+                </div>
+                <div class="ri-arrow">&rarr;</div>
+            </a>
+            <a href="reports/2026-05-20.html" class="report-item">
+                <div class="ri-date">2026-05-20</div>
+                <div class="ri-info">
+                    <div>涉藏信息监测日报 &mdash; 收录 8 篇报道</div>
+                    <div class="ri-meta">藏人行政中央活动动态</div>
+                    <div class="source-tags"><span class="st v">cn.vot.org: 8</span></div>
+                </div>
+                <div class="ri-arrow">&rarr;</div>
+            </a>
+            <a href="reports/2026-05-18.html" class="report-item">
+                <div class="ri-date">2026-05-18</div>
+                <div class="ri-info">
+                    <div>涉藏信息监测日报 &mdash; 收录 5 篇报道</div>
+                    <div class="ri-meta">藏人行政中央活动动态</div>
+                    <div class="source-tags"><span class="st v">cn.vot.org: 5</span></div>
+                </div>
+                <div class="ri-arrow">&rarr;</div>
+            </a>
+        </div>
+    </div>
+
 </div>
 
-<script>
-function switchPanel(name, el) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('panel-' + name).classList.add('active');
-    if (el) el.classList.add('active');
-}
-
-function filterBySource(source) {
-    const cards = document.querySelectorAll('.news-card');
-    cards.forEach(card => {
-        if (source === 'all' || card.dataset.source === source) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('panel-news').classList.add('active');
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    document.querySelectorAll('.sidebar-item')[1].classList.add('active');
-}
-
-function searchNews(keyword) {
-    const cards = document.querySelectorAll('.news-card');
-    keyword = keyword.toLowerCase();
-    cards.forEach(card => {
-        const title = (card.dataset.title || '').toLowerCase();
-        const body = card.querySelector('.news-card-body').textContent.toLowerCase();
-        if (title.includes(keyword) || body.includes(keyword)) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-</script>
 </body>
 </html>

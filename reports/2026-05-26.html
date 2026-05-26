@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监测日报 - 2026-05-26 | 境外涉藏信息监测平台</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --navy:#0f172a;--navy-light:#1e293b;--navy-mid:#334155;
+    --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#dbeafe;
+    --green:#10b981;--green-light:#d1fae5;
+    --amber:#f59e0b;--amber-light:#fef3c7;
+    --red:#ef4444;--red-light:#fee2e2;
+    --bg:#f1f5f9;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;
+    --gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;
+    --gray-800:#1e293b;--gray-900:#0f172a;
+    --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+    --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--gray-800);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
+.top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
+.top-header h1 a{color:var(--white);text-decoration:none}
+.top-header h1 a:hover{text-decoration:underline}
+.top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header .meta a{color:var(--gray-300)}
+.top-header .meta a:hover{color:var(--white)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{max-width:1100px;margin:0 auto;padding:24px 32px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
+.stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
+.stat-card .stat-sub{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+.stat-card.accent .stat-value{color:var(--accent)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.amber .stat-value{color:var(--amber)}
+.stat-card.red .stat-value{color:var(--red)}
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
+.news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
+.news-card:hover{box-shadow:var(--shadow-lg)}
+.news-card-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--gray-800);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--gray-400);align-items:center}
+.news-card-body{padding:16px 20px;font-size:.875rem;line-height:1.9;color:var(--gray-700)}
+.source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
+.source-tag.tibet{background:#dbeafe;color:#1d4ed8}
+.source-tag.vot{background:#fce7f3;color:#be185d}
+.report-paper{line-height:2;font-size:.95rem}
+.report-paper p{margin-bottom:14px;text-indent:2em}
+.report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
+.report-paper .sub-title{font-weight:600;color:var(--gray-700);margin:12px 0 8px;text-indent:0}
+.btn{display:inline-block;padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);text-decoration:none;color:var(--white)}
+.btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
+.btn-outline:hover{background:var(--gray-50);text-decoration:none}
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="top-header">
+    <h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-05-26</h1>
+    <div class="meta">
+        <span><span class="live-dot"></span> 数据已同步</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">6</div>
+            <div class="stat-sub">tibet.com: 3 | cn.vot.org: 3</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">日期范围</div>
+            <div class="stat-value">05-24~26</div>
+            <div class="stat-sub">近3天监测</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">威胁等级</div>
+            <div class="stat-value">中高</div>
+            <div class="stat-sub">外交立法双轨施压</div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">分析研判日报</div>
+      <div class="report-paper">
+        <p>2026年5月26日，针对涉藏关键字"藏人行政中央"的信息，经过全网搜索梳理，参考2个网站（tibet.com、cn.vot.org），现将有关情况报告如下：</p>
+        <p>近三日，藏人行政中央密集开展对美外交活动，美国会涉藏立法进程加速推进，达赖喇嘛转世问题再度成为中外博弈焦点。两大涉藏来源共刊载6篇相关报道，集中围绕美印外交互动、涉藏法案推进及转世权争议展开。</p>
+        <h3 class="section-title">一、基本概述</h3>
+        <p>2026年5月21日至25日，涉藏动态集中呈现在三个方向。一是藏人行政中央司政边巴次仁应美国驻印大使馆邀请出席美国独立250周年招待会，与美印高层同场互动。二是美国会众议院外交事务委员会主席麦克考与众议员麦戈文于5月21日提出涉藏法案，要求国务院推动对藏人行政中央的承认。三是中国驻印度大使馆发言人于静于5月23日在社交媒体平台X发文，警告印度不要干涉达赖喇嘛转世问题，称此属于中国"内政"。</p>
+        <p class="sub-title">（一）美国涉藏立法与外交联动加速</p>
+        <p>一是美国会提出涉藏承认法案。5月21日，麦克·麦克考与吉姆·麦戈文共同提出法案，要求国务院推动对藏人行政中央的承认，目前已提交至众议院外交事务委员会审议。该提案延续了2024年《促进解决西藏-中国争端法案》的政策方向。</p>
+        <p>二是美方高规格邀请藏人行政中央出席外交活动。5月24日，美国国务卿马可·卢比奥、印度外长苏杰生出席的新德里美国独立250周年招待会上，边巴次仁受邀出席。据西藏之声援引印度媒体WION分析，此举被解读为美国在美中关系复杂背景下持续关注西藏议题的信号。</p>
+        <p class="sub-title">（二）达赖喇嘛转世争议再起</p>
+        <p>一是中方警告印度不得干预转世事务。中国驻印使馆发言人于静5月23日在X平台发文，强调转世须经中国中央政府批准，称藏人行政中央"无权就转世问题作出主张"，并要求印度不为"西藏独立"活动提供平台。</p>
+        <p>二是达赖喇嘛方面坚持独立转世机制。达赖喇嘛尊者去年7月已声明转世体系将延续，认证工作由其信托基金董事会负责。近年来多国及佛教团体亦敦促中共不要干涉转世事务。</p>
+        <h3 class="section-title">二、分析研判</h3>
+        <p class="sub-title">（一）美国涉藏政策进入立法推进阶段</p>
+        <p>一是此次法案提出标志着美方涉藏议题从声明层面转向制度性推动，若法案进入全院表决，将对中美关系及涉藏议题产生实质性影响。</p>
+        <p>二是美方在接待藏人行政中央高层出席官方活动的同时推进立法，形成外交与立法双轨施压态势，意在提升涉藏议题在美中战略竞争中的权重。</p>
+        <p class="sub-title">（二）转世权博弈持续升温</p>
+        <p>值得注意的是，中方选择在美印涉藏外交活动密集期间通过社交媒体释放强硬立场，时机敏感。达赖喇嘛转世问题已超越宗教范畴，成为中美印多方地缘博弈的核心议题之一。</p>
+        <p>分析认为，近三日涉藏动态呈现美方"外交+立法"双轨推进与中方社交媒体外交回应的博弈格局，达赖喇嘛转世权争议正在加速国际化。下一步，我单位将持续跟踪美国会涉藏法案审议进展，关注美印涉藏外交互动升级态势，加强对达赖喇嘛转世议题多方博弈走向的研判分析。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">新闻报道汇总</div>
+
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政与外交部长在新德里出席美国独立 250 周年招待会</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">应美国驻印度大使塞尔吉奥・戈尔的邀请，藏人行政中央司政边巴次仁、外交与新闻部部长诺增卓玛于 5 月 24 日同来自多个国家的代表一道出席了在新德里举行的「自由 250：独立日招待会」。美国驻印度大使馆于当天在印度首都新德里举办庆祝美国独立 250 周年招待会。期间，美国国务卿马可·卢比奥（Marco Rubio）、印度外交部长苏杰生（Subrahmanyam Jaishankar）、美国驻印度大使塞尔吉奥·戈尔（Sergio Gor）分别发表讲话。此外，多国驻印使馆代表等嘉宾共同出席了活动，印度知名音乐家A.R. 拉赫曼也于现场带来音乐演出。藏人行政中央驻新德里办事处代表晋炯乃与秘书长扎西德吉也陪同司政及部长出席了此次活动。</div>
+        </div>
+
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">藏人行政中央司政边巴次仁于 5 月 22 日致函悼念美国前国会议员巴尼·弗兰克辞世。巴尼·弗兰克长期坚定支持图伯特自由事业，是图博人民真正的挚友。他于美国缅因州逝世，享年 86 岁。司政在吊唁信中指出，弗兰克议员在藏人难民安置美国的过程中发挥了至关重要的作用。他因发起并推动《1990 年移民法案》中的相关条款而将永远被人们铭记，该条款使 1000 名藏人难民得以在美国开启新生活并建立家园。</div>
+        </div>
+
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">台湾玄奘大学与新竹市佛教会共同主办的「浴佛・感恩・传爱520—佛诞国际文化节」于 5 月 20 日在玄奘大学隆重登场，达赖喇嘛西藏宗教基金会暨藏人行政中央驻台湾代表格桑坚参与佛学导师丹增南卓仁波切应邀出席并致词祝贺。此次活动汇聚了来自各地的信众，涵盖汉传、藏传及南传三大佛教传统的僧伽代表。玄奘大学是台湾藏传佛教僧众深造的重要高等学府之一，校内设有藏传佛教相关课程。</div>
+        </div>
+
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">藏人司政受邀出席美驻印大使馆"美国独立日"250周年招待会</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】藏人行政中央司政边巴次仁受邀出席美国驻新德里大使馆举行的美国独立日250周年招待会，引发外界对美方在西藏议题上外交立场的关注。美国国务卿马可·鲁比奥及印度外交部长苏杰生等出席了该活动。据印度媒体WION报道，美国方面此次邀请边巴次仁出席高规格外交活动，被外界解读为美国对西藏议题持续保持关注的信号。对于流亡藏人政治运动而言，此次出席活动被视为在国际关注度波动之际的一次重要曝光。</div>
+        </div>
+
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">美国提出涉西藏法案，要求国务院推动对藏人行政中央的承认</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】美国国会众议院外交事务委员会主席麦克考与众议员麦戈文在众议院共同提出一项决议，要求国务院推动对藏人行政中央的承认。该法案由麦克·麦克考（Michael T. McCaul）与吉姆·麦戈文（Jim McGovern）提出，已提交至众议院外交事务委员会审议。该提案延续了2024年《促进解决西藏-中国争端法案》的政策方向。</div>
+        </div>
+
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">中共警告印度不要干涉达赖喇嘛转世，称此属于中国"内政"</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】中共近日警告印度，不要干预达赖喇嘛尊者的转世问题，称此事属于中国"内政"。中国驻印度大使馆发言人于静于5月23日在社交媒体平台 X 上发表立场，强调转世须经中国中央政府批准。达赖喇嘛尊者于去年7月2日发布公开声明宣布其转世体系将延续，强调认证工作由其信托基金董事会负责。近年来，以美国为首的许多国家、非政府机构、佛教团体也先后敦促中共不要干涉达赖喇嘛尊者的转世事务。</div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="2026-05-25.html" class="btn btn-outline">&larr; 上一日报</a>
+        <a href="../index.html" class="btn btn-primary">返回首页</a>
+        <span class="btn btn-outline" style="opacity:.4;cursor:default">下一日报 &rarr;</span>
+    </div>
+</div>
+
+</body>
+</html>

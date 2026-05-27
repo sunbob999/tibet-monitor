@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -245,5 +245,147 @@ a:hover{text-decoration:underline}
     </div>
 </div>
 
+
+<script>
+var FONT_BODY = 'SimSun';
+var FONT_H1 = 'SimHei';
+var FONT_H2 = 'KaiTi';
+var FONT_SIZE = 32;
+var LINE_SP = 580;
+var INDENT_FL = 640;
+var MARGIN_T = 2098, MARGIN_B = 1984, MARGIN_L = 1588, MARGIN_R = 1474;
+var A4W = 11906, A4H = 16838;
+
+function getDateStr() {
+    var el = document.querySelector('.header .meta');
+    if (el) { var m = el.textContent.match(/(\d{4}年\d{2}月\d{2}日)/); if (m) return m[1]; }
+    return '';
+}
+
+function makeDoc(paragraphs, filename) {
+    var doc = new docx.Document({
+        sections: [{
+            properties: {
+                page: {
+                    size: { width: A4W, height: A4H },
+                    margin: { top: MARGIN_T, bottom: MARGIN_B, left: MARGIN_L, right: MARGIN_R }
+                }
+            },
+            children: paragraphs
+        }]
+    });
+    docx.Packer.toBlob(doc).then(function(blob) {
+        saveAs(blob, filename);
+    });
+}
+
+function exportAnalysisDocx() {
+    var btn = document.querySelector('#analysis .export-btn');
+    btn.disabled = true; btn.textContent = '生成中...';
+    var sec = document.getElementById('analysis');
+    var ps = [];
+    var ds = getDateStr();
+    ps.push(new docx.Paragraph({
+        children: [new docx.TextRun({ text: '深度研判分析报告', font: FONT_H1, size: 40, bold: true })],
+        alignment: docx.AlignmentType.CENTER, spacing: { after: 200, line: LINE_SP }
+    }));
+    ps.push(new docx.Paragraph({
+        children: [new docx.TextRun({ text: ds, font: FONT_BODY, size: 28 })],
+        alignment: docx.AlignmentType.CENTER, spacing: { after: 400, line: LINE_SP }
+    }));
+    var nodes = sec.querySelectorAll('h3.section-title, h4.sub-title, p');
+    for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        if (n.tagName === 'H3') {
+            ps.push(new docx.Paragraph({
+                children: [new docx.TextRun({ text: n.textContent.trim(), font: FONT_H1, size: FONT_SIZE, bold: true })],
+                spacing: { before: 300, after: 150, line: LINE_SP }
+            }));
+        } else if (n.tagName === 'H4') {
+            ps.push(new docx.Paragraph({
+                children: [new docx.TextRun({ text: n.textContent.trim(), font: FONT_H2, size: FONT_SIZE })],
+                spacing: { before: 200, after: 100, line: LINE_SP }
+            }));
+        } else if (n.tagName === 'P') {
+            var t = n.textContent.trim();
+            if (t) {
+                ps.push(new docx.Paragraph({
+                    children: [new docx.TextRun({ text: t, font: FONT_BODY, size: FONT_SIZE })],
+                    spacing: { line: LINE_SP }, indent: { firstLine: INDENT_FL }
+                }));
+            }
+        }
+    }
+    makeDoc(ps, '深度研判分析报告_' + ds + '.docx');
+    setTimeout(function() { btn.disabled = false; btn.textContent = '导出 DOCX'; }, 2000);
+}
+
+function exportNewsDocx() {
+    var btn = document.querySelector('#news .export-btn');
+    btn.disabled = true; btn.textContent = '生成中...';
+    var sec = document.getElementById('news');
+    var ps = [];
+    var ds = getDateStr();
+    ps.push(new docx.Paragraph({
+        children: [new docx.TextRun({ text: '新闻报道汇总', font: FONT_H1, size: 40, bold: true })],
+        alignment: docx.AlignmentType.CENTER, spacing: { after: 200, line: LINE_SP }
+    }));
+    ps.push(new docx.Paragraph({
+        children: [new docx.TextRun({ text: ds, font: FONT_BODY, size: 28 })],
+        alignment: docx.AlignmentType.CENTER, spacing: { after: 400, line: LINE_SP }
+    }));
+    var sources = sec.querySelectorAll('.source-section');
+    for (var i = 0; i < sources.length; i++) {
+        var src = sources[i];
+        var sh = src.querySelector('h3');
+        if (sh) {
+            ps.push(new docx.Paragraph({
+                children: [new docx.TextRun({ text: sh.textContent.trim(), font: FONT_H1, size: FONT_SIZE, bold: true })],
+                spacing: { before: 400, after: 200, line: LINE_SP }
+            }));
+        }
+        var arts = src.querySelectorAll('.article-item');
+        for (var j = 0; j < arts.length; j++) {
+            var art = arts[j];
+            var th = art.querySelector('h4');
+            if (th) {
+                ps.push(new docx.Paragraph({
+                    children: [new docx.TextRun({ text: th.textContent.trim(), font: FONT_BODY, size: FONT_SIZE, bold: true })],
+                    spacing: { before: 200, after: 100, line: LINE_SP }
+                }));
+            }
+            var dh = art.querySelector('.date');
+            if (dh) {
+                ps.push(new docx.Paragraph({
+                    children: [new docx.TextRun({ text: '发布时间: ' + dh.textContent.trim(), font: FONT_BODY, size: 24, color: '888888' })],
+                    spacing: { after: 100 }
+                }));
+            }
+            var bd = art.querySelector('.body-text');
+            if (bd) {
+                var bt = bd.textContent.trim();
+                if (bt) {
+                    var pars = bt.split(/\n+/);
+                    for (var k = 0; k < pars.length; k++) {
+                        var pv = pars[k].trim();
+                        if (pv) {
+                            ps.push(new docx.Paragraph({
+                                children: [new docx.TextRun({ text: pv, font: FONT_BODY, size: FONT_SIZE })],
+                                spacing: { line: LINE_SP }, indent: { firstLine: INDENT_FL }
+                            }));
+                        }
+                    }
+                }
+            }
+            ps.push(new docx.Paragraph({
+                children: [new docx.TextRun({ text: '————————————————————————', font: FONT_BODY, size: 20, color: 'CCCCCC' })],
+                spacing: { before: 100, after: 100 }, alignment: docx.AlignmentType.CENTER
+            }));
+        }
+    }
+    makeDoc(ps, '新闻报道汇总_' + ds + '.docx');
+    setTimeout(function() { btn.disabled = false; btn.textContent = '导出 DOCX'; }, 2000);
+}
+</script>
 </body>
 </html>

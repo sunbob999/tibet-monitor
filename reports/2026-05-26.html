@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -25,13 +25,13 @@ a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 .top-header{background:var(--navy);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md)}
 .top-header h1{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
-.top-header h1 a{color:var(--white);text-decoration:none}
-.top-header h1 a:hover{text-decoration:underline}
 .top-header .meta{display:flex;align-items:center;gap:16px;font-size:.8rem;color:var(--gray-400)}
+.top-header a{color:var(--gray-300)}
+.top-header a:hover{color:var(--white);text-decoration:none}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .container{max-width:1100px;margin:0 auto;padding:24px 32px}
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
 .stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow)}
 .stat-card .stat-label{font-size:.75rem;color:var(--gray-500);margin-bottom:4px}
 .stat-card .stat-value{font-size:1.5rem;font-weight:700;color:var(--gray-800)}
@@ -40,7 +40,6 @@ a:hover{text-decoration:underline}
 .stat-card.green .stat-value{color:var(--green)}
 .stat-card.amber .stat-value{color:var(--amber)}
 .stat-card.red .stat-value{color:var(--red)}
-.stat-card.purple .stat-value{color:#8b5cf6}
 .card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px}
 .card-title{font-size:1.05rem;font-weight:600;color:var(--gray-800);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-100)}
 .news-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .2s}
@@ -52,8 +51,6 @@ a:hover{text-decoration:underline}
 .source-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500}
 .source-tag.tibet{background:#dbeafe;color:#1d4ed8}
 .source-tag.vot{background:#fce7f3;color:#be185d}
-.source-tag.voa{background:#d1fae5;color:#065f46}
-.source-tag.rfa{background:#ede9fe;color:#5b21b6}
 .report-paper{line-height:2;font-size:.95rem}
 .report-paper p{margin-bottom:14px;text-indent:2em}
 .report-paper .section-title{font-size:1rem;font-weight:700;color:var(--gray-800);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);text-indent:0}
@@ -64,10 +61,21 @@ a:hover{text-decoration:underline}
 .btn-outline{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
 .btn-outline:hover{background:var(--gray-50);text-decoration:none}
 .nav-footer{display:flex;justify-content:center;gap:16px;padding:24px 0;border-top:1px solid var(--gray-200);margin-top:24px}
-.source-section{margin-bottom:20px}
-.source-section-title{font-size:.95rem;font-weight:600;color:var(--gray-700);padding:8px 0 12px;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:8px}
-@media print{.top-header,.nav-footer,.no-print{display:none!important}.container{padding:0!important}.news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}}
-@media(max-width:768px){.stats-row{grid-template-columns:repeat(2,1fr)}.container{padding:16px}}
+.archive-list{display:flex;flex-direction:column;gap:8px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.archive-item:hover{box-shadow:var(--shadow-lg)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--accent);min-width:120px}
+.archive-info{font-size:.8rem;color:var(--gray-500);flex:1}
+.archive-btn{font-size:.8rem}
+@media print{
+    .top-header,.nav-footer,.no-print{display:none!important}
+    .container{padding:0!important}
+    .news-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+}
 </style>
 </head>
 <body>
@@ -82,287 +90,368 @@ a:hover{text-decoration:underline}
     <div class="stats-row">
         <div class="stat-card accent">
             <div class="stat-label">监测网站数</div>
-            <div class="stat-value">4</div>
-            <div class="stat-sub">tibet / vot / voa / rfa</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tibet.com / cn.vot.org</div>
         </div>
         <div class="stat-card green">
-            <div class="stat-label">收录报道数</div>
-            <div class="stat-value">9</div>
-            <div class="stat-sub">4个来源汇总</div>
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">18</div>
+            <div class="stat-sub">tibet.com: 6 | cn.vot.org: 6</div>
         </div>
         <div class="stat-card amber">
             <div class="stat-label">日期范围</div>
-            <div class="stat-value">04-30~26</div>
-            <div class="stat-sub">近一周监测</div>
+            <div class="stat-value">05-26</div>
+            <div class="stat-sub">近3天监测</div>
         </div>
         <div class="stat-card red">
             <div class="stat-label">威胁等级</div>
             <div class="stat-value">中高</div>
-            <div class="stat-sub">多边外交立法施压</div>
-        </div>
-        <div class="stat-card purple">
-            <div class="stat-label">研判维度</div>
-            <div class="stat-value">4</div>
-            <div class="stat-sub">立法/外交/转世/人权</div>
+            <div class="stat-sub">多维联动施压</div>
         </div>
     </div>
 
     <div class="card">
       <div class="card-title">分析研判日报</div>
       <div class="report-paper">
-        <p>2026年5月26日，针对涉藏关键字"藏人行政中央"及相关敏感词汇的信息，经过全网搜索梳理，参考4个网站（tibet.com、cn.vot.org、voachinese.com、rfa.org），现将有关情况报告如下：</p>
-        <p>近一周，美印涉藏外交互动密集升级，美国会涉藏立法进程持续推进，达赖喇嘛转世与班禅喇嘛失踪问题再度成为国际舆论焦点，欧洲议会亦就中国民族团结法通过强硬决议。四大数据源共收录9篇相关报道，呈现美方"外交+立法"双轨施压与中方反制博弈、国际多边关注涉藏人权的新态势。</p>
-        <h3 class="section-title">一、基本概述</h3>
-        <p>一是美国会涉藏立法加速。5月21日，麦克·麦克考与吉姆·麦戈文共同提出法案，要求国务院推动对藏人行政中央的承认，进入众议院外交事务委员会审议。同期，参议员斯科特与默克利跨党推出《西藏暴行认定法案》，要求国务卿就中国是否针对藏民实施种族灭绝做出正式认定。二是美印涉藏外交高规格互动。5月24日，藏人行政中央司政边巴次仁受邀出席美国驻新德里大使馆举办的美国独立250周年招待会，美国国务卿卢比奥、印度外长苏杰生同场出席。三是达赖喇嘛转世与班禅喇嘛失踪双重博弈。5月18日，美国国务院就班禅喇嘛根敦确吉尼玛失踪31周年发表声明，呼吁中方立即放人。5月23日，中国驻印使馆发言人于静在X平台发文，警告印度不得干预转世事务。四是欧洲议会通过涉藏决议。4月30日，欧洲议会以439票通过决议，呼吁中国撤销《民族团结进步促进法》，强调达赖喇嘛继承人问题属于宗教事务。</p>
-        <h3 class="section-title">二、事件详情</h3>
-        <p class="sub-title">（一）美国涉藏政策进入制度性推进阶段</p>
-        <p>一是国会涉藏法案双轨并进。众议院外交委员会涉藏承认法案延续2024年《促进解决西藏-中国争端法案》方向，从声明层面转向制度性推动；参议院《西藏暴行认定法案》则首次要求行政当局对涉藏人权状况做出种族灭绝或危害人类罪行的正式法律认定，若通过将对中美关系产生深远影响。二是"自由西藏"下属"西藏观察"发布专题报告，通过多起藏族政治犯案例揭示中共在藏区日益严密的镇压体系，为美方立法提供新的舆论支撑。</p>
-        <p class="sub-title">（二）转世权博弈呈现国际化、多边化态势</p>
-        <p>一是美国国务院连续两年就班禅喇嘛失踪发表声明，从国务院发言人到国务卿层级逐步升级外交关注力度。二是中方在美印涉藏外交密集期通过社交媒体释放强硬立场，选择X平台而非正式外交渠道，时机敏感。三是欧洲议会首次在涉藏决议中明确支持达赖喇嘛转世事务由藏传佛教传统自主决定，将涉藏宗教自由议题纳入中欧关系议程。</p>
-        <h3 class="section-title">三、分析研判</h3>
-        <p class="sub-title">（一）国际涉藏力量正在形成联动效应</p>
-        <p>美方在国会立法、行政声明和高规格外交活动三个维度同时发力，形成对华"外交+立法"双轨施压态势。欧洲议会的同步行动进一步将涉藏议题扩展至中欧双边关系层面，国际涉藏力量正从美国单点突破向美欧联动格局演变。</p>
-        <p class="sub-title">（二）藏人行政中央国际能见度显著提升</p>
-        <p>司政边巴次仁连续出席高规格国际外交活动，从宗教文化领域向政治外交领域拓展。通过美国驻印大使馆邀请其出席独立日招待会这一方式，美方在不正式承认藏人行政中央的前提下，实质性地提升了其在国际政治场合的能见度和话语权。</p>
-        <p>分析认为，当前涉藏动态呈现美方"外交+立法+国际多边"三轨推进、中方"社交媒体外交+法律武器化"双线应对的复杂博弈格局，涉藏议题的国际化程度持续深化。下一步，我单位将持续跟踪美国会涉藏法案审议进展，关注欧洲涉藏决议对中欧关系的实质影响，加强对达赖喇嘛转世议题多方博弈走向的研判分析。</p>
+        <p>2026年5月26日，针对涉藏关键字"藏人行政中央"及相关敏感词汇的信息，经过全网搜索梳理，参考4个网站（tibet.com、cn.vot.org、voachinese.com、rfa.org），现将有关情况报告如下：</p><p>近一周，美印涉藏外交互动密集升级，美国会涉藏立法进程持续推进，达赖喇嘛转世与班禅喇嘛失踪问题再度成为国际舆论焦点，欧洲议会亦就中国民族团结法通过强硬决议。四大数据源共收录9篇相关报道，呈现美方"外交+立法"双轨施压与中方反制博弈、国际多边关注涉藏人权的新态势。</p><h3 class="section-title">一、基本概述</h3><p>一是美国会涉藏立法加速。5月21日，麦克·麦克考与吉姆·麦戈文共同提出法案，要求国务院推动对藏人行政中央的承认，进入众议院外交事务委员会审议。同期，参议员斯科特与默克利跨党推出《西藏暴行认定法案》，要求国务卿就中国是否针对藏民实施种族灭绝做出正式认定。二是美印涉藏外交高规格互动。5月24日，藏人行政中央司政边巴次仁受邀出席美国驻新德里大使馆举办的美国独立250周年招待会，美国国务卿卢比奥、印度外长苏杰生同场出席。三是达赖喇嘛转世与班禅喇嘛失踪双重博弈。5月18日，美国国务院就班禅喇嘛根敦确吉尼玛失踪31周年发表声明，呼吁中方立即放人。5月23日，中国驻印使馆发言人于静在X平台发文，警告印度不得干预转世事务。四是欧洲议会通过涉藏决议。4月30日，欧洲议会以439票通过决议，呼吁中国撤销《民族团结进步促进法》，强调达赖喇嘛继承人问题属于宗教事务。</p><h3 class="section-title">二、事件详情</h3><p class="sub-title">（一）美国涉藏政策进入制度性推进阶段</p><p>一是国会涉藏法案双轨并进。众议院外交委员会涉藏承认法案延续2024年《促进解决西藏-中国争端法案》方向，从声明层面转向制度性推动；参议院《西藏暴行认定法案》则首次要求行政当局对涉藏人权状况做出种族灭绝或危害人类罪行的正式法律认定，若通过将对中美关系产生深远影响。二是"自由西藏"下属"西藏观察"发布专题报告，通过多起藏族政治犯案例揭示中共在藏区日益严密的镇压体系，为美方立法提供新的舆论支撑。</p><p class="sub-title">（二）转世权博弈呈现国际化、多边化态势</p><p>一是美国国务院连续两年就班禅喇嘛失踪发表声明，从国务院发言人到国务卿层级逐步升级外交关注力度。二是中方在美印涉藏外交密集期通过社交媒体释放强硬立场，选择X平台而非正式外交渠道，时机敏感。三是欧洲议会首次在涉藏决议中明确支持达赖喇嘛转世事务由藏传佛教传统自主决定，将涉藏宗教自由议题纳入中欧关系议程。</p><h3 class="section-title">三、分析研判</h3><p class="sub-title">（一）国际涉藏力量正在形成联动效应</p><p>美方在国会立法、行政声明和高规格外交活动三个维度同时发力，形成对华"外交+立法"双轨施压态势。欧洲议会的同步行动进一步将涉藏议题扩展至中欧双边关系层面，国际涉藏力量正从美国单点突破向美欧联动格局演变。</p><p class="sub-title">（二）藏人行政中央国际能见度显著提升</p><p>司政边巴次仁连续出席高规格国际外交活动，从宗教文化领域向政治外交领域拓展。通过美国驻印大使馆邀请其出席独立日招待会这一方式，美方在不正式承认藏人行政中央的前提下，实质性地提升了其在国际政治场合的能见度和话语权。</p><p>分析认为，当前涉藏动态呈现美方"外交+立法+国际多边"三轨推进、中方"社交媒体外交+法律武器化"双线应对的复杂博弈格局，涉藏议题的国际化程度持续深化。下一步，我单位将持续跟踪美国会涉藏法案审议进展，关注欧洲涉藏决议对中欧关系的实质影响，加强对达赖喇嘛转世议题多方博弈走向的研判分析。</p>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title">新闻报道汇总</div>
-
-        <div class="source-section">
-          <div class="source-section-title">藏人行政中央官网（tibet.com）</div>
-        </div>
-
+      
         <div class="news-card" data-source="tibet.com">
           <div class="news-card-header">
             <div class="news-card-title">司政与外交部长在新德里出席美国独立 250 周年招待会</div>
-            <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">应美国驻印度大使塞尔吉奥・戈尔的邀请，藏人行政中央司政边巴次仁、外交与新闻部部长诺增卓玛于 5 月 24 日同来自多个国家的代表一道出席了在新德里举行的「自由 250：独立日招待会」。美国国务卿马可·卢比奥（Marco Rubio）、印度外交部长苏杰生（Subrahmanyam Jaishankar）、美国驻印度大使塞尔吉奥·戈尔（Sergio Gor）分别发表讲话。藏人行政中央驻新德里办事处代表晋炯乃与秘书长扎西德吉也陪同出席。</div>
+          <div class="news-card-body">应美国驻印度大使塞尔吉奥・戈尔的邀请，藏人行政中央司政边巴次仁、外交与新闻部部长诺增卓玛于 5 月 24 日同来自多个国家的代表一道出席了在新德里举行的「自由 250：独立日招待会」。
+美国驻印度大使馆于当天在印度首都新德里举办庆祝美国独立 250 周年招待会。期间，美国国务卿马可·卢比奥（Marco Rubio）、印度外交部长苏杰生（Subrahmanyam Jaishankar）、美国驻印度大使塞尔吉奥·戈尔（Sergio Gor）分别发表讲话。此外，多国驻印使馆代表等嘉宾共同出席了活动，印度知名音乐家A.R. 拉赫曼也于现场带来音乐演出。藏人行政中央驻新德里办事处代表晋炯乃与秘书长扎西德吉也陪同司政及部长出席了此次活动。
+来源: https://tibet.com/</div>
         </div>
-
         <div class="news-card" data-source="tibet.com">
           <div class="news-card-header">
             <div class="news-card-title">司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世</div>
-            <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">藏人行政中央司政边巴次仁于 5 月 22 日致函悼念美国前国会议员巴尼·弗兰克辞世。巴尼·弗兰克长期坚定支持图伯特自由事业。司政指出，弗兰克议员因发起并推动《1990 年移民法案》中的相关条款使 1000 名藏人难民得以在美国开启新生活并建立家园。</div>
+          <div class="news-card-body">藏人行政中央司政边巴次仁于 5 月 22 日致函悼念美国前国会议员巴尼·弗兰克辞世。巴尼·弗兰克长期坚定支持图伯特自由事业，是图博人民真正的挚友。他于美国缅因州逝世，享年 86 岁。
+司政在致给逝者遗孀吉姆·雷迪（Jim Ready）的吊唁信中写道："获悉您的丈夫、前众议员巴尼·弗兰克逝世的消息，我们深感悲痛。我谨代表藏人行政中央与全体藏人，向您及您的亲人致以最诚挚的哀悼。"
+在回顾弗兰克议员生前对图伯特（西藏）事业的长期支持时，司政指出，他在藏人难民安置美国的过程中发挥了至关重要的作用。他因发起并推动《1990 年移民法案》中的相关条款而将永远被人们铭记，该条款使 1000 名藏人难民得以在美国开启新生活并建立家园。
+司政进一步写道，正是得益于弗兰克议员富有远见的慷慨支持，许多藏人家庭才能够让子女接受优质教育，送他们进入顶尖大学深造，并赋能他们实现自立。
+司政最后总结道："逝者弗兰克议员对图伯特人民的坚定支持、对人权事业的承诺，以及同藏人之间历久弥坚的友谊，将永远被我们铭记，并深怀感激与敬意。愿他早日转世重生。"
+来源: https://tibet.com/</div>
         </div>
-
         <div class="news-card" data-source="tibet.com">
           <div class="news-card-header">
             <div class="news-card-title">驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节</div>
-            <div class="news-card-meta"><span class="source-tag tibet">tibet.com</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">台湾玄奘大学与新竹市佛教会共同主办的「浴佛・感恩・传爱520—佛诞国际文化节」于 5 月 20 日在玄奘大学隆重登场，藏人行政中央驻台湾代表格桑坚参与佛学导师丹增南卓仁波切应邀出席并致词祝贺。活动汇聚汉传、藏传及南传三大佛教传统僧伽代表。</div>
+          <div class="news-card-body">台湾玄奘大学与新竹市佛教会共同主办的「浴佛・感恩・传爱520—佛诞国际文化节」于 5 月 20 日在玄奘大学隆重登场，达赖喇嘛西藏宗教基金会暨藏人行政中央驻台湾代表格桑坚参与佛学导师丹增南卓仁波切应邀出席并致词祝贺。
+此次盛会汇聚了来自各地的信众，涵盖汉传、藏传及南传三大佛教传统的僧伽代表，以及当地政府和相关机构的代表。此外，玄奘大学校长、副校长、全体教职员工及学生也共同出席了活动。活动内容包括传统的释迦牟尼佛像浴佛仪式以及多场精彩的文化表演。
+期间，台湾国际藏传佛教研究会会长堪布慈旺仁珍、格西拉让巴哈欣仁波切，以及来自藏传佛教不同教派的 50 多名僧众也齐聚一堂。堪布慈旺仁珍用中文致欢迎词。现场还通过神圣的金刚宝舞表演和诵经祈祷，生动展现了藏传佛教的独特文化内涵。
+玄奘大学是台湾藏传佛教僧众深造的重要高等学府之一，校内设有藏传佛教相关课程。此外，该校藏传佛教研究中心每年都会与藏人行政中央驻台湾办事处及该校藏传佛教研究中心合作举办相关论坛，共同探讨藏传佛教在台湾的发展现状，并致力于推动相关学术与宗教研究的发展。
+来源: https://tibet.com/</div>
         </div>
-
-        <div class="source-section" style="margin-top:20px">
-          <div class="source-section-title">西藏之声（cn.vot.org）</div>
-        </div>
-
         <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">藏人司政受邀出席美驻印大使馆"美国独立日"250周年招待会</div>
-            <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">【西藏之声2026年5月25日报道】据印度媒体WION报道，美国方面邀请边巴次仁出席高规格外交活动，被解读为美国对西藏议题持续保持关注的信号。报道指出华盛顿在西藏问题上的基本立场未变，仍通过多种外交与立法渠道表达关切。</div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】藏人行政中央司政边巴次仁受邀出席美国驻新德里大使馆举行的美国独立日250周年招待会，引发外界对美方在西藏议题上外交立场的关注。此次活动有美国国务卿马可·鲁比奥及印度外交部长苏杰生等出席，被认为具有一定意义。
+藏人行政中央司政边巴次仁于5月24日受邀出席美国驻新德里大使馆举行的美国独立日250周年招待会。正在印度访问的美国国务卿马可·鲁比奥（Marco Rubio）以及印度外交部长苏杰生（S. Jaishankar）等也出席了该活动。
+据印度媒体WION报道，美国方面此次邀请边巴次仁出席高规格外交活动，被外界解读为在当前美中关系复杂背景下，美国对西藏议题持续保持关注与一定程度外交支持的信号。报道指出，尽管美国总统川普近期对华政策互动频繁，美中关系有所升温，但华盛顿在西藏问题上的基本立场并未发生明显变化，仍通过多种外交与立法渠道表达关切。
+对于自1959年达赖喇嘛尊者流亡以来主要居住在印度的藏人社区而言，此次受邀被认为具有象征意义，也体现出其在国际场合中的能见度。司政边巴次仁经常提到美国国会及政府通过相关立法持续关注西藏议题，包括宗教自由保障以及反对中国干预达赖喇嘛尊者转世事务等内容。
+报道还提到，美国对西藏问题的政策框架可追溯至多项立法与政策文件，其中包括《西藏政策与支持法案》（Tibet Policy and Support Act），强调国际社会与藏人行政中央的接触，以及对西藏人权与宗教状况的关注。分析认为，在中国对涉藏议题高度敏感的背景下，此类外交互动往往会引发北京方面的反应。中国政府长期将流亡藏人政府的国际接触视为对其内政的干涉，并在宗教与历史叙事，尤其是达赖喇嘛尊者转世问题上保持高度管控。报道表示，对于流亡藏人政治运动而言，此次出席活动被视为在国际关注度波动之际的一次重要曝光，也为其在全球外交场域中提供了新的象征性平台。
+来源: https://cn.vot.org/</div>
         </div>
-
         <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">美国提出涉西藏法案，要求国务院推动对藏人行政中央的承认</div>
-            <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">【西藏之声2026年5月25日报道】美国国会众议院外交事务委员会主席麦克考与众议员麦戈文共同提出法案，要求国务院推动对藏人行政中央的承认。该提案延续了2024年《促进解决西藏-中国争端法案》的政策方向。</div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】美国国会众议院外交事务委员会主席麦克考与众议员麦戈文在众议院共同提出一项决议，要求国务院推动对藏人行政中央的承认。该议案已被提交至众议院外交事务委员会审议。相关信息已发布于美国国会官网。
+美国国会众议院5月21日正式提出一项法案，内容要求国务院推动对藏人行政中央的承认。根据国会官网记录，该法案被正式提交至众议院，并随后转交众议院外交事务委员会审议，进入立法程序。
+该法案由国会众议院外交事务委员会主席麦克·麦克考（Michael T. McCaul）与众议员吉姆·麦戈文（Jim McGovern）提出。目前法案尚处于委员会审查阶段，后续是否进入全院表决仍有待进一步推进。
+该提案被视为美国国会涉藏议题立法进程中的最新动作之一。2024年，美国通过了《促进解决西藏-中国争端法案》，否定了西藏自古以来就是中国一部分的中共说法，将西藏议题仍未解决设为美国的官方立场与政策。
+来源: https://cn.vot.org/</div>
         </div>
-
         <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">中共警告印度不要干涉达赖喇嘛转世，称此属于中国"内政"</div>
-            <div class="news-card-meta"><span class="source-tag vot">cn.vot.org</span> <span>2026-05-25</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-25</span>
+            </div>
           </div>
-          <div class="news-card-body">【西藏之声2026年5月25日报道】中国驻印度大使馆发言人于静于5月23日在社交媒体平台X上发文，强调达赖喇嘛转世须经中国中央政府批准，称藏人行政中央"无权就转世问题作出主张"。</div>
+          <div class="news-card-body">【西藏之声2026年5月25日报道】中共近日警告印度，不要干预达赖喇嘛尊者的转世问题，称此事属于中国"内政"。中国同时称，希望印度不要为支持"西藏独立"的活动提供平台。
+中国驻印度大使馆发言人于静于5月23日在社交媒体平台 X（原推特）上发表了上述立场。她称，达赖喇嘛的转世遵循"长期确立的宗教仪轨和历史传统"，几个世纪以来都需要中国中央政府的批准，并称现任第14世达赖喇嘛本人也是通过这一"既定程序"被认定的。
+她写道："达赖喇嘛转世问题纯属中国内政，不应受到外部干涉。"她还表示，"所谓藏人行政中央并未得到任何主权国家承认，其领导层既无代表西藏人民的合法性，也无权就转世问题作出主张。"
+该帖子还称，印度在涉藏问题上已有明确承诺，并希望印度继续履行这些承诺，不要为"西藏独立"活动提供任何平台，也不要干预达赖喇嘛转世问题。于静表示，这样的做法将有助于促进中印双边关系的整体稳定与建设性发展。
+达赖喇嘛尊者于去年7月2日发布公开声明宣布其转世体系将延续，并强调"寻找、认证转世之重任将由达赖喇嘛的喇章-噶丹颇章信托基金之董事会负责，除此机制以外，任谁皆不具备认证转世的正当性"。近年来，以美国为首的许多国家、非政府机构、佛教团体也先后敦促中共不要干涉达赖喇嘛尊者的转世事务。
+来源: https://cn.vot.org/</div>
         </div>
-
-        <div class="source-section" style="margin-top:20px">
-          <div class="source-section-title">美国之音中文（voachinese.com）</div>
-        </div>
-
-        <div class="news-card" data-source="voachinese.com">
+        <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">班禅喇嘛失踪31周年，美国呼吁中国当局立即放人</div>
-            <div class="news-card-meta"><span class="source-tag voa">voachinese.com</span> <span>2026-05-19</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
           </div>
-          <div class="news-card-body">美国国务院发言人5月18日就班禅喇嘛失踪31周年发表书面声明，呼吁中国当局立即释放根敦确吉尼玛及其家人，并停止因宗教信仰而迫害在中国的藏人。声明表示藏传佛教徒应当能够在不受党国势力干预的情况下自由选择自己的领袖。</div>
+          <div class="news-card-body">美国国务院发言人5月18日就藏传佛教精神领袖班禅喇嘛失踪31周年发表书面声明，呼吁中国当局立即释放他及其家人，并停止对藏人的宗教迫害。声明还表示，藏传佛教徒应当能够遵从自己的信仰，在不受党国势力干预的情况下，自由地选择自己的领袖——如达赖喇嘛和班禅喇嘛。
+国务院发言人托马斯·皮戈特在声明中指出："昨天是被尊称为班禅喇嘛的藏传佛教领袖根敦确吉尼玛失踪31周年。在达赖喇嘛认定这名当时六岁的孩童为未来重要的藏传佛教领袖数日后，中国当局便造成他和他的家人失踪。"声明要求中国当局立即释放根敦确吉尼玛及其家人，并停止因宗教信仰而迫害在中国的藏人。
+1995年，达赖喇嘛宣布认定六岁男童根敦确吉尼玛为第十一世班禅喇嘛，5月17日该男孩和家人被中国当局带走，恰扎仁波切随后被捕至今下落不明。中国政府以"金瓶掣签"方式另选坚赞诺布为班禅喇嘛。历届美国政府均曾就班禅喇嘛失踪周年发表声明，去年5月18日国务卿卢比奥就班禅喇嘛失踪30周年发表书面声明。
+来源: https://www.voachinese.com/</div>
         </div>
-
-        <div class="news-card" data-source="voachinese.com">
+        <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">最新报告揭露中共镇压藏人新模式；美议员跨党推出《西藏暴行认定法案》</div>
-            <div class="news-card-meta"><span class="source-tag voa">voachinese.com</span> <span>2026-05-01</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-01</span>
+            </div>
           </div>
-          <div class="news-card-body">"西藏观察"4月30日发布报告，记录僧人桑丹嘉措和嘉央桑丹被拘留后下落不明、作家岗吉珠巴嘉在14年监禁中遭受酷刑等案例。同期，参议员斯科特与默克利跨党推出《西藏暴行认定法案》。</div>
+          <div class="news-card-body">藏人权利倡导组织"自由西藏"的下属研究机构"西藏观察"4月30日发布报告，详述多起藏族政治犯案例，揭示中共治下对藏人施以日益严厉惩处的运作体系。报告题为《失踪、遭受酷刑与被噤声》，记录了僧人桑丹嘉措和嘉央桑丹被拘留后家人不知其下落、作家岗吉珠巴嘉在14年监禁中遭受酷刑且身体状况危急、益西桑波服满18年刑期后获释但身体极度虚弱等案例。
+与此同时，美国参议员里克·斯科特与杰夫·默克利跨党推出《西藏暴行认定法案》，要求国务卿就中国是否正在针对藏民实施种族灭绝或危害人类罪行做出正式认定。美国国务院发布的最新报告显示，2025年美国驻华大使馆领事官员获准对西藏自治区进行了自2019年以来的首次正式访问，但阻碍外国人员进入西藏的法规与程序依然如故。
+来源: https://www.voachinese.com/</div>
         </div>
-
-        <div class="news-card" data-source="voachinese.com">
+        <div class="news-card" data-source="cn.vot.org">
           <div class="news-card-header">
             <div class="news-card-title">欧洲议会通过决议，呼吁中国撤销民族团结法</div>
-            <div class="news-card-meta"><span class="source-tag voa">voachinese.com</span> <span>2026-04-30</span></div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-04-30</span>
+            </div>
           </div>
-          <div class="news-card-body">欧洲议会4月30日以439票通过决议，谴责中国《民族团结进步促进法》鼓励同化政策并限制文化、宗教与语言自由，强调达赖喇嘛继承人问题属于宗教事务。决议警告该法律将对中欧关系造成严重后果。</div>
+          <div class="news-card-body">欧洲议会4月30日通过决议，呼吁中国政府立即撤销《民族团结进步促进法》，谴责该法律对源自西藏、新疆和内蒙古的人口造成严重后果。决议以439票支持、52票反对和71票弃权获得通过。
+决议谴责该法律鼓励同化政策并限制文化、宗教与语言自由，违反中国依据国际法必须承担的义务。决议要求释放政治犯包括维吾尔族学者伊利哈木·土赫提，并强调达赖喇嘛继承人问题属于宗教事务，只能由藏传佛教传统决定。决议还警告该法律将对欧盟与中国关系造成严重后果，呼吁对相关责任人实施欧盟全球人权制裁机制。
+来源: https://www.voachinese.com/</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">班禅喇嘛失踪31周年，美国呼吁中国当局立即放人</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">美国国务院发言人星期一(5月18日)就藏传佛教精神领袖班禅喇嘛失踪31周年发表书面声明，呼吁中国当局立即释放他及其家人，并停止对藏人的宗教迫害。声明还说，应当允许藏传佛教徒按照自己的信仰自由选择达赖喇嘛和班禅喇嘛等领袖。
+国务院发言人托马斯·“汤米”·皮戈特(Thomas“Tommy”Pigott)星期一在题为《纪念班禅喇嘛失踪31周年》的新闻声明中说：“昨天是被尊称为班禅喇嘛的藏传佛教领袖根敦确吉尼玛失踪31周年。在达赖喇嘛认定这名当时六岁的孩童为未来重要的藏传佛教领袖数日后，中国当局便造成他和他的家人失踪。”
+国务院的这份声明继续说：“中国当局应当立即释放根敦确吉尼玛和他的家人，并停止因宗教信仰而迫害在中国的藏人或其他人士。”
+声明还说：“美国支持藏人的宗教自由，以及他们维护自身独特的文化和语言认同的自由。”
+声明最后表示：“藏传佛教徒与所有宗教群体的成员一样，应当能够遵从自己的信仰，在不受党国(party-state)势力干预的情况下，自由地选择自己的领袖--如达赖喇嘛和班禅喇嘛。”
+1989年1月28日，藏传佛教第二号领袖人物第十世班禅喇嘛圆寂。1995年，参与寻访班禅喇嘛灵童转世的中国政协委员、班禅喇嘛驻锡地扎什伦布寺的住持恰扎仁波切将寻访结果告知流亡在外的西藏精神领袖第十四世达赖喇嘛。当年5月14日，达赖喇嘛宣布认定六岁男童根敦确吉尼玛为第十一世班禅喇嘛。5月17日，这名小男孩和家人被中国当局带走。恰扎仁波切随后被捕，至今下落不明。中国政府以“金瓶掣签”的方式选择新的班禅喇嘛，根敦确吉尼玛被排除在候选名单之外。另一位男孩坚赞诺布被北京扶立为班禅喇嘛。外界至今得不到有关根敦确吉尼玛的讯息。
+历届美国政府，包括第一届特朗普政府和拜登政府的国务院都曾就班禅喇嘛根敦确吉尼玛失踪周年或生日发表声明，呼吁中国政府说明他的下落并敦促宗教自由。
+去年5月18日，国务卿马尔科·卢比奥(Marco Rubio)就班禅喇嘛失踪30周年发表了书面声明。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">最新报告揭露中共镇压藏人新模式；美议员跨党推出《西藏暴行认定法案》</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">总部位于英国的藏人权利倡导组织团体“自由西藏”(Free Tibet)的下属研究机构“西藏观察”(Tibet Watch)星期四(4月30日)发布一份报告，详述了多起藏族政治犯的案例，揭示了报告所说的中国共产党治下的一个手段严密、对藏人施以日益严厉惩处的运作体系。与此同时，美国政府行政当局和国会议员持续密切关注西藏的人权状况，两位参议员跨党推出一项法案，要求国务卿就中国是否正在针对藏民实施种族灭绝或危害人类罪行做出正式认定。
+“西藏观察”在这份题为《失踪、遭受酷刑与被噤声；针对藏人僧侣、作家及教师的镇压日益加剧的模式》 (Disappeared, tortured and silenced A Pattern of Intensifying Repression Against Tibetan Monks, Writers and Teachers)的报告中，通过记录一系列来自西藏各地的案例，揭示出一种日益加剧的镇压模式，即当局针对藏人的行为进行打压，而这些行为本属于藏人社区日常的文化、宗教及思想生活范畴。
+系列案例揭露了镇压体系的运作特征
+报告详述了多起藏族政治犯的案例，其中包括一年多前被当地中国警方拘留的僧人桑丹嘉措(Samten Gyatso)和嘉央桑丹(Jamyang Samten)，他们的家人至今仍不知其下落，甚至无法确定他们是否尚在人世；教师兼知名作家岗吉珠巴嘉(Gangkye Drubpa Kyab)目前身体状况危急，他在长达14年的监禁期间，遭受了残酷且非人道的折磨；曾参与2007年旨在维护藏语学习权利的和平抗议活动的益西桑波(Yeshe Zangpo)，他在服满长达18年的刑期后于3月25日获释，但身体状况已极度虚弱。
+“西藏观察”发言人凯特·桑德斯(Kate Saunders)在回复美国之音(VOA)的电邮中表示，任何寻常事物，一条微信帖文、一张照片、一本教科书，都可能导致一名藏人凭空消失数年；中共的目的就是要迫使每一位藏人日复一日地反复权衡：自己最寻常的文化或宗教生活举动，是否会不慎触碰那条无形的红线。
+桑德斯说：“这种压迫所造成的心理创伤具有极强的腐蚀性：它引发焦虑、抑郁、高度的警觉与戒备，更在最私密的个人领域撕裂了藏人的社会肌理，信任遭到侵蚀，被迫进行自我审查，亲情与信仰的网络支离破碎。”
+报告指出，这一系列案例揭示了一个镇压体系的运作特征：它手段严密、缺乏透明度，且对藏人身份认同的哪怕是私下表达，也会被施以日益严厉的惩处。
+西藏观察：“我们所在的社会必须直面这一现实”
+报告强调，一旦某位藏人曾被卷入这套体系中，其个人档案便会被长期留存，不仅将面临更为严密的监视，更将时时处于险境中；那些曾为维护西藏语言、文化或宗教信仰而公开发声者，其所付出的代价绝非仅仅是一次性的牢狱之灾，而是一种永无止境的持续状态。
+桑德斯告诉美国之音，中共的这套压迫机器的触角并未止步于西藏的边境线，通过植入间谍软件、实施网络骚扰以及监控流亡藏人的通讯联络，中共正将其“数字压迫”模式输出至海外。她说：“其目的仍然是：无论藏人的声音在何处响起，都要在那里制造恐惧、挑拨离间，并扼杀一切异议之声。我们所在的社会必须直面这一现实。”
+报告最后提出了五点建议，包括敦促中国当局在一些双边人权对话及在联合国，立即公布包括桑丹嘉措、嘉央桑丹在内的多位政治犯的下落、状况和健康状况，向联合国人权理事会提交这份报告中记录的案例，以及要求中国根据其国际人权义务，为藏族政治犯提供探视权、法律援助和独立监督等等。
+美国持续密切关注藏区现状和人权问题
+美国政府行政部门和国会一直通过发布年度报告和制定相关法案以及发表声明等方式，持续关注中国政府在西藏的治理方式及西藏人权问题。
+美国国务院上星期五(4月24日)发布的
+最新报告
+显示，虽然2025年，美国驻华大使馆的领事官员获准对西藏自治区进行了自2019年以来的首次正式访问，但是中国政府那些一贯阻碍美国外交官、官员、记者及游客前往西藏自治区及西藏自治区以外藏区的法规与程序依然如故。美国外交官、记者、研究人员及美籍藏人在试图访藏时仍面临困难。
+美国国务院这份依据2018年《西藏旅行对等法》内容向国会提交的年度报告涵盖了2025年全年情况，显示了中共如何通过许可证制度、明显的监控手段以及针对性的恐吓和骚扰，阻止外国人进入西藏。
+与此同时，星期三(4月29日)，佛罗里达州共和党籍联邦参议员里克·斯科特(Rick Scott)与俄勒冈州民主党籍联邦参议员杰夫·默克利(Jeff Merkley)共同提出了《
+西藏暴行认定法案
+》(Tibet Atrocities Determination Act)。这项立法要求美国国务卿就中国是否正在针对藏人实施种族灭绝或危害人类罪行做出正式认定。
+斯科特参议员在其网站上发布的
+新闻稿
+中表示，中共正在西藏实施种族灭绝，这是无可回避的事实。他说：“北京政权在压迫西藏人民的过程中，实施了系统性的杀戮、酷刑、强制绝育、强迫迁徙、政府授意的绑架，以及无数其它危害人类的罪行。”
+默克利参议员在同一份新闻稿中指出：“面对中国对藏人持续不断的侵害，包括日益加剧的文化抹杀、强行拆散家庭、监视、监禁以及酷刑，美国绝不能保持沉默。既然中国政府持续无视国际法赋予藏人的权利，我们就必须明确表明：这些罪行绝不会被视而不见。”
+斯科特参议员表示他很高兴能与默克利参议员跨党合作，共同推动这项旨在追究中国政府责任的行动。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">欧洲议会通过决议，呼吁中国撤销民族团结法</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-04-30</span>
+            </div>
+          </div>
+          <div class="news-card-body">欧洲议会星期四(4月30日)通过一项决议，呼吁中国政府立即撤销《民族团结进步促进法》。决议谴责这部新法律对源自西藏、新疆和内蒙古的人口造成严重后果。
+欧洲议会在决议中谴责这部法律鼓励同化政策并限制文化、宗教与语言自由，违反了中国依据国际法必须承担的义务。
+决议还要求中国释放政治犯，包括维吾尔族学者伊利哈木·土赫提(Ilham Tohti)。他在2014年被中国政府以“分裂国家罪”判处无期徒刑。2019年，欧洲议会向身陷囹圄的伊利哈木颁发了欧洲最高人权奖“萨哈罗夫奖”。
+议员们还强调，西藏精神领袖达赖喇嘛的继承人问题属于宗教事务，只能由藏传佛教传统来决定。
+决议还警告说，推出和执行这部法律将对欧盟与中国的关系造成严重后果。
+议员们还谴责中国在欧盟境内针对个人的跨国镇压，并敦促成员国暂停与中国的引渡条约。
+议员们还呼吁欧盟理事会对那些对这部新法律负有责任的人员实施欧盟全球人权制裁机制。
+中国在今年3月通过《民族团结进步促进法》，该法定于从今年7月1日起实施。
+欧洲议会是有27个成员国的欧洲联盟的立法机构，议员由直选产生。
+这项决议以439票支持、52票反对和71票弃权获得通过。
+决议推动者是来自立陶宛的代纽斯·扎利马斯(Dainius Žalimas)和来自斯洛伐克的米里亚姆·莱克斯曼(Miriam Lexmann)。莱克斯曼是对中政策跨国议会联盟(IPAC)的共同主席，扎利马斯是该联盟成员，担任过立陶宛的宪法法院院长。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+上个月，对中政策跨国议会联盟的另一位共同主席约翰·穆勒纳尔(John Moolenaar)领导的美国众议院美国与中国共产党战略竞争特设委员会在中国出台民族团结法后也谴责说：“中共新出台的‘民族团结’法是其日益加剧的奥威尔式‘中国化’运动的幌子。它暴露了中共统战战略的真正目的：对党国绝对服从和奴役。”</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政与外交部长在新德里出席美国独立 250 周年招待会</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">应美国驻印度大使塞尔吉奥・戈尔的邀请，藏人行政中央司政边巴次仁、外交与新闻部部长诺增卓玛于 5 月 24 日同来自多个国家的代表一道出席了在新德里举行的「自由 250：独立日招待会」。 美国驻印度大使馆于当天在印度首都新德里举办庆祝美国独立 250 周年招待会。期间，美国国务卿马可·卢比奥（Marco Rubio）、印度外交部长苏杰生（Subrahmanyam Jaishankar）、美国驻印度大使塞尔吉奥·戈尔（Sergio Gor）分别发表讲话。 此外，多国驻印使馆代表等嘉宾共同出席了活动，印度知名音乐家A.R. 拉赫曼也于现场带来音乐演出。藏人行政中央驻新德里办事处代表晋炯乃与秘书长扎西德吉也陪同司政及部长出席了此次活动。 记者/责编：蒋扬 《图伯特之页》首发，转载请注明出处 The post 司政与外交部长在新德里出席美国独立 250 周年招待会 first appeared on CTA Official Site in Chinese.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">藏人行政中央司政边巴次仁于 5 月 22 日致函悼念美国前国会议员巴尼·弗兰克辞世。巴尼·弗兰克长期坚定支持图伯特自由事业，是图博人民真正的挚友。他于美国缅因州逝世，享年 86 岁。 司政在致给逝者遗孀吉姆·雷迪（Jim Ready）的吊唁信中写道：“获悉您的丈夫、前众议员巴尼·弗兰克逝世的消息，我们深感悲痛。我谨代表藏人行政中央与全体藏人，向您及您的亲人致以最诚挚的哀悼。” 在回顾弗兰克议员生前对图伯特（西藏）事业的长期支持时，司政指出，他在藏人难民安置美国的过程中发挥了至关重要的作用。他因发起并推动《 1990 年移民法案》中的相关条款而将永远被人们铭记，该条款使 1000 名藏人难民得以在美国开启新生活并建立家园。 司政进一步写道，正是得益于弗兰克议员富有远见的慷慨支持，许多藏人家庭才能够让子女接受优质教育，送他们进入顶尖大学深造，并赋能他们实现自立。 司 政最后总结道：“逝者弗兰克议员对图伯特人民的坚定支持、对人权事业的承诺，以及同藏人之间历久弥坚的友谊，将永远被我们铭记，并深怀感激与敬意。愿他早日转世重生。” 记者：次仁 责编：蒋扬 《图伯特之页》首发，转载请注明出处 The post 司政边巴次仁就致函悼念美国前众议员巴尼·弗兰克逝世 first appeared on CTA Official Site in Chinese.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">tibet.com</span>
+              <span>2026-05-25</span>
+            </div>
+          </div>
+          <div class="news-card-body">台湾玄奘大学与新竹市佛教会共同主办的「浴佛・感恩・传爱520—佛诞国际文化节」于 5 月 20 日在玄奘大学隆重登场，达赖喇嘛西藏宗教基金会暨藏人行政中央驻台湾代表格桑坚参与佛学导师丹增南卓仁波切应邀出席并致词祝贺。 此次盛会汇聚了来自各地的信众，涵盖汉传、藏传及南传三大佛教传统的僧伽代表，以及当地政府和相关机构的代表。此外，玄奘大学校长、副校长、全体教职员工及学生也共同出席了活动。活动内容包括传统的释迦牟尼佛像浴佛仪式以及多场精彩的文化表演。 期间，台湾国际藏传佛教研究会会长堪布慈旺仁珍、格西拉让巴哈欣仁波切，以及来自藏传佛教不同教派的 50 多名僧众也齐聚一堂。堪布慈旺仁珍用中文致欢迎词。现场还通过神圣的金刚宝舞表演和诵经祈祷，生动展现了藏传佛教的独特文化内涵。 玄奘大学是台湾藏传佛教僧众深造的重要高等学府之一，校内设有藏传佛教相关课程。此外，该校藏传佛教研究中心每年都会与藏人行政中央驻台湾办事处及该校藏传佛教研究中心合作举办相关论坛，共同探讨藏传佛教在台湾的发展现状，并致力于推动相关学术与宗教研究的发展。 记者：次仁 责编：蒋扬 来源：驻台湾办事处 《图伯特之页》首发，转载请注明出处 The post 驻台湾代表格桑坚参受邀出席台湾玄奘大学举办的佛诞暨国际文化节 first appeared on CTA Official Site in Chinese.</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">班禅喇嘛失踪31周年，美国呼吁中国当局立即放人</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-19</span>
+            </div>
+          </div>
+          <div class="news-card-body">美国国务院发言人星期一(5月18日)就藏传佛教精神领袖班禅喇嘛失踪31周年发表书面声明，呼吁中国当局立即释放他及其家人，并停止对藏人的宗教迫害。声明还说，应当允许藏传佛教徒按照自己的信仰自由选择达赖喇嘛和班禅喇嘛等领袖。
+国务院发言人托马斯·“汤米”·皮戈特(Thomas“Tommy”Pigott)星期一在题为《纪念班禅喇嘛失踪31周年》的新闻声明中说：“昨天是被尊称为班禅喇嘛的藏传佛教领袖根敦确吉尼玛失踪31周年。在达赖喇嘛认定这名当时六岁的孩童为未来重要的藏传佛教领袖数日后，中国当局便造成他和他的家人失踪。”
+国务院的这份声明继续说：“中国当局应当立即释放根敦确吉尼玛和他的家人，并停止因宗教信仰而迫害在中国的藏人或其他人士。”
+声明还说：“美国支持藏人的宗教自由，以及他们维护自身独特的文化和语言认同的自由。”
+声明最后表示：“藏传佛教徒与所有宗教群体的成员一样，应当能够遵从自己的信仰，在不受党国(party-state)势力干预的情况下，自由地选择自己的领袖--如达赖喇嘛和班禅喇嘛。”
+1989年1月28日，藏传佛教第二号领袖人物第十世班禅喇嘛圆寂。1995年，参与寻访班禅喇嘛灵童转世的中国政协委员、班禅喇嘛驻锡地扎什伦布寺的住持恰扎仁波切将寻访结果告知流亡在外的西藏精神领袖第十四世达赖喇嘛。当年5月14日，达赖喇嘛宣布认定六岁男童根敦确吉尼玛为第十一世班禅喇嘛。5月17日，这名小男孩和家人被中国当局带走。恰扎仁波切随后被捕，至今下落不明。中国政府以“金瓶掣签”的方式选择新的班禅喇嘛，根敦确吉尼玛被排除在候选名单之外。另一位男孩坚赞诺布被北京扶立为班禅喇嘛。外界至今得不到有关根敦确吉尼玛的讯息。
+历届美国政府，包括第一届特朗普政府和拜登政府的国务院都曾就班禅喇嘛根敦确吉尼玛失踪周年或生日发表声明，呼吁中国政府说明他的下落并敦促宗教自由。
+去年5月18日，国务卿马尔科·卢比奥(Marco Rubio)就班禅喇嘛失踪30周年发表了书面声明。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">最新报告揭露中共镇压藏人新模式；美议员跨党推出《西藏暴行认定法案》</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-05-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">总部位于英国的藏人权利倡导组织团体“自由西藏”(Free Tibet)的下属研究机构“西藏观察”(Tibet Watch)星期四(4月30日)发布一份报告，详述了多起藏族政治犯的案例，揭示了报告所说的中国共产党治下的一个手段严密、对藏人施以日益严厉惩处的运作体系。与此同时，美国政府行政当局和国会议员持续密切关注西藏的人权状况，两位参议员跨党推出一项法案，要求国务卿就中国是否正在针对藏民实施种族灭绝或危害人类罪行做出正式认定。
+“西藏观察”在这份题为《失踪、遭受酷刑与被噤声；针对藏人僧侣、作家及教师的镇压日益加剧的模式》 (Disappeared, tortured and silenced A Pattern of Intensifying Repression Against Tibetan Monks, Writers and Teachers)的报告中，通过记录一系列来自西藏各地的案例，揭示出一种日益加剧的镇压模式，即当局针对藏人的行为进行打压，而这些行为本属于藏人社区日常的文化、宗教及思想生活范畴。
+系列案例揭露了镇压体系的运作特征
+报告详述了多起藏族政治犯的案例，其中包括一年多前被当地中国警方拘留的僧人桑丹嘉措(Samten Gyatso)和嘉央桑丹(Jamyang Samten)，他们的家人至今仍不知其下落，甚至无法确定他们是否尚在人世；教师兼知名作家岗吉珠巴嘉(Gangkye Drubpa Kyab)目前身体状况危急，他在长达14年的监禁期间，遭受了残酷且非人道的折磨；曾参与2007年旨在维护藏语学习权利的和平抗议活动的益西桑波(Yeshe Zangpo)，他在服满长达18年的刑期后于3月25日获释，但身体状况已极度虚弱。
+“西藏观察”发言人凯特·桑德斯(Kate Saunders)在回复美国之音(VOA)的电邮中表示，任何寻常事物，一条微信帖文、一张照片、一本教科书，都可能导致一名藏人凭空消失数年；中共的目的就是要迫使每一位藏人日复一日地反复权衡：自己最寻常的文化或宗教生活举动，是否会不慎触碰那条无形的红线。
+桑德斯说：“这种压迫所造成的心理创伤具有极强的腐蚀性：它引发焦虑、抑郁、高度的警觉与戒备，更在最私密的个人领域撕裂了藏人的社会肌理，信任遭到侵蚀，被迫进行自我审查，亲情与信仰的网络支离破碎。”
+报告指出，这一系列案例揭示了一个镇压体系的运作特征：它手段严密、缺乏透明度，且对藏人身份认同的哪怕是私下表达，也会被施以日益严厉的惩处。
+西藏观察：“我们所在的社会必须直面这一现实”
+报告强调，一旦某位藏人曾被卷入这套体系中，其个人档案便会被长期留存，不仅将面临更为严密的监视，更将时时处于险境中；那些曾为维护西藏语言、文化或宗教信仰而公开发声者，其所付出的代价绝非仅仅是一次性的牢狱之灾，而是一种永无止境的持续状态。
+桑德斯告诉美国之音，中共的这套压迫机器的触角并未止步于西藏的边境线，通过植入间谍软件、实施网络骚扰以及监控流亡藏人的通讯联络，中共正将其“数字压迫”模式输出至海外。她说：“其目的仍然是：无论藏人的声音在何处响起，都要在那里制造恐惧、挑拨离间，并扼杀一切异议之声。我们所在的社会必须直面这一现实。”
+报告最后提出了五点建议，包括敦促中国当局在一些双边人权对话及在联合国，立即公布包括桑丹嘉措、嘉央桑丹在内的多位政治犯的下落、状况和健康状况，向联合国人权理事会提交这份报告中记录的案例，以及要求中国根据其国际人权义务，为藏族政治犯提供探视权、法律援助和独立监督等等。
+美国持续密切关注藏区现状和人权问题
+美国政府行政部门和国会一直通过发布年度报告和制定相关法案以及发表声明等方式，持续关注中国政府在西藏的治理方式及西藏人权问题。
+美国国务院上星期五(4月24日)发布的
+最新报告
+显示，虽然2025年，美国驻华大使馆的领事官员获准对西藏自治区进行了自2019年以来的首次正式访问，但是中国政府那些一贯阻碍美国外交官、官员、记者及游客前往西藏自治区及西藏自治区以外藏区的法规与程序依然如故。美国外交官、记者、研究人员及美籍藏人在试图访藏时仍面临困难。
+美国国务院这份依据2018年《西藏旅行对等法》内容向国会提交的年度报告涵盖了2025年全年情况，显示了中共如何通过许可证制度、明显的监控手段以及针对性的恐吓和骚扰，阻止外国人进入西藏。
+与此同时，星期三(4月29日)，佛罗里达州共和党籍联邦参议员里克·斯科特(Rick Scott)与俄勒冈州民主党籍联邦参议员杰夫·默克利(Jeff Merkley)共同提出了《
+西藏暴行认定法案
+》(Tibet Atrocities Determination Act)。这项立法要求美国国务卿就中国是否正在针对藏人实施种族灭绝或危害人类罪行做出正式认定。
+斯科特参议员在其网站上发布的
+新闻稿
+中表示，中共正在西藏实施种族灭绝，这是无可回避的事实。他说：“北京政权在压迫西藏人民的过程中，实施了系统性的杀戮、酷刑、强制绝育、强迫迁徙、政府授意的绑架，以及无数其它危害人类的罪行。”
+默克利参议员在同一份新闻稿中指出：“面对中国对藏人持续不断的侵害，包括日益加剧的文化抹杀、强行拆散家庭、监视、监禁以及酷刑，美国绝不能保持沉默。既然中国政府持续无视国际法赋予藏人的权利，我们就必须明确表明：这些罪行绝不会被视而不见。”
+斯科特参议员表示他很高兴能与默克利参议员跨党合作，共同推动这项旨在追究中国政府责任的行动。</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">欧洲议会通过决议，呼吁中国撤销民族团结法</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">cn.vot.org</span>
+              <span>2026-04-30</span>
+            </div>
+          </div>
+          <div class="news-card-body">欧洲议会星期四(4月30日)通过一项决议，呼吁中国政府立即撤销《民族团结进步促进法》。决议谴责这部新法律对源自西藏、新疆和内蒙古的人口造成严重后果。
+欧洲议会在决议中谴责这部法律鼓励同化政策并限制文化、宗教与语言自由，违反了中国依据国际法必须承担的义务。
+决议还要求中国释放政治犯，包括维吾尔族学者伊利哈木·土赫提(Ilham Tohti)。他在2014年被中国政府以“分裂国家罪”判处无期徒刑。2019年，欧洲议会向身陷囹圄的伊利哈木颁发了欧洲最高人权奖“萨哈罗夫奖”。
+议员们还强调，西藏精神领袖达赖喇嘛的继承人问题属于宗教事务，只能由藏传佛教传统来决定。
+决议还警告说，推出和执行这部法律将对欧盟与中国的关系造成严重后果。
+议员们还谴责中国在欧盟境内针对个人的跨国镇压，并敦促成员国暂停与中国的引渡条约。
+议员们还呼吁欧盟理事会对那些对这部新法律负有责任的人员实施欧盟全球人权制裁机制。
+中国在今年3月通过《民族团结进步促进法》，该法定于从今年7月1日起实施。
+欧洲议会是有27个成员国的欧洲联盟的立法机构，议员由直选产生。
+这项决议以439票支持、52票反对和71票弃权获得通过。
+决议推动者是来自立陶宛的代纽斯·扎利马斯(Dainius Žalimas)和来自斯洛伐克的米里亚姆·莱克斯曼(Miriam Lexmann)。莱克斯曼是对中政策跨国议会联盟(IPAC)的共同主席，扎利马斯是该联盟成员，担任过立陶宛的宪法法院院长。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+上个月，对中政策跨国议会联盟的另一位共同主席约翰·穆勒纳尔(John Moolenaar)领导的美国众议院美国与中国共产党战略竞争特设委员会在中国出台民族团结法后也谴责说：“中共新出台的‘民族团结’法是其日益加剧的奥威尔式‘中国化’运动的幌子。它暴露了中共统战战略的真正目的：对党国绝对服从和奴役。”</div>
         </div>
     </div>
 
     <div class="nav-footer">
-        <a href="2026-05-25.html" class="btn btn-outline">&larr; 上一日报</a>
+        <a href="2026-05-25.html" class="btn btn-outline">← 前一天</a>
         <a href="../index.html" class="btn btn-primary">返回首页</a>
-        <span class="btn btn-outline" style="opacity:.4;cursor:default">下一日报 &rarr;</span>
+        <a href="2026-05-27.html" class="btn btn-outline">后一天 →</a>
     </div>
 </div>
 
-<script>
-var FONT_BODY = 'SimSun';
-var FONT_H1 = 'SimHei';
-var FONT_H2 = 'KaiTi';
-var FONT_SIZE = 32;
-var LINE_SP = 580;
-var INDENT_FL = 640;
-var MARGIN_T = 2098, MARGIN_B = 1984, MARGIN_L = 1588, MARGIN_R = 1474;
-var A4W = 11906, A4H = 16838;
-
-function getDateStr() {
-    var el = document.querySelector('.header .meta');
-    if (el) { var m = el.textContent.match(/(\d{4}年\d{2}月\d{2}日)/); if (m) return m[1]; }
-    return '';
-}
-
-function makeDoc(paragraphs, filename) {
-    var doc = new docx.Document({
-        sections: [{
-            properties: {
-                page: {
-                    size: { width: A4W, height: A4H },
-                    margin: { top: MARGIN_T, bottom: MARGIN_B, left: MARGIN_L, right: MARGIN_R }
-                }
-            },
-            children: paragraphs
-        }]
-    });
-    docx.Packer.toBlob(doc).then(function(blob) {
-        saveAs(blob, filename);
-    });
-}
-
-function exportAnalysisDocx() {
-    var btn = document.querySelector('#analysis .export-btn');
-    btn.disabled = true; btn.textContent = '生成中...';
-    var sec = document.getElementById('analysis');
-    var ps = [];
-    var ds = getDateStr();
-    ps.push(new docx.Paragraph({
-        children: [new docx.TextRun({ text: '深度研判分析报告', font: FONT_H1, size: 40, bold: true })],
-        alignment: docx.AlignmentType.CENTER, spacing: { after: 200, line: LINE_SP }
-    }));
-    ps.push(new docx.Paragraph({
-        children: [new docx.TextRun({ text: ds, font: FONT_BODY, size: 28 })],
-        alignment: docx.AlignmentType.CENTER, spacing: { after: 400, line: LINE_SP }
-    }));
-    var nodes = sec.querySelectorAll('h3.section-title, h4.sub-title, p');
-    for (var i = 0; i < nodes.length; i++) {
-        var n = nodes[i];
-        if (n.tagName === 'H3') {
-            ps.push(new docx.Paragraph({
-                children: [new docx.TextRun({ text: n.textContent.trim(), font: FONT_H1, size: FONT_SIZE, bold: true })],
-                spacing: { before: 300, after: 150, line: LINE_SP }
-            }));
-        } else if (n.tagName === 'H4') {
-            ps.push(new docx.Paragraph({
-                children: [new docx.TextRun({ text: n.textContent.trim(), font: FONT_H2, size: FONT_SIZE })],
-                spacing: { before: 200, after: 100, line: LINE_SP }
-            }));
-        } else if (n.tagName === 'P') {
-            var t = n.textContent.trim();
-            if (t) {
-                ps.push(new docx.Paragraph({
-                    children: [new docx.TextRun({ text: t, font: FONT_BODY, size: FONT_SIZE })],
-                    spacing: { line: LINE_SP }, indent: { firstLine: INDENT_FL }
-                }));
-            }
-        }
-    }
-    makeDoc(ps, '深度研判分析报告_' + ds + '.docx');
-    setTimeout(function() { btn.disabled = false; btn.textContent = '导出 DOCX'; }, 2000);
-}
-
-function exportNewsDocx() {
-    var btn = document.querySelector('#news .export-btn');
-    btn.disabled = true; btn.textContent = '生成中...';
-    var sec = document.getElementById('news');
-    var ps = [];
-    var ds = getDateStr();
-    ps.push(new docx.Paragraph({
-        children: [new docx.TextRun({ text: '新闻报道汇总', font: FONT_H1, size: 40, bold: true })],
-        alignment: docx.AlignmentType.CENTER, spacing: { after: 200, line: LINE_SP }
-    }));
-    ps.push(new docx.Paragraph({
-        children: [new docx.TextRun({ text: ds, font: FONT_BODY, size: 28 })],
-        alignment: docx.AlignmentType.CENTER, spacing: { after: 400, line: LINE_SP }
-    }));
-    var sources = sec.querySelectorAll('.source-section');
-    for (var i = 0; i < sources.length; i++) {
-        var src = sources[i];
-        var sh = src.querySelector('h3');
-        if (sh) {
-            ps.push(new docx.Paragraph({
-                children: [new docx.TextRun({ text: sh.textContent.trim(), font: FONT_H1, size: FONT_SIZE, bold: true })],
-                spacing: { before: 400, after: 200, line: LINE_SP }
-            }));
-        }
-        var arts = src.querySelectorAll('.article-item');
-        for (var j = 0; j < arts.length; j++) {
-            var art = arts[j];
-            var th = art.querySelector('h4');
-            if (th) {
-                ps.push(new docx.Paragraph({
-                    children: [new docx.TextRun({ text: th.textContent.trim(), font: FONT_BODY, size: FONT_SIZE, bold: true })],
-                    spacing: { before: 200, after: 100, line: LINE_SP }
-                }));
-            }
-            var dh = art.querySelector('.date');
-            if (dh) {
-                ps.push(new docx.Paragraph({
-                    children: [new docx.TextRun({ text: '发布时间: ' + dh.textContent.trim(), font: FONT_BODY, size: 24, color: '888888' })],
-                    spacing: { after: 100 }
-                }));
-            }
-            var bd = art.querySelector('.body-text');
-            if (bd) {
-                var bt = bd.textContent.trim();
-                if (bt) {
-                    var pars = bt.split(/\n+/);
-                    for (var k = 0; k < pars.length; k++) {
-                        var pv = pars[k].trim();
-                        if (pv) {
-                            ps.push(new docx.Paragraph({
-                                children: [new docx.TextRun({ text: pv, font: FONT_BODY, size: FONT_SIZE })],
-                                spacing: { line: LINE_SP }, indent: { firstLine: INDENT_FL }
-                            }));
-                        }
-                    }
-                }
-            }
-            ps.push(new docx.Paragraph({
-                children: [new docx.TextRun({ text: '————————————————————————', font: FONT_BODY, size: 20, color: 'CCCCCC' })],
-                spacing: { before: 100, after: 100 }, alignment: docx.AlignmentType.CENTER
-            }));
-        }
-    }
-    makeDoc(ps, '新闻报道汇总_' + ds + '.docx');
-    setTimeout(function() { btn.disabled = false; btn.textContent = '导出 DOCX'; }, 2000);
-}
-</script>
 </body>
 </html>

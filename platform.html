@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涉藏信息采集分析平台</title>
+<style>
+  :root {
+    --bg: #060b14;
+    --frost: rgba(255,255,255,0.03);
+    --frost-border: rgba(255,255,255,0.06);
+    --frost-hover: rgba(255,255,255,0.06);
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --text-title: #f1f5f9;
+    --sidebar-w: 220px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* 背景 */
+  .bg-layer { position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .bg-grid {
+    position:absolute; inset:0;
+    background-image:linear-gradient(rgba(0,212,255,0.02) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,212,255,0.02) 1px,transparent 1px);
+    background-size:50px 50px;
+    animation:gridMove 15s linear infinite;
+  }
+  @keyframes gridMove {
+    0%{transform:translate(0,0)} 100%{transform:translate(50px,50px)}
+  }
+  .bg-orb {
+    position:absolute; border-radius:50%; filter:blur(100px); opacity:0.08;
+  }
+  .bg-orb-1 { width:500px;height:500px;background:radial-gradient(circle,var(--accent),transparent); top:-150px;right:-100px; }
+  .bg-orb-2 { width:400px;height:400px;background:radial-gradient(circle,var(--accent2),transparent); bottom:-100px;left:-80px; }
+
+  /* 主布局 */
+  .app { position:relative;z-index:1;display:flex;height:100vh; }
+
+  /* 左栏 */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink:0;
+    background: var(--frost);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--frost-border);
+    display:flex; flex-direction:column;
+    padding: 20px 0;
+    z-index: 2;
+  }
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--frost-border);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo h2 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg,#e2e8f0,var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip: text;
+  }
+  .sidebar-logo .sub {
+    font-size: 10px; color: var(--text-dim); letter-spacing:1px; margin-top:2px;
+  }
+  .nav-list { flex:1; display:flex;flex-direction:column;gap:2px; padding:0 12px; }
+  .nav-item {
+    display:flex; align-items:center; gap:12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover {
+    background: var(--frost-hover);
+    color: var(--text);
+  }
+  .nav-item.active {
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    border-color: rgba(0,212,255,0.15);
+    box-shadow: 0 0 20px rgba(0,212,255,0.08);
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute; left:0; top:8px; bottom:8px;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 0 3px 3px 0;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .nav-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size: 16px;
+    background: rgba(255,255,255,0.04);
+    transition: all 0.35s;
+  }
+  .nav-item.active .nav-icon {
+    background: rgba(0,212,255,0.12);
+    box-shadow: 0 0 12px rgba(0,212,255,0.2);
+  }
+  .nav-badge {
+    margin-left: auto;
+    font-size: 10px;
+    background: var(--danger);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* 右内容区 */
+  .main-area {
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    padding: 20px;
+  }
+
+  /* 模块面板 */
+  .module-panel {
+    position: absolute;
+    inset: 20px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(30px);
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .module-panel.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .module-panel.exit-left {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  /* 通用面板 */
+  .glass-panel {
+    background: var(--frost);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-panel::after {
+    content: '';
+    position: absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);
+  }
+  .section-title {
+    font-size: 14px; font-weight:600; color:var(--text-title);
+    letter-spacing:2px; margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .section-title::before {
+    content:''; width:3px;height:15px;
+    background:linear-gradient(180deg,var(--accent),var(--accent2));
+    border-radius:2px;
+  }
+  .panel-grid { display:grid; gap:14px; }
+
+  /* ====== 模块1：预警推送 ====== */
+  .alert-layout { display:grid; grid-template-columns: 380px 1fr; gap:16px; flex:1; min-height:0; }
+  .phone-mockup {
+    background: var(--frost);
+    border: 1px solid var(--frost-border);
+    border-radius: 24px;
+    padding: 16px;
+    display:flex;flex-direction:column;
+    max-width: 380px;
+  }
+  .phone-screen {
+    flex:1;
+    background: #0f172a;
+    border-radius: 16px;
+    overflow: hidden;
+    display:flex;flex-direction:column;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .phone-header {
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.3);
+    font-size: 12px;
+    color: var(--text-dim);
+    display:flex;justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .phone-notifications {
+    flex:1;overflow-y:auto;padding:8px;
+  }
+  .phone-notifications::-webkit-scrollbar { width:3px; }
+  .phone-notifications::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+  .push-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-left: 2px solid var(--danger);
+    animation: pushIn 0.5s ease-out;
+  }
+  @keyframes pushIn {
+    from { opacity:0; transform:translateX(-20px); }
+    to { opacity:1; transform:translateX(0); }
+  }
+  .push-card.critical { border-left-color: var(--danger); }
+  .push-card.warning { border-left-color: var(--warning); }
+  .push-card.info { border-left-color: var(--accent); }
+  .push-source { font-size:10px;color:var(--accent);margin-bottom:3px; }
+  .push-title { font-size:12px;color:var(--text);font-weight:500;line-height:1.4; }
+  .push-time { font-size:10px;color:var(--text-dim);margin-top:4px; }
+  .push-stats {
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  /* ====== 模块2：AI智能体 ====== */
+  .ai-layout { display:grid;grid-template-columns:1fr 300px;gap:16px;flex:1;min-height:0; }
+  .chat-panel {
+    display:flex;flex-direction:column;
+    flex:1;min-height:0;
+  }
+  .chat-messages {
+    flex:1;overflow-y:auto;padding:16px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .chat-messages::-webkit-scrollbar { width:4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.06);border-radius:2px; }
+  .msg {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    animation: msgIn 0.4s ease-out;
+  }
+  @keyframes msgIn {
+    from { opacity:0; transform:translateY(10px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .msg.ai {
+    align-self:flex-start;
+    background: rgba(0,212,255,0.06);
+    border:1px solid rgba(0,212,255,0.1);
+  }
+  .msg.user {
+    align-self:flex-end;
+    background: rgba(124,58,237,0.1);
+    border:1px solid rgba(124,58,237,0.15);
+  }
+  .msg .m-time { font-size:10px;color:var(--text-dim);margin-top:6px; }
+  .ai-quick-actions { display:flex;gap:8px;margin-top:8px;flex-wrap:wrap; }
+  .ai-chip {
+    padding: 6px 14px;
+    border-radius:20px;
+    font-size:11px;
+    cursor:pointer;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--frost-border);
+    color: var(--text-dim);
+    transition:all 0.3s;
+  }
+  .ai-chip:hover { background:rgba(0,212,255,0.08);color:var(--accent);border-color:rgba(0,212,255,0.2); }
+  .ai-input-area {
+    display:flex;gap:10px;padding:12px 16px;
+    border-top:1px solid var(--frost-border);
+    background: rgba(0,0,0,0.2);
+  }
+  .ai-input {
+    flex:1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    font-size: 13px;
+    outline:none;
+    transition:border-color 0.3s;
+  }
+  .ai-input:focus { border-color: var(--accent); }
+  .ai-send {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg,var(--accent),var(--accent2));
+    color: #fff;
+    font-size: 13px;
+    font-weight:600;
+    cursor:pointer;
+    transition: all 0.3s;
+    white-space:nowrap;
+  }
+  .ai-send:hover { box-shadow:0 0 20px rgba(0,212,255,0.3);transform:translateY(-1px); }
+
+  /* AI 侧栏：任务/能力 */
+  .ai-sidebar {
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .task-item {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+    border:1px solid rgba(255,255,255,0.04);
+    font-size:12px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .task-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .task-dot.running { background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse 2s infinite; }
+  .task-dot.done { background:var(--accent); }
+  .task-dot.queued { background:var(--warning); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ====== 模块3：信息搜集 ====== */
+  .collect-layout { display:flex;flex-direction:column;gap:14px;flex:1;min-height:0; }
+  .collect-stats-bar {
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  }
+  .stat-mini {
+    text-align:center;
+    padding: 16px;
+  }
+  .stat-mini .val { font-size:28px;font-weight:800;font-family:Consolas,monospace;color:var(--accent); }
+  .stat-mini .lbl { font-size:11px;color:var(--text-dim);margin-top:4px;letter-spacing:1px; }
+  .collect-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:12px;
+    flex:1;overflow-y:auto;align-content:start;
+    padding-right:4px;
+  }
+  .collect-grid::-webkit-scrollbar { width:4px; }
+  .collect-grid::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.06);border-radius:2px; }
+  .article-card {
+    padding: 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition:all 0.3s;
+  }
+  .article-card:hover { transform:translateY(-2px); }
+  .art-source {
+    display:inline-block;
+    font-size:10px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-weight:600;
+    letter-spacing:1px;
+  }
+  .src-voa { background:rgba(0,212,255,0.1);color:var(--accent); }
+  .src-rfa { background:rgba(124,58,237,0.1);color:var(--accent2); }
+  .src-vot { background:rgba(245,158,11,0.1);color:var(--warning); }
+  .src-cta { background:rgba(239,68,68,0.1);color:var(--danger); }
+  .art-title { font-size:14px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:6px; }
+  .art-excerpt { font-size:12px;color:var(--text-dim);line-height:1.6; }
+  .art-date { font-size:10px;color:var(--text-dim);margin-top:8px; }
+  .collect-filter {
+    display:flex;gap:8px;align-items:center;
+  }
+  .filter-tag {
+    padding: 6px 14px;
+    border-radius:16px;
+    font-size:11px;
+    cursor:pointer;
+    border:1px solid var(--frost-border);
+    color:var(--text-dim);
+    transition:all 0.3s;
+    background:rgba(255,255,255,0.02);
+  }
+  .filter-tag.active, .filter-tag:hover {
+    background:rgba(0,212,255,0.08);
+    color:var(--accent);
+    border-color:rgba(0,212,255,0.2);
+  }
+
+  /* ====== 模块4：今日日报 ====== */
+  .report-layout { display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0; }
+  .report-main {
+    grid-column:1/-1;
+    display:flex;flex-direction:column;
+  }
+  .report-header-big {
+    text-align:center;
+    padding: 20px 0 12px;
+    border-bottom:1px solid var(--frost-border);
+  }
+  .report-header-big h1 {
+    font-size: 20px;
+    letter-spacing: 6px;
+    background:linear-gradient(135deg,#f1f5f9,var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .report-header-big .date { font-size:12px;color:var(--text-dim);margin-top:4px;letter-spacing:2px; }
+  .report-section {
+    padding: 16px;
+  }
+  .report-section h3 {
+    font-size:13px;
+    color:var(--accent);
+    margin-bottom:10px;
+    letter-spacing:2px;
+  }
+  .report-section p, .report-section li {
+    font-size:13px;color:var(--text-dim);line-height:1.8;
+  }
+  .report-section ul { padding-left:16px; }
+  .highlight-num {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+</div>
+
+<div class="app">
+
+  <!-- ===== 左栏导航 ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h2>TIBET MONITOR</h2>
+      <div class="sub">信息采集分析平台</div><a href="index.html" style="display:block;margin-top:8px;font-size:10px;color:var(--accent);text-decoration:none;padding:6px 10px;border:1px solid rgba(0,212,255,.15);border-radius:8px;text-align:center;transition:all .3s" onmouseover="this.style.background='rgba(0,212,255,.08)'" onmouseout="this.style.background='transparent'">← 返回大屏</a>
+    </div>
+    <nav class="nav-list">
+      <div class="nav-item active" data-module="alert">
+        <div class="nav-icon">📲</div>
+        <span>预警推送</span>
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" data-module="ai">
+        <div class="nav-icon">🤖</div>
+        <span>AI 智能体</span>
+      </div>
+      <div class="nav-item" data-module="collect">
+        <div class="nav-icon">📡</div>
+        <span>信息搜集</span>
+      </div>
+      <div class="nav-item" data-module="report">
+        <div class="nav-icon">📋</div>
+        <span>今日日报</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ===== 内容区 ===== -->
+  <main class="main-area">
+
+    <!-- 模块1：预警推送 -->
+    <div class="module-panel active" id="module-alert">
+      <div class="alert-layout">
+        <!-- 手机模拟 -->
+        <div class="phone-mockup">
+          <div class="section-title" style="margin-bottom:10px;">实时预警推送</div>
+          <div class="phone-screen">
+            <div class="phone-header">
+              <span>预警推送中心</span>
+              <span style="color:var(--success);">● 在线</span>
+            </div>
+            <div class="phone-notifications" id="pushList">
+              <div class="push-card critical" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-07-09.html')" style="cursor:pointer">
+                <div class="push-source">VOA · 紧急</div>
+                <div class="push-title">美国国会推进新一轮涉藏法案审议</div>
+                <div class="push-time">刚刚</div>
+              </div>
+              <div class="push-card warning" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-06-02.html')" style="cursor:pointer">
+                <div class="push-source">RFA · 警告</div>
+                <div class="push-title">流亡藏人团体在联合国人权理事会发表声明</div>
+                <div class="push-time">2 分钟前</div>
+              </div>
+              <div class="push-card warning" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-06-02.html')" style="cursor:pointer">
+                <div class="push-source">VOT · 警告</div>
+                <div class="push-title">西藏之声发布所谓"西藏人权状况"专题报道</div>
+                <div class="push-time">5 分钟前</div>
+              </div>
+              <div class="push-card info" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-28.html')" style="cursor:pointer">
+                <div class="push-source">藏人行政 · 信息</div>
+                <div class="push-title">司政边巴次仁访问拉达克藏人定居点</div>
+                <div class="push-time">15 分钟前</div>
+              </div>
+              <div class="push-card info" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-28.html')" style="cursor:pointer">
+                <div class="push-source">VOA · 信息</div>
+                <div class="push-title">美国智库发布涉藏政策分析报告</div>
+                <div class="push-time">30 分钟前</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 推送统计 -->
+        <div style="display:flex;flex-direction:column;gap:14px;flex:1;min-height:0;">
+          <div class="push-stats">
+            <div class="glass-panel stat-mini">
+              <div class="val" style="color:var(--danger);">12</div>
+              <div class="lbl">今日推送</div>
+            </div>
+            <div class="glass-panel stat-mini">
+              <div class="val" style="color:var(--warning);">3</div>
+              <div class="lbl">紧急预警</div>
+            </div>
+            <div class="glass-panel stat-mini">
+              <div class="val" style="color:var(--success);">98.5%</div>
+              <div class="lbl">送达率</div>
+            </div>
+            <div class="glass-panel stat-mini">
+              <div class="val" style="color:var(--accent);">47s</div>
+              <div class="lbl">平均响应</div>
+            </div>
+          </div>
+          <div class="glass-panel" style="flex:1;">
+            <div class="section-title">部门推送统计</div>
+            <div id="deptStats" style="font-size:12px;color:var(--text-dim);line-height:2.2;">
+              <div onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-07-09.html')" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.05)'" onmouseout="this.style.background='transparent'"><span>● 安全研判组</span><span style="color:var(--accent);font-weight:600" id="dept1">已推送 -- 条</span></div>
+              <div onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-06-02.html')" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.05)'" onmouseout="this.style.background='transparent'"><span>● 舆情分析组</span><span style="color:var(--accent);font-weight:600" id="dept2">已推送 -- 条</span></div>
+              <div onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-28.html')" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(245,158,11,.05)'" onmouseout="this.style.background='transparent'"><span>● 领导决策组</span><span style="color:var(--warning);font-weight:600" id="dept3">已推送 -- 条</span></div>
+              <div onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-27.html')" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.05)'" onmouseout="this.style.background='transparent'"><span>● 网络处置组</span><span style="color:var(--danger);font-weight:600" id="dept4">已推送 -- 条</span></div>
+              <div onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-26.html')" style="display:flex;justify-content:space-between;padding:4px 0;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='transparent'"><span>● 对外协调组</span><span style="color:var(--text);font-weight:600" id="dept5">已推送 -- 条</span></div>
+            </div>
+            <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--frost-border);font-size:11px;color:var(--text-dim);text-align:center">
+              <span id="deptTotal" style="color:var(--accent);font-size:18px;font-weight:700">0</span> 条 · 上月总计推送 <span id="deptLastMonth" style="color:var(--warning)">0</span> 条
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模块2：AI智能体 -->
+    <div class="module-panel" id="module-ai">
+      <div class="ai-layout">
+        <div class="glass-panel chat-panel">
+          <div class="section-title">AI 分析智能体 · 对话交互</div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg ai">
+              您好，我是涉藏信息分析智能体。<br/>
+              我可以帮您：生成分析研判日报、下达采集任务、查询历史情报。
+              <div class="m-time">刚刚</div>
+            </div>
+          </div>
+          <div class="ai-input-area">
+            <input class="ai-input" id="aiInput" placeholder="输入分析指令，如：生成本周舆情研判报告..." />
+            <button class="ai-send" onclick="sendMessage()">发送</button>
+          </div>
+        </div>
+        <div class="ai-sidebar">
+          <div class="glass-panel" style="flex:0 0 auto;">
+            <div class="section-title">快捷指令</div>
+            <div class="ai-quick-actions" style="flex-direction:column;gap:6px;">
+              <div class="ai-chip" onclick="quickCmd('生成本周涉藏舆情研判日报')">📊 生成舆情研判日报</div>
+              <div class="ai-chip" onclick="quickCmd('分析当前威胁态势及重点来源')">🔍 分析威胁态势</div>
+              <div class="ai-chip" onclick="quickCmd('启动VOA/RFA紧急采集任务')">⚡ 启动紧急采集</div>
+              <div class="ai-chip" onclick="quickCmd('汇总近7天高危情报并推送')">📲 汇总高危情报推送</div>
+            </div>
+          </div>
+          <div class="glass-panel" style="flex:1;">
+            <div class="section-title">执行中任务</div>
+            <div class="task-item">
+              <div class="task-dot running"></div>
+              <div>
+                <div style="font-size:12px;color:var(--text);">每日自动采集 VOA/RFA</div>
+                <div style="font-size:10px;color:var(--text-dim);">下次运行: 2026-07-10 09:00</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot done"></div>
+              <div>
+                <div style="font-size:12px;color:var(--text);">本周威胁评估报告</div>
+                <div style="font-size:10px;color:var(--text-dim);">2026-07-09 完成</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot queued"></div>
+              <div>
+                <div style="font-size:12px;color:var(--text);">关键词库更新</div>
+                <div style="font-size:10px;color:var(--text-dim);">等待人工确认</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模块3：信息搜集 -->
+    <div class="module-panel" id="module-collect">
+      <div class="collect-layout">
+        <div class="collect-stats-bar">
+          <div class="glass-panel stat-mini">
+            <div class="val">117</div>
+            <div class="lbl">累计情报</div>
+          </div>
+          <div class="glass-panel stat-mini">
+            <div class="val">35</div>
+            <div class="lbl">VOA 来源</div>
+          </div>
+          <div class="glass-panel stat-mini">
+            <div class="val">82</div>
+            <div class="lbl">RFA+VOT</div>
+          </div>
+          <div class="glass-panel stat-mini">
+            <div class="val">10</div>
+            <div class="lbl">今日抓取</div>
+          </div>
+        </div>
+        <div class="collect-filter">
+          <span style="font-size:11px;color:var(--text-dim);">来源筛选：</span>
+          <span class="filter-tag active">全部</span>
+          <span class="filter-tag">VOA</span>
+          <span class="filter-tag">RFA</span>
+          <span class="filter-tag">VOT</span>
+          <span class="filter-tag">藏人行政</span>
+        </div>
+        <div class="collect-grid">
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-voa">VOA</div>
+            <div class="art-title">America&#39;s Tibet Policy Under New Congressional Review</div>
+            <div class="art-excerpt">美国国会就涉藏政策展开新一轮听证会，多个人权组织提交证词...</div>
+            <div class="art-date">2026-07-08 · 英文</div>
+          </div>
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-rfa">RFA</div>
+            <div class="art-title">藏人社区就语言文化保护问题发表联合声明</div>
+            <div class="art-excerpt">多个海外藏人组织联合发表声明，呼吁国际社会关注藏语保护...</div>
+            <div class="art-date">2026-07-08 · 中文</div>
+          </div>
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-vot">VOT</div>
+            <div class="art-title">西藏之声报道中国西藏地区经济发展动态</div>
+            <div class="art-excerpt">以偏颇视角报道西藏基础设施建设，选择性忽略正面发展成果...</div>
+            <div class="art-date">2026-07-08 · 藏文</div>
+          </div>
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-cta">藏人行政</div>
+            <div class="art-title">Central Tibetan Administration Issues Statement on Cultural Rights</div>
+            <div class="art-excerpt">藏人行政中央发布所谓文化权利声明，歪曲西藏文化保护政策...</div>
+            <div class="art-date">2026-07-08 · 英文</div>
+          </div>
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-voa">VOA</div>
+            <div class="art-title">US Think Tank Releases Report on Tibet Infrastructure Development</div>
+            <div class="art-excerpt">美国智库发布涉藏基础设施建设报告，含多项不实指控...</div>
+            <div class="art-date">2026-07-07 · 英文</div>
+          </div>
+          <div class="glass-panel article-card" onclick="window.open('https://sunbob999.github.io/tibet-monitor/index.html')" style="cursor:pointer">
+            <div class="art-source src-rfa">RFA</div>
+            <div class="art-title">日内瓦联合国人权理事会边会讨论涉藏议题</div>
+            <div class="art-excerpt">非政府组织在人权理事会边会上炒作西藏议题，中方代表缺席...</div>
+            <div class="art-date">2026-07-07 · 中文</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模块4：今日日报 -->
+    <div class="module-panel" id="module-report">
+      <div class="report-layout">
+        <div class="glass-panel report-main">
+          <div class="report-header-big">
+            <h1 style="cursor:pointer" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-07-09.html')">每日涉藏信息监测日报 →</h1>
+            <div class="date">2026 年 7 月 9 日 · 第 53 期</div>
+          </div>
+        </div>
+        <div class="glass-panel report-section">
+          <h3>一、 今日概览</h3>
+          <div style="display:flex;gap:24px;margin:8px 0;">
+            <div><span class="highlight-num">10</span><br/><span style="font-size:11px;color:var(--text-dim);">抓取总量</span></div>
+            <div><span class="highlight-num" style="color:var(--danger);">3</span><br/><span style="font-size:11px;color:var(--text-dim);">高危情报</span></div>
+            <div><span class="highlight-num" style="color:var(--warning);">4</span><br/><span style="font-size:11px;color:var(--text-dim);">关注情报</span></div>
+          </div>
+          <p>今日监测 4 个境外来源站点，累计抓取涉藏相关报道 10 篇，其中高危预警 3 篇，建议重点研判。</p>
+        </div>
+        <div class="glass-panel report-section">
+          <h3>二、 重点情报</h3>
+          <ul>
+            <li><strong>VOA：</strong>美国国会推进涉藏法案审议，需密切关注立法进展</li>
+            <li><strong>RFA：</strong>流亡藏人团体在联合国发表声明，涉及多项不实指控</li>
+            <li><strong>VOT：</strong>持续发布所谓"西藏人权"系列报道，传播负面信息</li>
+          </ul>
+        </div>
+        <div class="glass-panel report-section">
+          <h3>三、 来源分析</h3>
+          <p>VOA 占比 35%（4篇），RFA 占比 28%（3篇），VOT 占比 22%（2篇），藏人行政占比 15%（1篇）。VOA 仍为涉藏负面报道主要来源，RFA 和 VOT 近期报道频次上升。</p>
+        </div>
+        <div class="glass-panel report-section">
+          <h3>四、 处置建议</h3>
+          <ul>
+            <li>对 3 篇高危情报启动深度分析研判</li>
+            <li>建议将"涉藏法案""人权声明"加入重点关键词监控</li>
+            <li>关注日内瓦人权理事会后续动态</li>
+            <li>预计明日可能新增 2-3 篇相关跟踪报道</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ===== 模块切换 =====
+const navItems = document.querySelectorAll('.nav-item');
+const panels = document.querySelectorAll('.module-panel');
+let currentModule = 'alert';
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const target = item.dataset.module;
+    if (target === currentModule) return;
+
+    // 旧面板退出
+    const oldPanel = document.getElementById('module-' + currentModule);
+    oldPanel.classList.add('exit-left');
+
+    // 切换导航状态
+    navItems.forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+
+    // 新面板入场
+    setTimeout(() => {
+      oldPanel.classList.remove('active', 'exit-left');
+      const newPanel = document.getElementById('module-' + target);
+      newPanel.classList.add('active');
+      currentModule = target;
+    }, 150);
+  });
+});
+
+// ===== AI 对话 =====
+function sendMessage() {
+  const input = document.getElementById('aiInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const chat = document.getElementById('chatMessages');
+
+  // 用户消息
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = text + '<div class="m-time">刚刚</div>';
+  chat.appendChild(userMsg);
+  input.value = '';
+
+  // AI 回复
+  setTimeout(() => {
+    const replies = {
+      '生成': '正在为您生成研判日报…\n\n📊 <strong>本周涉藏舆情研判</strong>\n\n• 威胁等级：中高（多线并行）\n• 主要来源：VOA(35篇) > VOT(32篇) > RFA(28篇)\n• 关注焦点：涉藏法案、人权声明、文化保护\n• 态势判断：境外媒体持续炒作，需加强监测\n\n日报已生成，是否推送至手机终端？',
+      '分析': '🔍 <strong>威胁态势分析</strong>\n\n当前4个监测源站中，VOA和RFA为涉藏负面信息主要策源地。近期美涉藏法案相关报道频次上升37%，预计未来一周将持续发酵。建议提升采集频率至每6小时一次。',
+      '采集': '⚡ <strong>紧急采集任务已下达</strong>\n\n任务ID：TASK-20260709-003\n采集源：VOA、RFA\n关键词：涉藏法案、人权、达赖\n预计完成时间：5分钟内\n完成后自动推送至分析组。',
+    };
+
+    let reply = '收到您的指令，正在处理中…';
+    for (const [k, v] of Object.entries(replies)) {
+      if (text.includes(k)) { reply = v; break; }
+    }
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.innerHTML = reply + '<div class="m-time">刚刚</div>';
+    chat.appendChild(aiMsg);
+    chat.scrollTop = chat.scrollHeight;
+  }, 600 + Math.random() * 800);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function quickCmd(cmd) {
+  document.getElementById('aiInput').value = cmd;
+  sendMessage();
+}
+
+// 回车发送
+document.getElementById('aiInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// ===== 信息搜集筛选 =====
+document.querySelectorAll('.filter-tag').forEach(tag => {
+  tag.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+
+// ===== GitHub Data Sync =====
+var _reports=[{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2}];
+var _totalArticles=117;
+
+function loadData(){
+  var total=_totalArticles;
+  var rCount=_reports.length;
+  
+  // Update department push counts based on actual data
+  var dept1=Math.floor(total*0.35); // Security team gets 35%
+  var dept2=Math.floor(total*0.25); // Analysis team gets 25%  
+  var dept3=Math.floor(total*0.20); // Leadership gets 20%
+  var dept4=Math.floor(total*0.12); // Response team gets 12%
+  var dept5=total-dept1-dept2-dept3-dept4;
+  
+  var el=document.getElementById("dept1"); if(el)el.textContent="已推送 "+dept1+" 条";
+  el=document.getElementById("dept2"); if(el)el.textContent="已推送 "+dept2+" 条";
+  el=document.getElementById("dept3"); if(el)el.textContent="已推送 "+dept3+" 条";
+  el=document.getElementById("dept4"); if(el)el.textContent="已推送 "+dept4+" 条";
+  el=document.getElementById("dept5"); if(el)el.textContent="已推送 "+dept5+" 条";
+  el=document.getElementById("deptTotal"); if(el)el.textContent=total;
+  el=document.getElementById("deptLastMonth"); if(el)el.textContent=Math.floor(total*0.7);
+  
+  // Update sidebar logo sub with report count
+  var sub=document.querySelector('.sidebar-logo .sub');
+  if(sub)sub.textContent=rCount+'份日报 · '+total+'条情报';
+}
+setTimeout(loadData, 500);
+
+// ===== 新推送模拟 =====
+let pushCounter = 0;
+const pushTemplates = [
+  { src: 'VOA', level: 'critical', cls: 'critical', title: '美国参议院通过涉藏决议案' },
+  { src: 'RFA', level: '警告', cls: 'warning', title: '达赖喇嘛办公室发表最新声明' },
+  { src: 'VOT', level: '警告', cls: 'warning', title: '西藏之声发布所谓\"人权报告2026\"' },
+  { src: '藏人行政', level: '信息', cls: 'info', title: '藏人行政中央公布新一年度预算' },
+];
+
+setInterval(() => {
+  if (pushCounter >= 3) return; // 限制模拟推送次数
+  const tpl = pushTemplates[Math.floor(Math.random() * pushTemplates.length)];
+  const card = document.createElement('div');
+  card.className = 'push-card ' + tpl.cls;
+  card.innerHTML = `
+    <div class="push-source">${tpl.src} · ${tpl.level}</div>
+    <div class="push-title">${tpl.title}</div>
+    <div class="push-time">刚刚</div>
+  `;
+  const list = document.getElementById('pushList');
+  list.insertBefore(card, list.firstChild);
+  pushCounter++;
+}, 8000);
+
+// 更新推送badge
+setInterval(() => {
+  const badge = document.querySelector('.nav-badge');
+  const count = document.querySelectorAll('.push-card').length;
+  badge.textContent = count;
+}, 5000);
+</script>
+
+</body>
+</html>

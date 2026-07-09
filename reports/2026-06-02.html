@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>监测日报 - 2026-06-02 | 境外涉藏信息监测平台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --bg-dark:#060a17;--bg-mid:#0a1024;--bg-panel:rgba(14,22,45,0.85);--bg-card:rgba(22,32,58,0.65);
+    --border-glow:rgba(0,212,255,0.3);--border-soft:rgba(100,130,180,0.15);--border-mid:rgba(0,212,255,0.12);
+    --cyan:#00d4ff;--cyan-light:#5ce8ff;--cyan-dim:#0891b2;--blue:#3b82f6;--green:#10b981;
+    --amber:#f59e0b;--red:#ef4444;--pink:#ec4899;--purple:#a855f7;
+    --text-main:#e8edf5;--text-body:#c5d1e0;--text-dim:#7a8ba3;--text-muted:#4a5b75;
+    --shadow-glow:0 0 24px rgba(0,212,255,0.1);
+    --shadow-card:0 4px 30px rgba(0,0,0,0.5);
+    --grad-cyan:linear-gradient(135deg,#0891b2,#00d4ff);
+}
+@font-face{font-family:'Orbitron';src:url('https://fonts.gstatic.com/s/orbitron/v29/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWg.woff2') format('woff2');font-display:swap}
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    background:var(--bg-dark);color:var(--text-main);min-height:100vh;line-height:1.8;
+    position:relative;overflow-x:hidden;
+}
+/* === 装饰背景层 === */
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+    background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+    background-size:50px 50px;
+}
+.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+    background:
+        radial-gradient(ellipse 800px 400px at 15% 0%,rgba(0,100,200,0.15) 0%,transparent 60%),
+        radial-gradient(ellipse 600px 300px at 85% 30%,rgba(0,180,255,0.08) 0%,transparent 60%),
+        radial-gradient(ellipse 700px 350px at 50% 100%,rgba(10,80,180,0.1) 0%,transparent 60%);
+}
+.bg-scanline{position:fixed;top:0;left:0;width:100%;height:2px;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent);
+    animation:scan 8s linear infinite;
+}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+body > *:not(.bg-grid):not(.bg-glow):not(.bg-scanline){position:relative;z-index:2}
+/* === 链接 === */
+a{color:var(--cyan);text-decoration:none;transition:color .2s}
+a:hover{color:var(--cyan-light);text-decoration:underline}
+/* === 顶部标题栏 === */
+.top-header{
+    background:linear-gradient(90deg,rgba(8,16,40,0.98),rgba(12,24,50,0.98));
+    color:var(--text-main);padding:0 32px;height:64px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;
+    border-bottom:1px solid var(--border-glow);
+    box-shadow:0 2px 30px rgba(0,212,255,0.12);
+    backdrop-filter:blur(12px);
+}
+.top-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 10%,var(--cyan) 50%,transparent 90%);opacity:.6;
+}
+.top-header h1{font-size:1.15rem;font-weight:600;letter-spacing:1.5px}
+.top-header h1 a{color:var(--text-main)}
+.top-header h1 a:hover{color:var(--cyan)}
+.top-header .meta{display:flex;align-items:center;gap:20px;font-size:.8rem;color:var(--text-dim)}
+.top-header a{color:var(--text-dim)}
+.top-header a:hover{color:var(--cyan);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;box-shadow:0 0 10px var(--green)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+.clock-display{font-family:'Orbitron',monospace;font-size:.78rem;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 8px rgba(0,212,255,0.3)}
+/* === 主容器 === */
+.container{max-width:1120px;margin:0 auto;padding:32px 32px}
+/* === 统计卡片行 === */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.stat-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:12px;padding:20px 24px;
+    box-shadow:var(--shadow-card);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+    animation:fadeUp .6s ease-out backwards;
+}
+.stat-card:nth-child(1){animation-delay:.1s}
+.stat-card:nth-child(2){animation-delay:.2s}
+.stat-card:nth-child(3){animation-delay:.3s}
+.stat-card:nth-child(4){animation-delay:.4s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* 顶部光线 */
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.6;
+}
+/* 底部进度条 */
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:60%;
+    background:linear-gradient(90deg,var(--cyan),transparent);opacity:.3;border-radius:0 2px 2px 0;
+}
+.stat-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateY(-3px)}
+.stat-card:hover::after{width:100%;opacity:.6;transition:all .4s}
+.stat-card .stat-label{font-size:.72rem;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px}
+.stat-card .stat-value{font-size:2rem;font-weight:700;color:var(--text-main);font-family:'Orbitron',sans-serif}
+.stat-card .stat-sub{font-size:.7rem;color:var(--text-muted);margin-top:6px}
+.stat-card.accent .stat-value{color:var(--cyan);text-shadow:0 0 16px rgba(0,212,255,0.5)}
+.stat-card.accent::after{background:linear-gradient(90deg,var(--cyan),transparent)}
+.stat-card.green .stat-value{color:var(--green);text-shadow:0 0 16px rgba(16,185,129,0.5)}
+.stat-card.green::after{background:linear-gradient(90deg,var(--green),transparent)}
+.stat-card.amber .stat-value{color:var(--amber);text-shadow:0 0 16px rgba(245,158,11,0.5)}
+.stat-card.amber::after{background:linear-gradient(90deg,var(--amber),transparent)}
+.stat-card.red .stat-value{color:var(--red);text-shadow:0 0 16px rgba(239,68,68,0.5)}
+.stat-card.red::after{background:linear-gradient(90deg,var(--red),transparent)}
+/* === 来源分布可视化 === */
+.source-dist{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;animation:fadeUp .6s ease-out .5s backwards}
+.dist-card{flex:1;min-width:140px;background:var(--bg-card);border:1px solid var(--border-soft);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow-card);transition:all .25s;position:relative;overflow:hidden}
+.dist-card:hover{border-color:var(--border-glow);transform:translateY(-2px)}
+.dist-card .dist-bar{height:4px;border-radius:2px;margin-top:10px;overflow:hidden;background:rgba(255,255,255,0.05)}
+.dist-card .dist-bar-fill{height:100%;border-radius:2px;transition:width 1s ease-out}
+.dist-card .dist-name{font-size:.78rem;color:var(--text-dim);letter-spacing:.5px}
+.dist-card .dist-num{font-size:1.6rem;font-weight:700;font-family:'Orbitron',sans-serif;margin-top:4px}
+/* === 通用卡片（带角标装饰） === */
+.card{
+    background:var(--bg-panel);
+    border:1px solid var(--border-soft);
+    border-radius:12px;padding:30px 34px;
+    box-shadow:var(--shadow-card);margin-bottom:28px;
+    backdrop-filter:blur(8px);
+    position:relative;
+    animation:fadeUp .6s ease-out backwards;
+}
+/* 四角L型装饰 */
+.card::before,.card::after{content:'';position:absolute;width:16px;height:16px;border:2px solid var(--cyan);opacity:.4;pointer-events:none}
+.card::before{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:12px 0 0 0}
+.card::after{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 12px 0}
+.card-title{
+    font-size:1.15rem;font-weight:600;color:var(--cyan);
+    margin-bottom:20px;padding-bottom:16px;
+    border-bottom:1px solid var(--border-mid);
+    text-shadow:0 0 12px rgba(0,212,255,0.25);
+    letter-spacing:1px;
+    display:flex;align-items:center;gap:8px;
+}
+.card-title::before{content:'';display:inline-block;width:4px;height:18px;background:var(--grad-cyan);border-radius:2px;box-shadow:0 0 8px rgba(0,212,255,0.4)}
+/* === 分析报告正文 === */
+.report-paper{line-height:2.2;font-size:.95rem;color:var(--text-body)}
+.report-paper p{margin-bottom:18px;text-indent:2em}
+.report-paper p:first-child{padding:14px 20px;background:rgba(0,212,255,0.05);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;text-indent:2em;margin-bottom:22px}
+.report-paper .section-title{
+    font-size:1.1rem;font-weight:700;color:var(--cyan);
+    margin:32px 0 16px;padding:8px 16px;
+    border-left:4px solid var(--cyan);text-indent:0;
+    text-shadow:0 0 10px rgba(0,212,255,0.2);
+    background:linear-gradient(90deg,rgba(0,212,255,0.06),transparent);
+    border-radius:0 6px 6px 0;
+}
+.report-paper .sub-title{font-weight:600;color:#a5c4f0;margin:18px 0 10px;text-indent:0;font-size:.98rem}
+/* === 新闻卡片 === */
+.news-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:12px;overflow:hidden;
+    box-shadow:var(--shadow-card);margin-bottom:18px;
+    transition:all .3s;
+    position:relative;
+    animation:fadeUp .5s ease-out backwards;
+}
+.news-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateX(4px)}
+/* 左侧色条 */
+.news-card[data-source="tibet.com"]{border-left:3px solid var(--blue)}
+.news-card[data-source="cn.vot.org"]{border-left:3px solid var(--pink)}
+.news-card[data-source="voachinese.com"]{border-left:3px solid var(--green)}
+.news-card[data-source="rfa.org"]{border-left:3px solid var(--purple)}
+.news-card-header{
+    padding:16px 24px;
+    border-bottom:1px solid var(--border-soft);
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:8px;
+    background:linear-gradient(90deg,rgba(15,25,50,0.6),rgba(20,30,55,0.3));
+}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--text-main);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--text-dim);align-items:center}
+.news-card-body{padding:18px 24px;font-size:.875rem;line-height:2.1;color:var(--text-body);max-height:600px;overflow-y:auto}
+.news-card-body::-webkit-scrollbar{width:5px}
+.news-card-body::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+.news-card-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.3);border-radius:3px}
+/* === 来源标签 === */
+.source-tag{display:inline-block;padding:3px 12px;border-radius:4px;font-size:.7rem;font-weight:600;letter-spacing:.5px}
+.source-tag.tibet{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.4)}
+.source-tag.vot{background:rgba(236,72,153,0.15);color:#f472b6;border:1px solid rgba(236,72,153,0.4)}
+/* === 按钮 === */
+.btn{display:inline-block;padding:8px 22px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--grad-cyan);color:#060a17;font-weight:600}
+.btn-primary:hover{box-shadow:0 0 20px rgba(0,212,255,0.5);text-decoration:none;color:#060a17}
+.btn-primary:disabled{background:var(--text-muted);cursor:not-allowed;box-shadow:none}
+.btn-outline{background:transparent;color:var(--text-dim);border:1px solid var(--border-soft)}
+.btn-outline:hover{background:var(--bg-card);border-color:var(--border-glow);color:var(--cyan);text-decoration:none}
+/* === 底部导航 === */
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:32px 0;border-top:1px solid var(--border-soft);margin-top:32px}
+/* === 归档列表 === */
+.archive-list{display:flex;flex-direction:column;gap:10px}
+.archive-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:10px;box-shadow:var(--shadow-card);
+    transition:all .25s;
+}
+.archive-item:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateX(4px)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--cyan);min-width:120px;font-family:'Orbitron',sans-serif}
+.archive-info{font-size:.8rem;color:var(--text-dim);flex:1}
+.archive-btn{font-size:.8rem}
+/* === 导出按钮 === */
+.export-btn{
+    display:inline-block;margin-left:14px;padding:6px 18px;
+    font-size:13px;color:#060a17;
+    background:var(--grad-cyan);
+    border:none;border-radius:5px;cursor:pointer;vertical-align:middle;font-weight:600;
+    transition:all .2s;
+}
+.export-btn:hover{box-shadow:0 0 16px rgba(0,212,255,0.5)}
+.export-btn:active{background:var(--cyan-dim)}
+.export-btn:disabled{background:var(--text-muted);cursor:not-allowed;box-shadow:none}
+/* === 返回顶部 === */
+.back-top{text-align:right;margin-top:16px}
+.back-top a{color:var(--text-dim);font-size:13px}
+.back-top a:hover{color:var(--cyan)}
+/* === 目录 === */
+.toc{background:var(--bg-card);border:1px solid var(--border-soft);border-radius:12px;padding:22px 28px;margin-bottom:24px;box-shadow:var(--shadow-card)}
+.toc h2{font-size:17px;margin-bottom:12px;color:var(--cyan)}
+.toc a{display:block;color:var(--text-body);text-decoration:none;padding:6px 0;font-size:14px;transition:all .2s;padding-left:12px;border-left:2px solid transparent}
+.toc a:hover{color:var(--cyan);text-decoration:none;border-left-color:var(--cyan);padding-left:16px}
+/* === 来源分区 === */
+.source-section{background:rgba(14,22,45,0.4);border-radius:10px;padding:22px;margin-bottom:18px;border:1px solid var(--border-soft);position:relative}
+.source-section h3{font-size:16px;margin-bottom:16px}
+.article-item{background:var(--bg-card);border-radius:8px;padding:16px;margin-bottom:12px;border:1px solid var(--border-soft);transition:all .25s}
+.article-item:hover{border-color:var(--border-glow)}
+.article-item h4{font-size:15px;margin:8px 0;color:var(--text-main)}
+.article-header{margin-bottom:6px}
+.tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;margin-right:8px;font-weight:600}
+.date{color:var(--text-muted);font-size:12px}
+.body-text{font-size:13px;color:var(--text-body);max-height:500px;overflow-y:auto;white-space:pre-wrap;line-height:1.9}
+.body-text::-webkit-scrollbar{width:5px}
+.body-text::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+.body-text::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.3);border-radius:3px}
+.no-content{color:var(--text-muted);font-style:italic;font-size:14px}
+/* === 页脚 === */
+.footer{text-align:center;padding:28px;color:var(--text-muted);font-size:12px}
+.footer p{margin:4px 0}
+/* === 打印 === */
+@media print{
+    .top-header,.nav-footer,.no-print,.export-btn,.bg-grid,.bg-glow,.bg-scanline{display:none!important}
+    body{background:#fff!important;color:#000!important}
+    .container{padding:0!important}
+    .card,.news-card,.stat-card,.archive-item{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
+    .card::before,.card::after{display:none!important}
+    .card-title,.section-title,.stat-value,.news-card-title,.archive-date{color:#000!important;text-shadow:none!important}
+    .report-paper,.news-card-body,.body-text{color:#333!important}
+    .report-paper p:first-child{background:none!important;border-left:3px solid #333!important}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+    .card{padding:20px}
+}
+
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-glow"></div><div class="bg-scanline"></div>
+<div class="top-header">
+    <h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-06-02</h1>
+    <div class="meta">
+        <span><span class="live-dot"></span> 数据已同步</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card accent">
+            <div class="stat-label">监测网站数</div>
+            <div class="stat-value">3</div>
+            <div class="stat-sub">tibet.com / cn.vot.org / voachinese.com</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">当日收录报道</div>
+            <div class="stat-value">27</div>
+            <div class="stat-sub">tibet:10 | vot:15 | voa:2</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">日期范围</div>
+            <div class="stat-value">04-02~06-01</div>
+            <div class="stat-sub">近7天监测</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">威胁等级</div>
+            <div class="stat-value">高风险</div>
+            <div class="stat-sub">多维联动施压</div>
+        </div>
+    </div>
+
+    <div class="source-dist"><div class="dist-card" style="border-left:3px solid #3b82f6"><div class="dist-name">藏人行政中央</div><div class="dist-num" style="color:#3b82f6">10</div><div class="dist-bar"><div class="dist-bar-fill" style="width:37%;background:#3b82f6"></div></div></div><div class="dist-card" style="border-left:3px solid #ec4899"><div class="dist-name">西藏之声</div><div class="dist-num" style="color:#ec4899">15</div><div class="dist-bar"><div class="dist-bar-fill" style="width:56%;background:#ec4899"></div></div></div><div class="dist-card" style="border-left:3px solid #10b981"><div class="dist-name">美国之音</div><div class="dist-num" style="color:#10b981">2</div><div class="dist-bar"><div class="dist-bar-fill" style="width:7%;background:#10b981"></div></div></div><div class="dist-card" style="border-left:3px solid #a855f7"><div class="dist-name">自由亚洲</div><div class="dist-num" style="color:#a855f7">0</div><div class="dist-bar"><div class="dist-bar-fill" style="width:0%;background:#a855f7"></div></div></div></div>
+
+    <div class="card">
+      <div class="card-title">分析研判日报 <button class="export-btn" onclick="exportAnalysisDocx()">导出 DOCX</button></div>
+      <div class="report-paper">
+        <p>2026年06月02日，针对涉藏关键字"西藏、藏人、达赖"的信息，经过全网搜索梳理，参考4个网站，现将有关情况报告如下：</p><p>本周境外涉藏议题持续活跃，核心事件为第十八届图伯特人民议会正式成立及正副议长宣誓就职、司政边巴次仁连任获得多国政要致贺、美国会议员推出《确保西藏未来法案》要求强化对藏支持，以及台湾外交部长与国会连线相继致贺司政连任等多起外交联动事件。此外，cn.vot.org持续披露西藏境内环境污染、藏语教育萎缩等议题。</p><p><h3 class="section-title">一、基本概述</h3></p><p><h4 class="sub-title">（一）第十八届图伯特人民议会成立，正副议长宣誓就职</h4></p><p>5月31日至6月1日，第十八届图伯特人民议会议员正式宣誓就职，卓玛次仁与堪布索朗丹培分别当选为正副议长。值得关注的是，本届议会产生了首位女性议长，标志着藏人行政中央在性别平等方面迈出重要一步。议会常务委员会随即召开首次会议，部署新一届任期工作重点。tibet.com与cn.vot.org均对此进行了详细报道。</p><p><h4 class="sub-title">（二）司政边巴次仁连任就职，国际政要密集致贺</h4></p><p>司政边巴次仁连任就职后，美国、英国、澳大利亚及台湾地区政要相继致函祝贺。英国国会议员代表团访问图伯特人民议会，澳洲国会跨党派支持图伯特小组发表祝贺声明，台湾外交部长林佳龙及台湾国会图伯特连线均致函祝贺。驻台湾代表出席美国独立250周年庆祝活动，进一步拓展"台湾-图伯特"关系。美国之音报道指出，美国官方对流亡藏人社区选举表示祝贺。</p><p><h4 class="sub-title">（三）美国会议员推出《确保西藏未来法案》</h4></p><p>5月27日，美国民主党众议员麦戈文与共和党众议员麦考尔跨党派推出《确保西藏未来法案》，要求确立与藏人行政中央直接接触的政策，赋予其联合国观察员地位及相应外交礼遇。美国之音对此进行专题报道，强调法案旨在"强化持续对藏人支持与接触"。此法案与此前《2020年图伯特政策与支持法》《促进解决藏中争议法》形成系列涉藏立法链条。</p><p><h4 class="sub-title">（四）西藏境内局势持续受到关注</h4></p><p>cn.vot.org本周披露多起境内议题：一是西藏迪庆藏文使用乱象，藏语学校相继关闭，藏文沦为装饰；二是西藏泽库县组织老党员开展政治宣传活动；三是西藏湖泊因人为因素加速转为碳源，中共称"受气候变暖影响"；四是工厂废气排放污染脆弱生态。此外，专访阿嘉仁波切谈中共如何透过金瓶掣签操控班禅喇嘛转世，揭示宗教干预问题。</p><p><h3 class="section-title">二、分析研判</h3></p><p><h4 class="sub-title">（一）议会换届与司政连任形成"双重权力更新"</h4></p><p>第十八届议会成立与司政连任同步推进，标志着藏人行政中央完成立法与行政的双重权力更新。首位女性议长的产生具有象征意义，显示其在性别平等议题上的策略性布局。新一届议会常务委员会首次会议的召开，表明其已迅速进入运作状态，预计将在国际游说、议案推动等方面加大力度。</p><p><h4 class="sub-title">（二）多国致贺形成"准外交承认"态势</h4></p><p>美国、英国、澳大利亚及台湾地区政要密集致贺司政连任，其中台湾外交部长林佳龙亲自致函尤为值得关注。驻台湾代表出席美国独立250周年庆祝活动，将"台湾-图伯特-美国"三方关系串联。这一系列互动实质上构成对藏人行政中央的"准外交承认"态势，值得持续跟踪。</p><p><h4 class="sub-title">（三）美国涉藏立法持续加码</h4></p><p>《确保西藏未来法案》是继《2020年图伯特政策与支持法》《促进解决藏中争议法》之后的又一涉藏立法，形成系列化、递进式的立法链条。法案要求赋予藏人行政中央联合国观察员地位，若获通过将大幅提升其国际法主体地位。</p><p><h4 class="sub-title">（四）境内议题被系统化利用</h4></p><p>cn.vot.org本周密集报道环境污染、藏语教育、宗教干预等境内议题，呈现系统化、专题化的传播策略。专访阿嘉仁波切谈班禅转世问题，直指中共宗教政策核心。这些议题被用作国际游说的素材，与外部立法推进形成内外呼应。</p><p>分析认为，本周涉藏信息呈现"权力更新+国际致贺+立法推进+境内议题"四线并进态势，藏人行政中央正借议会换届与司政连任之机，系统推进国际化战略。下一步，我单位将持续跟踪《确保西藏未来法案》审议进程、第十八届议会工作部署、以及多边外交场合"准承认"操作的动态。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">新闻报道汇总 <button class="export-btn" onclick="exportNewsDocx()">导出 DOCX</button></div>
+      
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">第十八届图伯特人民议会常务委员会召开首次会议</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">第十八届图伯特议会新组成的常务委员会于今天（ 6 月 1 日）召开首次会议。根据《流亡藏人宪章》第 42 条规定，常务委员会由来自图伯特三区的各两名议员，以及各宗教传承的各一名议员组成。会议正式完成常务委员会的组建工作，并就委员职责分工及所属委员会进行了安排。 会议由议长卓玛次仁主持，出席会议的常务委员会成员包括：副议长堪布索朗丹培、议员久钦贡确曲珍、议员丹巴亚培、议员格西拉让巴安珠次丹、议员洛本图丹坚赞、议员格西阿炯仁钦坚赞、议员洛桑图丹、议员曲扎嘉措、议员贡波顿珠，以及议员坚赞曲吉等。 当天上午 11 时，第十八届图伯特人民议会首届常务委员会成员在议会图书暨会议厅举行会议。议长卓玛次仁向与会委员表示欢迎，并介绍了议会未来一段时期的重要工作安排，同时强调委员之间应加强协调与合作，共同确保各项职责顺利落实。 新组成的常务委员会委员任期为一年，自 2026 年 6 月 1 日至 2027 年 5 月 31 日，职责分工如下： 一、财政委员会 议员久钦贡确曲珍 议员格西拉让巴安珠次丹 二、政治委员会 议员丹巴亚培 议员洛本图丹坚赞 议员洛桑图丹 议员贡波顿珠 议员坚赞曲吉 三、行政监督委员会 议员格西阿炯仁钦坚赞 议员曲扎嘉措 记者/责编：蒋扬 来源：议会秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+第十八届图伯特人民议会常务委员会召开首次会议
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">第十八届图伯特人民议会正副议长正式宣誓就职</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">第十八届图伯特人民议会新当选议长卓玛次仁与副议长堪布索朗丹培，于今天（ 6 月 1 日）在最高法院首席大法官益西旺姆前正式宣誓就职。 藏人行政中央司政边巴次仁、最高法院法官达瓦普吉与帕巴次仁、各独立自治机构负责人及成员、第十八届图伯特（西藏）人民议会全体议员，以及藏人行政中央各部门秘书长和全体公务员共同见证了这一重要时刻。 仪式在乃穹寺僧众庄严的诵经祈福声中拉开序幕。随后，依照传统举行了“曼札三供”供奉仪轨，并向与会嘉宾及代表敬献了吉祥甜饭与酥油茶。 卓玛次仁正式就任第十八届图伯特人民议会议长，成为图伯特人民议会历史上首位女性议长。此前，她曾担任第十七届图伯特人民议会副议长，并连续当选多届议员。 堪布索朗丹培则开启其第二个副议长任期。此前，他曾担任第十五届图伯特人民议会副议长，以及第十六届和第十七届图伯特人民议会议长，在议会事务及公共服务领域拥有丰富经验。 此次宣誓就职后，议长卓玛次仁与副议长堪布索朗丹培将携手领导第十八届图伯特人民议会。在未来五年的任期内，他们将共同带领全体议员履行立法、监督及代表藏人社会的重要职责，致力于推动图伯特事业持续发展。 记者：次仁               责编：蒋扬 来源：议会秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+第十八届图伯特人民议会正副议长正式宣誓就职
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">卓玛次仁与堪布索朗丹培当选为第十八届图伯特人民议会正副议长</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-31</span>
+            </div>
+          </div>
+          <div class="news-card-body">根据藏人行政中央选举委员会相关规定，第十八届图伯特人民议会议员于 5 月 31 日下午通过无记名投票方式，选举卓玛次仁为议长，堪布索朗丹培为副议长。 在议长选举中，卓玛次仁德康获得 22 票，当选议长；堪布索朗丹培获得 20 票，另有 3 张选票被判定为无效票。随着此次当选，卓玛次仁成为图伯特人民议会历史上首位女性议长。 在副议长选举中，堪布索朗丹培获得 22 票，当选副议长；噶玛格勒获得 20 票，另有 3 张选票被判定为无效票。 卓玛次仁简介 卓玛次仁于 1956 年 7 月 1 日出生于西藏达涅。在达赖喇嘛尊者及藏人行政中央的关怀与支持下，她完成了学校教育、本科学业及教师培训课程。此后，她在藏人行政中央教育部所属的多所学校任教长达 26 年。她曾担任第九届和第十届卫藏协会中央执行委员会主席，目前担任该委员会顾问。 200 1年，她获得富布赖特奖学金赴美国接受特殊教育，并积极向美国及国际学生介绍图伯特议题，提高国际社会对图伯特问题的关注。 随后，她先后当选第十三届、第十四届、第十五届、第十六届、第十七届及第十八届图伯特人民议会卫藏区议员。她曾担任第十七届图伯特人民议会副议长，并曾担任常务委员会及多个议会委员会成员。在议员生涯中，她始终积极反映民众关切，广泛参与印度国内及国际间的官方访问与倡议图伯特活动。 堪布索南丹培简介 堪布索朗丹培于 1974 年 7 月 18 日出生于图伯特康区热科（Rekhe）。他在当地完成小学教育后，进入那日扎西曲林寺学习佛法教义、禅修及宗教仪轨。 1993 年流亡印度后，他获得觐见达赖喇嘛尊者的机会，随后进入位于印度南部拜拉库佩的藏传佛教宁玛派南卓林寺佛学院深造，并取得高中、本科及佛教哲学硕士学位，专攻显密佛学。2003 年完成学业后，经贝诺法王任命，担任南卓林寺纠察师三年。2011 年获得佛教哲学博士学位（相当于博士学位）。 他曾接受众多藏传佛教高僧大德的灌顶、传承与教导，其中包括达赖喇嘛尊者、贝诺法王、达隆仁波切，以及谢钦然绛仁波切等。 他先后当选第十四届、第十五届、第十六届、第十七届及第十八届图伯特人民议会宁玛派议员，并曾担任第十五届图伯特人民议会副议长，以及第十六届和第十七届图伯特人民议会议长。 记者/责编：蒋扬 来源：议会秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+卓玛次仁与堪布索朗丹培当选为第十八届图伯特人民议会正副议长
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">第十八届图伯特人民议会议员正式宣誓就职</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-31</span>
+            </div>
+          </div>
+          <div class="news-card-body">第十八届图伯特人民议会新当选议员宣誓就职仪式于 5 月 31 日上午在议会大厅举行，全体当选议员在临时议长达瓦次仁面前正式宣誓就职。 根据《流亡藏人宪章》之规定，藏人行政中央最高法院首席大法官益西旺姆于当天上午首先为临时议长达瓦次仁主持就职宣誓仪式。随后，全体新当选议员在图伯特（西藏）精神领袖第十四世达赖喇嘛尊者法相前顶礼并敬献哈达，并在临时议长达瓦次仁面前正式宣誓就职。 临时议长达瓦次仁在致辞中首先祝贺司政边巴次仁成功连任，并向第十八届图伯特人民议会全体新当选议员表示祝贺。他表示：“在未来五年的任期内，遵循达赖喇嘛尊者的教导，践行全体藏人民众的共同愿望，是我们肩负的首要责任。”他同时强调，唯有团结一致、携手奋进，才能更有效地推动图伯特事业不断向前发展。 第十八届图伯特人民议会由 45 名议员组成，其中包括 16 名新当选议员。议会席位分别由图伯特三区（卫藏、康区和安多）各 10 名议员、藏传佛教四大教派及苯教各 2 名代表、北美、南美及欧洲藏人社区各 2 名代表，以及澳大利亚及亚洲地区（不包括印度、尼泊尔和不丹）藏人社区 1 名代表组成。 新一届议会的正式成立，标志着流亡藏人民主制度迈入新的发展阶段。未来五年，全体议员将肩负代表民意、监督行政机构运作以及推动图伯特事业发展的重要职责。 记者：次仁                责编：蒋扬 来源：议会秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+第十八届图伯特人民议会议员正式宣誓就职
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">司政边巴次仁连任就职  国际政要及各界民众纷纷致贺</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">在成功连任并宣誓就任藏人行政中央第十七届噶厦司政后，司政边巴次仁接连收到来自世界各地的祝贺与支持。多国政府官员、国会议员及国际友人纷纷致函或公开表达祝贺，而藏人社会各界也齐聚达兰萨拉，以敬献哈达等传统方式向司政表达敬意与期许，展现出对新一届噶厦的信心与支持。 在司政边巴次仁正式就职后，来自藏人与国际社会的各界机构、民间组织及个人纷纷发来贺电与祝福，表达对其继续领导藏人行政中央的认可与支持。 致贺者包括多国政府部长、议员及高级官员，其中包括台湾外交部长林佳龙、印度阿鲁纳恰尔邦首席部长白玛堪卓，以及澳洲及台湾等多个国家的国会支持图伯特小组等。相关祝贺通过贺函、亲自拜会、电子邮件及其他正式渠道陆续传达。此外，许多长期支持图伯特事业的国际友人，也通过社交媒体平台发表推文表达祝贺。 27 日下午，大批藏人以个人身份或代表各机构与非政府组织前往噶厦秘书处司政办公室，向司政边巴次仁敬献哈达并表达敬意与祝福。其中也包括藏人行政中央各部门秘书长及公务员。 记者：次仁              责编：蒋扬 来源：噶厦秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+司政边巴次仁连任就职  国际政要及各界民众纷纷致贺
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">英国国会议员代表团访问图伯特人民议会</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">第十七届图伯特人民议会议长堪布索朗丹培与副议长卓玛次仁，于 5 月 28 日在议会秘书处接待了来访的英国国会议员代表团并举行会谈。 代表团成员包括英国工党议员、前政府部长凯瑞·麦卡锡（Kerry McCarthy），英国自由民主党议员暨英国国会跨党派支持图伯特小组成员薇拉·霍布豪斯（Wera Hobhouse），以及其丈夫威廉·霍布豪斯（William Hobhouse），并由藏人行政中央驻伦敦办事处秘书长丹增贡嘎陪同访问。两名英国国会议员此前作为国际嘉宾出席了司政边巴次仁的宣誓就职典礼。 会谈期间，议长堪布索朗丹培首先对英国议员代表团的到访表示欢迎，并感谢他们出席司政宣誓就职仪式。议长指出，代表团在这一重要时刻到访不仅具足象征意义，更向国际社会传递了关于图伯特（西藏）议题的强有力讯息，同时也极大地鼓舞了图伯特境内外同胞的士气。 议长进一步表示，在达赖喇嘛尊者的英明领导下，藏人行政中央不仅成功将图伯特议题推向国际舞台，同时也始终致力于保护与弘扬图伯特独特的语言和宗教文化传统。然而，这些珍贵的文化遗产目前正在图伯特境内遭受中国当局的持续打压，甚至濒临被系统性消灭的危机。 随后，代表团随后听取了有关图伯特人民议会各项工作的介绍，包括世界国会议员支持图伯特大会、在印度及国际社会开展的倡议工作、图伯特人民议会的组成架构、每年两次的议会会议、各委员会运作情况以及其他相关议会事务。 副议长卓玛次仁在发言时表示，此次英国代表团访问达兰萨拉，不仅为图伯特境内饱受苦难的同胞带来了希望，也向中国政府传递出国际社会持续、坚定支持图伯特正义事业的明确讯号。 副议长同时向代表团详细介绍了当前图伯特境内的严峻局势，并强调藏人在中国强权统治下面临的生存危机。她特别指出，中国当局近年来持续推行所谓的“中华民族共同体”及强迫同化政策，包括在当地大规模设立殖民式寄宿学校，系统性地剥夺图伯特儿童学习与使用本民族语言、文化及实践宗教信仰的基本权利。她痛斥这些措施是中共企图从根源上消除图伯特民族身份认同的策略。 副议长地指出：“在图伯特，信仰被视为犯罪，真相遭受审查，而不公则披着‘发展’的外衣。”她强调，图伯特境内持续发生的自焚抗议事件，正是针对中共强权统治及其图伯特政策的绝望与决绝抗争。 会谈结束后，代表团在正副议长的陪同下参观了议会议事大厅。随后，图伯特人民议会常务委员会设宴招待代表团一行。 记者：次仁                责编：蒋扬 来源：议会秘书处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+英国国会议员代表团访问图伯特人民议会
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">驻台湾代表出席美国独立 250 周年庆祝活动</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">应美国在台协会邀请，藏人行政中央驻台湾办事处代表格桑坚参与秘书长明究玉珍，于 5 月 27 日晚出席了在台湾举行的美国独立建国 250 周年庆祝活动。 活动于美国在台协会台北办事处举行。出席活动的重要嘉宾包括台湾总统赖清德、立法院长韩国瑜，以及台湾外交部长、国防部长、朝野政党代表和驻台外国使节等各界人士。 庆祝活动在美国国歌声中拉开序幕，随后由美国在台协会处长谷立言致辞。台湾总统赖清德随后发表祝贺讲话，强调此次纪念活动的重要意义。 作为纪念，台积电（TSMC）创办人张忠谋向美国在台协会处长谷立言赠送了他亲笔撰写的回忆录《张忠谋自传》，并特别委托其转赠予美国总统川普 正式活动结束后，现场举行了晚宴招待会。期间，驻台湾代表格桑坚参与台湾政府官员、立法机构成员、驻台外交使团代表以及多个非政府组织人士进行了交流互动。 记者：次仁            责编：蒋扬 来源：驻台湾办事处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+驻台湾代表出席美国独立 250 周年庆祝活动
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">台湾外交部长林佳龙致函祝贺司政边巴次仁连任</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">中华民国（台湾）外交部长林佳龙于 5 月 26 日致函祝贺边巴次仁宣誓就任藏人行政中央第十七届噶厦司政，并表示台湾将继续支持图伯特人民追求自由、尊严及维护文化传承的努力。 林佳龙部长在贺函中代表中华民国（台湾）政府，就边巴次仁成功连任并宣誓就任藏人行政中央司政，致以最诚挚的祝贺。他表示，司政边巴次仁再次获得藏人选民的信任与支持，充分体现了藏人社会对其领导能力的高度肯定。 他在贺函中进一步写道：“台湾深切钦佩藏人社群所展现的勇气与坚定意志。我们赞赏您对于自由、人类尊严以及图伯特文化传承所作出的坚定承诺。台湾政府期待进一步深化双方友谊，增进相互理解，并创造更多紧密合作的机会。” 林佳龙部长在贺函最后同时表达了对司政边巴次仁未来持续取得成功的良好祝愿，并祝愿图伯特人民和平安康、繁荣昌盛。 记者/责编：蒋扬 来源：驻台湾办事处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+台湾外交部长林佳龙致函祝贺司政边巴次仁连任
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">台湾国会图伯特连线致函祝贺司政边巴次仁连任</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">台湾国会西藏（图伯特）连线会长吴沛忆立法委员于 5 月 27 日致函司政边巴次仁，祝贺他宣誓就任藏人行政中央第十七届噶厦司政，并重申将持续支持图伯特自由、人权与民主发展事业。 吴沛忆立委在贺函写道：“台湾国会西藏（图伯特）连线代表所有关心图伯特自由、人权与民主发展的台湾国会友人，诚挚恭贺藏人行政中央司政边巴次仁阁下，于2026年5月27日在印度达兰萨拉正式宣誓就任第十七届噶厦司政，开启其第二个五年任期。 边巴次仁司政长年致力于推动藏人民主制度、维护图伯特人民基本人权、传承图伯特宗教文化，并在国际社会中坚定倡议以和平、非暴力与对话方式，确认“图伯特自古以来就不是中国的一部分”，并寻求图伯特问题的公正解决。此次连任，不仅展现全球藏人社群对其领导的信任，也象征藏人民主制度在流亡艰困处境中持续稳健前行。 台湾与图伯特虽有不同的历史处境，却同样深知自由、民主、法治、人权与文化尊严的珍贵。台湾人民对图伯特人民长期守护信仰、语言、文化与民族身份及雪域高原世界第三极的努力，始终怀抱深切敬意；也相信图伯特人民坚持和平、慈悲与真理的精神，是当今世界面对威权扩张与人权危机时极为重要的道德力量。 台湾国会西藏（图伯特）连线期待，在边巴次仁司政新任期中，台湾与藏人行政中央能持续深化交流合作，在民主治理、人权倡议、宗教自由、文化保存、教育交流与国际连结等领域，携手推动更坚实的伙伴关系。” 贺函最后写道：“谨此致上最诚挚的祝贺，并祝福边巴次仁司政与第十七届噶厦新任期政务顺利，全球图伯特人民福祉增长，图伯特的自由、人权与正义早日实现。” 记者/责编：蒋扬 来源：驻台湾办事处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+台湾国会图伯特连线致函祝贺司政边巴次仁连任
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="tibet.com">
+          <div class="news-card-header">
+            <div class="news-card-title">澳洲国会跨党派支持图伯特小组祝贺边巴次仁成功连任司政</div>
+            <div class="news-card-meta">
+              <span class="source-tag tibet">藏人行政中央</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">澳洲国会跨党派支持图伯特（西藏）小组于 5 月27 日致函祝贺边巴次仁成功连任藏人行政中央司政，并重申达赖喇嘛尊者的转世事务不应受到中国政府任何形式的干涉。 澳洲国会跨党派支持图伯特小组的联合主席工党众议员苏珊·坦普尔曼（Susan Templeman）、自由党参议员迪恩·史密斯（Dean Smith）以及澳大利亚绿党参议员芭芭拉·波考克（Barbara Pocock）在贺函中，向司政边巴次仁表达诚挚祝愿，并重申他们将继续支持图伯特自由事业。 他们在贺函中表示：“您以决定性的支持率成功连任，反映了图伯特人民对您领导力的信心与信任。在您继续致力于实现图伯特人民的希望与诉求之际，我们祝愿您的各项工作取得圆满成功。” 联合主席们进一步指出，澳洲国会跨党派支持图伯特小组将坚定不移地支持图伯特人民的自由、尊严和基本人权，并继续倡导通过具有实质意义的对话，和平协商解决藏中冲突。 他们同时重申了该小组的立场，即达赖喇嘛尊者的转世事务纯属宗教自由与精神传统范畴，必须免受中国政府任何形式的干涉。此外，联合主席们也对司政未来的访澳行程表达了诚挚的欢迎，并表示：“我们非常期待您在不久的将来访问澳大利亚。” 记者：次仁                责编：蒋扬 来源：驻澳洲办事处 《图伯特之页》首发，转载请注明出处
+
+
+The post 
+澳洲国会跨党派支持图伯特小组祝贺边巴次仁成功连任司政
+ first appeared on 
+CTA Official Site in Chinese
+.</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">Voice Of TibetThe Voice Of  The Voiceless</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">签到
+
+首页
+
+达赖喇嘛
+
+西藏
+
+流亡
+
+国际
+
+关于我们
+
+音频档案
+
+视频存档
+
+签到
+
+欢迎！
+登录到您的帐户
+
+您的用户名
+
+您的密码
+
+忘记密码了吗？
+
+找回密码
+
+恢复您的密码
+
+您的电子邮件
+
+搜索
+
+Voice Of Tibet
+The Voice Of  The Voiceless
+
+Voice Of Tibet
+The Voice Of  The Voiceless
+
+藏历2152年｜木蛇年
+
+བོད་
+
+Facebook
+RSS
+Soundcloud
+X
+Youtube
+
+ནོར་ཝེ་བོད་ཀྱི་རླུང་འཕྲིན་ཁང་།
+
+在此输入...
+搜索
+
+首页
+
+达赖喇嘛
+
+西藏
+
+流亡
+
+国际
+
+关于我们
+
+音频档案
+
+视频存档
+
+Pulses PRO
+The Voice Of  The Voiceless
+
+首页
+
+达赖喇嘛
+
+西藏
+
+流亡
+
+国际
+
+关于我们
+
+音频档案
+
+视频存档
+
+搜索
+
+新闻头条
+
+		星期一 01/06/2026	
+
+第十八届西藏人民议会议员宣誓就职，选举产生首位女性议长
+
+中共在西藏泽库县组织老党员开展政治宣传活动
+
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+有声书
+
+More Details »
+
+More Details »
+
+More Details »
+
+More Details »
+
+More Details »
+
+More Details »
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难 
+
+ 01/06/2026 
+
+美国会议员提出《确保西藏未来法案》 
+
+ 29/05/2026 
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任 
+
+ 28/05/2026 
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可 
+
+ 28/05/2026 
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职 
+
+ 27/05/2026 
+
+热点新闻
+
+第十八届西藏人民议会议员宣誓就职，选举产生首位女性议长
+
+vot.org
+
+-
+
+01/06/2026
+
+【西藏之声2026年6月1日报道】第十八届西藏人民议会45名议员于5月31日完成宣誓就职，并选举产生新一届议长与副议长。卓玛次仁当选议长，成为流亡藏人民主制度建立以来首位女性议长。本届新议员约占议会总人数的38%，而女性议员则占议会总人数的20%。
+
+中共在西藏泽库县组织老党员开展政治宣传活动
+
+vot.org
+
+-
+
+01/06/2026
+
+【西藏之声2026年6月1日报道】中共当局近日在西藏泽库县组织约40名藏人“老党员”开展所谓“锤炼党员党性”主题活动，要求他们携带中共党旗深入山区和牧区进行宣传。消息人士指出，此类活动是当局持续加强藏人意识形态控制的一部分，旨在通过老党员向基层民众特别是年轻一代灌输“爱党爱国”思想，进一步扩大官方政治宣传在牧区社会的影响。
+
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+
+vot.org
+
+-
+
+01/06/2026
+
+【西藏之声2026年6月1日报道】中共当局无视西藏严峻的环境危机，任由工厂废气肆意污染西藏环境。近日，一名藏人冒险录制视频，向外界发出紧急求助，控诉世代居住的家乡，如今已成人畜难以为继的绝境，而中共当局非但未予回应，更对传播真相者施以电话恐吓。
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+vot.org
+
+-
+
+01/06/2026
+
+【西藏之声2026年6月1日报道】生活在英国的中国异见人士洪奇在银行账户遭中共当局冻结、一家四口面临露宿街头的紧急关头拨打警方热线求助，协助通话的疑似中国背景翻译员却以政治言论大加训斥。这一事件引发外界对中共统战部渗透英国普通话翻译界、威胁海外异见人士安全的广泛忧虑与强烈关切。
+
+藏人作家曝光西藏迪庆藏文使用乱象：藏语学校相继关闭，藏文沦为装饰
+
+vot.org
+
+-
+
+30/05/2026
+
+【西藏之声2026年5月30日报道】近日藏人作家卓嘉舞在社交媒体上曝光西藏迪庆地区各种商铺的藏文招牌上，错字连篇，甚至出现毫无意义字符的现象后，引发藏人学者、教师及僧侣等各界人士的广泛关注。境内外藏人不满中共当局如今已将境内各地藏文招牌变为纯粹装饰，完全无视藏文拼写是否正确、内容是否具有实际意义。
+
+美国会议员提出《确保西藏未来法案》
+
+vot.org
+
+-
+
+29/05/2026
+
+【西藏之声2026年5月29日报道】美国国会议员近日提出《2026年确保西藏未来法案》，强调即便未来达赖喇嘛尊者圆寂，美国仍将持续与藏人行政中央保持正式接触，并支持藏人争取人权、宗教自由及民族自决权。
+
+西藏湖...</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">第十八届西藏人民议会议员宣誓就职，选举产生首位女性议长</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+流亡
+
+第十八届西藏人民议会议员宣誓就职，选举产生首位女性议长
+
+By
+
+vot.org
+
+01/06/2026
+
+481
+
+相关文章
+
+【西藏之声2026年6月1日报道】第十八届西藏人民议会45名议员于5月31日完成宣誓就职，并选举产生新一届议长与副议长。卓玛次仁当选议长，成为流亡藏人民主制度建立以来首位女性议长。本届新议员约占议会总人数的38%，而女性议员则占议会总人数的20%。
+
+第十八届西藏人民议会45名议员于5月31日在印北达兰萨拉正式宣誓就职，并选举产生新一届议会议长与副议长。议员卓玛次仁当选议长，成为西藏流亡民主制度建立以来首位女性议长，议员堪布索南丹培则当选副议长。
+
+今年2月，流亡藏人社区举行每五年一次的大选。分布在全球27个国家和地区的流亡藏人经过两轮投票，选举产生了新一届西藏人民议会议员。
+
+新当选议员们在临时议长达瓦次仁主持下完成宣誓后，随即举行议长与副议长选举。最终，原第十七届西藏人民议会副议长卓玛次仁当选议长，而原议长堪布索南丹培则转任副议长。
+
+本届议会共有45名议员，其中17人为首次当选的新议员，28人为连任议员，新议员约占议会总人数的38%。此外，共有9名女性议员当选，占议会总人数的20%。
+
+根据流亡藏人民主制度设计，西藏人民议会由45名议员组成。其中30名议员分别代表西藏传统三大省区（康巴、安多、卫藏），10名议员代表西藏五大宗教传承（格鲁、萨迦、噶举、宁玛、苯教），其余5名议员则来自来自欧非、北美、亚澳三大选区，包括北美选区2席、欧洲及非洲选区2席，以及亚洲与澳洲选区1席。
+
+西藏人民议会是流亡藏人民主制度的重要组成部分，负责立法、监督行政及审议藏人行政中央各项政策与预算。
+
+前一篇文章
+中共在西藏泽库县组织老党员开展政治宣传活动
+下一篇文章
+星期一 01/06/2026
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">中共在西藏泽库县组织老党员开展政治宣传活动</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+西藏
+
+中共在西藏泽库县组织老党员开展政治宣传活动
+
+By
+
+vot.org
+
+01/06/2026
+
+442
+
+相关文章
+
+【西藏之声2026年6月1日报道】中共当局近日在西藏泽库县组织约40名藏人“老党员”开展所谓“锤炼党员党性”主题活动，要求他们携带中共党旗深入山区和牧区进行宣传。消息人士指出，此类活动是当局持续加强藏人意识形态控制的一部分，旨在通过老党员向基层民众特别是年轻一代灌输“爱党爱国”思想，进一步扩大官方政治宣传在牧区社会的影响。
+
+消息人士提供
+
+5月28日，中共当局在西藏泽库县组织一场以“行走沙漠公园，锤炼党员党性”为主题的政治宣传活动，安排约40名藏人“老党员”参加。
+
+据活动内容显示，当局要求参与者携带中共党旗及宣传横幅，徒步深入山区和牧区开展宣传，向当地民众展示所谓的“党员先锋模范作用”和“党性教育成果”。
+
+一位消息人士向本台透露，此类活动是中国政府近年来持续推进政治教育和意识形态宣传工作的一部分。活动期间，参与者手持中共党旗和中国国旗，在山区、草原和荒野地带徒步行进，宣传所谓“党的理想”和“中国梦”等政治口号。
+
+消息人士指出，当局试图通过组织年长党员带头参与此类活动，向当地青年灌输“爱党爱国”思想，借此强化对藏人社会的意识形态影响，使年轻一代逐渐淡化对西藏自身文化、语言和历史的关注。
+
+消息人士还提到，泽库县曾发生过大规模学生抗议事件。2010年，泽库县第一民族中学、第二民族中学及职业技术学校约2500名学生走上街头举行示威，高呼“语言自由”“民族平等”等口号，并前往县人民政府、公安局和武警中队驻地表达诉求。
+
+该消息人士认为，近年来中共不断在藏地举办各种“爱党爱国”教育活动，同时配合日益严密的社会管控措施，使当地民众难以表达不同意见，只能被动接受官方宣传和政治教育。
+
+消息人士表示，与中国政府长期开展的党纪党规学习、政治立场教育等活动一样，此次组织老党员开展徒步宣传活动，主要针对藏地牧区民众而设计，旨在进一步扩大官方意识形态在藏人基层社会的影响力。
+
+荡秋报道
+
+前一篇文章
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+下一篇文章
+第十八届西藏人民议会议员宣誓就职，选举产生首位女性议长
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-06-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+西藏
+
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+
+By
+
+vot.org
+
+01/06/2026
+
+458
+
+相关文章
+
+【西藏之声2026年6月1日报道】中共当局无视西藏严峻的环境危机，任由工厂废气肆意污染西藏环境。近日，一名藏人冒险录制视频，向外界发出紧急求助，控诉世代居住的家乡，如今已成人畜难以为继的绝境，而中共当局非但未予回应，更对传播真相者施以电话恐吓。
+
+视频截图
+
+中共当局无视西藏严峻的环境危机，任由工厂废气肆意污染西藏环境。境内藏人忍无可忍，强烈呼吁当局正视西藏生态遭受的系统性摧残。
+
+网名为“萨格尔扎西”的X账号近日发布了一段从西藏境内传出的视频。视频中可见矗立在一片工厂区的巨大烟囱持续不断的冒出浓烟，笼罩在当地上空。一名藏人控诉，他们的村庄墨竹工卡与达则地区长期被工厂排放的浓烟所笼罩，“根本不是人能居住的地方，别说人，就连牲畜也难逃死亡的威胁。”拍摄视频的藏人还指出，一旦有人将此类内容发布至社交媒体，相关部门便立即致电恐吓，公然禁止任何人传播这些真相。
+
+这名藏人在视频中呼吁当地政府领导与环保部门立即采取行动，还普通民众一个基本的生存权利。他更向所有看到这段视频的人发出紧急呼吁，希望大家广泛转发，让更多人知道这片土地上正在发生的一切。
+
+他在视频中声明，他所揭露的一切皆为铁证事实，既未触犯任何国家法律，亦无任何政治意图，更与宗教事务毫无关联。他强烈要求相关部门核实情况，而非派人向无辜百姓打电话恐吓威胁。
+
+他强调，自己不过是一介平民，发声的唯一动力，是对西藏墨竹工卡与达则地区人民存亡的深切关怀，别无他求，“只为这片土地上的生灵，只为西藏的生态不再遭受踐踏。”
+
+洛桑报道
+
+Tags
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+
+前一篇文章
+中共无视西藏脆弱生态任由工厂排放废气，藏人吁当局正视污染之害
+下一篇文章
+中共在西藏泽库县组织老党员开展政治宣传活动
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">藏人作家曝光西藏迪庆藏文使用乱象：藏语学校相继关闭，藏文沦为装饰</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-05-30</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+西藏
+
+藏人作家曝光西藏迪庆藏文使用乱象：藏语学校相继关闭，藏文沦为装饰
+
+By
+
+vot.org
+
+30/05/2026
+
+1624
+
+相关文章
+
+【西藏之声2026年5月30日报道】近日藏人作家卓嘉舞在社交媒体上曝光西藏迪庆地区各种商铺的藏文招牌上，错字连篇，甚至出现毫无意义字符的现象后，引发藏人学者、教师及僧侣等各界人士的广泛关注。境内外藏人不满中共当局如今已将境内各地藏文招牌变为纯粹装饰，完全无视藏文拼写是否正确、内容是否具有实际意义。
+
+长期游历西藏各地的藏人作家卓嘉舞（འབྲོག་སྐྱ་བོ་）于本月10日在社交媒体上发布了一段短视频，揭示西藏迪庆地区商铺藏文招牌中存在大量错别字与毫无实际意义的藏文字样，他对藏语文字的使用与传承日益衰退表达了忧虑。
+
+有消息人士向本台透露，众多藏人学者、教师、僧侣，乃至一切热爱藏语文字的藏人，纷纷在网络上表达了对中共统治下西藏迪庆地区藏语文字正从根本上走向衰落的深切担忧。各方不满中共当局如今已将招牌上的藏文变为纯粹的装饰，完全无视藏文拼写是否正确、内容是否具有实际意义。尤其令藏人忧虑的是，迪庆地区大多数居民提到藏文，往往仅能辨认出“བཀྲིས་བདེ་ལེགས།”（扎西德勒）几个字，对藏文更深层的文化内涵则普遍缺乏关注。
+
+消息人士还透露卓嘉舞也曾向他表示，境内商品上出现毫无实际意义、与商品毫无关联的藏文现象同样十分普遍。
+
+与西藏其他地区相比，迪庆地区的藏语言文化流失情况尤为明显。当地年轻一代中，能够熟练使用藏语和藏文的人越来越少，相关文化传承面临严峻挑战。
+
+洛桑报道
+
+Tags
+藏人作家曝光西藏迪庆藏文使用乱象：藏语学校相继关闭，藏文沦为装饰
+
+前一篇文章
+星期五 29/05/2026
+下一篇文章
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">美国会议员提出《确保西藏未来法案》</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+国际
+
+美国会议员提出《确保西藏未来法案》
+
+By
+
+vot.org
+
+29/05/2026
+
+2113
+
+相关文章
+
+【西藏之声2026年5月29日报道】美国国会议员近日提出《2026年确保西藏未来法案》，强调即便未来达赖喇嘛尊者圆寂，美国仍将持续与藏人行政中央保持正式接触，并支持藏人争取人权、宗教自由及民族自决权。
+
+美国国会众议院外交事务委员会主席麦克·麦克考（Michael T. McCaul）与众议员吉姆·麦戈文（Jim McGovern）5月26日共同提出一项新法案，旨在强化美国对西藏人民追求人权与尊严愿景的承诺。吉姆·麦戈文在官网发布了相关消息。
+
+这项法案名为《2026年确保西藏未来法案》（Assuring the Future of Tibet Act of 2026），赋予美国政府在未来达赖喇嘛尊者圆寂后，继续与藏人行政中央保持接触与合作的权限。
+
+麦戈文议员表示，“美国国会长期以来始终关注西藏与中国之间争议的解决。不幸的是，达赖喇嘛尊者不可能永远与我们同在。我们必须确保美国政府拥有必要的授权与工具，继续为藏人的基本人权发声。为实现这一目标，我们必须支持藏人行政中央作为藏人民主选举产生的合法代表机构。”
+
+麦考尔议员则表示，“在达赖喇嘛尊者与藏人历经艰险、逃离中国共产党迫害前往印度数十年后，中共至今仍持续威胁藏人的信仰与自由。正如我访问达兰萨拉时向尊者所承诺的那样，美国将始终与藏人站在一起，支持他们追求民族自决。我很自豪支持这项重要法案，以永久巩固美国对藏人的承诺，并确保与其民主领导机构之间牢不可破的联系。”
+
+根据法案内容，美国政策将明确包括多项立场，包括美国将继续直接与藏人或藏人通过民主选举产生的领导机构与宗教文化领袖保持接触；将藏人行政中央视为由达赖喇嘛建立的藏人治理体系的延续；支持藏人在国际法框架下自由行使包括民族自决权在内的基本且普世人权；并重申美国将西藏与中国之间争议的解决视为美国战略利益的一部分。
+
+为落实上述目标，法案还要求美国政府倡导给予藏人行政中央在联合国体系及相关国际机构中的观察员地位，并向藏人行政中央官员提供“适当”级别的官方接触与外交礼遇，包括可能提供外交安全保护，以及部分外交特权与豁免待遇。
+
+根据美国立法程序，该法案将首先由众议院外交事务委员会审查，议员们可对法案内容进行讨论、修改并提出建议。若该委员会批准，法案随后将提交众议院全体进行辩论和表决。
+
+一部法案需由参众两院分别通过文字一致的版本并交由总统签署，方能成为法律。
+
+荡秋报道
+
+前一篇文章
+西藏湖泊因中共人为因素加速转为碳源，中科称“受气候变暖影响”
+下一篇文章
+星期五 29/05/2026
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026
+
+在台藏人参与台湾“真和平，要国防”游行，呼吁台湾以西藏遭遇为戒
+
+26/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">西藏湖泊因中共人为因素加速转为碳源，中科称“受气候变暖影响”</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+西藏
+
+西藏湖泊因中共人为因素加速转为碳源，中科称“受气候变暖影响”
+
+By
+
+vot.org
+
+29/05/2026
+
+1620
+
+相关文章
+
+【西藏之声2026年5月29日报道】中国科学院最新研究显示，受气候变暖影响，西藏高原不少湖泊正从吸收温室气体的“碳汇”转变为排放温室气体的“碳源”。研究指出，冻土融化与“热喀斯特”湖泊扩张正在加速释放甲烷和二氧化碳，可能进一步加剧全球变暖。
+
+网图
+
+中国科学院近日在《环境生态与流域期刊（Watershed Ecology and the Environment）》网站上发布的一项研究称，西藏高原上的许多湖泊，正在从过去吸收温室气体的“碳汇”，逐渐转变为释放温室气体的“碳源”。
+
+这项研究显示，随着“气候持续变暖”，西藏高原冻土正在加速融化，冰川不断消融，并形成大量因冻土融化而出现的新湖泊。这些湖泊会释放长期被冻结在地下的古老碳，包括二氧化碳和甲烷。其中，甲烷的温室效应被认为约为二氧化碳的28倍。
+
+研究人员分析近400篇论文后发现，西藏高原湖泊如今已不再只是稳定的“碳汇”，不少湖泊已经演变为强烈的温室气体排放源。
+
+然而，造成西藏生态危机的原因，并不仅仅是抽象的“全球变暖”。
+
+长期以来，中共以“开发西部”“绿色发展”为名，在西藏大规模推进铁路、水电、矿产开采以及基础设施扩张工程。大量山体被炸毁、河流被截流、草原遭到破坏，许多传统牧区和生态敏感地区逐渐工业化。与此同时，北京当局推动的大规模人口迁入，也进一步加重了高原生态系统的压力。
+
+流亡藏人团体和国际人权与环境团体多年来不断警告，西藏不仅是藏人的家园，更是亚洲多条主要河流的源头，被称为“亚洲水塔”。西藏生态遭到破坏，不仅影响当地农牧民和自然环境，还会波及整个亚洲的水资源安全与气候稳定。
+
+此次研究特别指出，随着气温升高，湖泊中的微生物活动正在加速，它们会分解有机物并释放更多温室气体。这种变化可能使原本吸收碳的生态系统，逐渐转变为“净排放体”，进一步加剧全球暖化。
+
+中共自己的研究人员也呼吁建立针对不同湖泊类型的管理模式，以减少高排放湖泊释放温室气体。但藏人和国际环保人士认为，如果不停止高强度资源开发和破坏性工程，仅靠技术性管理，无法真正阻止西藏生态持续恶化。
+
+荡秋报道
+
+前一篇文章
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+下一篇文章
+美国会议员提出《确保西藏未来法案》
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-05-29</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+国际
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+By
+
+vot.org
+
+29/05/2026
+
+1746
+
+相关文章
+
+【西藏之声2026年5月29日报道】近日，美国、澳大利亚及台湾政要相继致函政边巴次仁，祝贺其成功连任藏人行政中央第十七届司政。美方强调将持续与民主选举产生的西藏领导人保持往来，澳方议员联名重申对藏人自由与人权的坚定支持，台湾外交部长则表达了深化台藏合作的期许。
+
+流亡藏人社区今年2月举行五年一次的司政选举，司政边巴次仁以61.25%的得票率成功连任，将继续领导第十七届藏人行政中央内阁。司政边巴次仁于本月27日在印度达兰萨拉正式宣誓就职后，美国、澳大利亚及台湾政要先后向边巴次仁致函表达了祝贺。
+
+美国
+
+美国西藏议题特别协调员、国务院民主、人权和劳工事务局助理国务卿莱利·M·巴恩斯（Riley M. Barnes）在社交媒体X上发布贺函，对藏人行政中央及世界各地流亡藏人成功举行此次选举表示祝贺，并特别祝贺边巴次仁顺利连任司政一职。巴恩斯在函中强调，美国将持续与民主选举产生的西藏领导人保持往来，坚定支持全球藏人社群。
+
+澳大利亚
+
+澳大利亚国会支持西藏小组联合主席苏珊·坦普尔曼（Susan Templeman）、参议员迪安·史密斯（Dean Smith）及参议员芭芭拉·波科克（Barbara Pocock）联名致函，祝贺边巴次仁再次当选，并重申对西藏事业的坚定支持。
+
+据藏人行政中央官网发布的贺函内容，澳大利亚国会议员们指出，边巴次仁以压倒性优势胜选，充分体现了藏人对其领导力的高度信任，并祝愿他在为藏人民众的希望与抱负而奋斗的征途上一切顺遂。
+
+贺函还表示，澳大利亚国会支持西藏小组始终坚定支持维护藏人的自由、尊严与基本人权，并持续倡导以和平谈判、实质性对话的方式化解藏中冲突。此外，他们重申，达赖喇嘛尊者的转世问题属于宗教自由与精神传统范畴，必须免受中国政府任何形式的干涉。
+
+台湾
+
+台湾外交部长林佳龙亦致函边巴次仁，代表台湾政府对其顺利连任藏人行政中央第十七届司政并正式就职致以诚挚祝贺。
+
+据藏人行政中央官网发布的贺函，林佳龙表示边巴次仁的连任再次印证了藏人对其领导力的信任与期望。台湾对藏人的坚韧精神与坚定意志深表敬意，对藏人为争取自由、维护人权及传承西藏文化所付出的努力深感钦佩。他表示，台湾政府期待深化台藏友谊与相互理解，并致力于推动双方未来更紧密的合作，衷心祝愿司政边巴次仁在为藏人谋求和平、福祉与繁荣的事业中旗开得胜、圆满成就。
+
+另外“台湾国会西藏（图伯特）连线”也发表声明，祝贺边巴次仁宣誓就任藏人行政中央第十七届内阁司政的同时，重申将持续支持藏人自由、人权与民主发展事业。
+
+声明指出，司政边巴次仁长年致力于推动藏人民主制度、维护西藏人民基本人权、传承西藏宗教文化，并在国际社会中坚定倡议以和平、非暴力与对话方式，确认“西藏自古以来就不是中国的一部分”，并寻求西藏问题的公正解决。此次连任，不仅展现全球藏人社群对其领导的信任，也象征藏人民主制度在流亡艰困处境中持续稳健前行。
+
+“台湾国会西藏（图伯特）连线”指出，台湾与西藏虽有不同的历史处境，却同样深知自由、民主、法治、人权与文化尊严的珍贵。台湾人民对西藏人民长期守护信仰、语言、文化与民族身份始终怀抱深切敬意；也相信西藏人民坚持和平、慈悲与真理的精神，是当今世界面对威权扩张与人权危机时极为重要的道德力量。
+
+洛桑报道
+
+Tags
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+前一篇文章
+星期四 28/05/2026
+下一篇文章
+西藏湖泊因中共人为因素加速转为碳源，中科称“受气候变暖影响”
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026
+
+在台藏人参与台湾“真和平，要国防”游行，呼吁台湾以西藏遭遇为戒
+
+26/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">专访阿嘉仁波切，谈中共如何透过金瓶掣签操控班禅喇嘛转世</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2026-05-14</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+专访节目
+历史见证节目
+
+专访阿嘉仁波切，谈中共如何透过金瓶掣签操控班禅喇嘛转世
+
+By
+
+vot.org
+
+14/05/2026
+
+3069
+
+相关文章
+
+【西藏之声2026年5月14日报道】第十一世班禅喇嘛遭中共绑架消失31年之际，本台采访了近日前来印度拜见达赖喇嘛尊者的阿嘉仁波切。阿嘉仁波切曾在西藏期间亲眼目睹了中共如何通过“金瓶掣签”操控班禅喇嘛转世的过程。他在此次采访中向我们详细介绍了当时的状况，以及他流亡前后的个人经历。
+
+西藏之声： 首先，我代表西藏之声，感谢仁波切接受我们的采访邀请。 仁波切，您近期重新出版了一本详述您过往经历的书。 在书中，您提到了一些此前从未提及过的内容，请问都有哪些新内容？
+
+阿嘉仁波切： 来到这里（流亡）后，我有幸拜见了达赖喇嘛尊者。 他现在已经90岁了，年事已高。 同样，我们也有几位高僧大德也达到了很高的寿数。 与他们相比，我们还不算太老，但我已经75岁了，所以其实也挺老了。 我从小就经历过很多不同的事情。 其中一个重要的经历是在1958年之前，也就是我们通常所说的中国入侵西藏之前。 事实上，中国在那之前就已经开始入侵了，西藏的局势从1952年左右开始变化。 西藏是一个广阔的地方。 多麦省区在1948年就已经被侵占了。 在拉萨，中国军队从1952年开始抵达，因此，西藏已经从那个时候开始沦陷了。 尽管如此，在西藏，这段时期通常不被认为是西藏完全遭中国控制的时期。 当时，西藏虽处于中国控制下，但寺院、僧院和宗教生活仍保有一定程度的自由。 我经历了那最后的几年，就像我们老一辈所知道的那样。 1958年之后，发生了许多悲剧。 出现了饥荒，僧侣被监禁，许多寺院被关闭或摧毁。 接着是文化大革命， 这个时期一直持续到1980年左右，也就是毛泽东去世之后。 在那之后，西藏和整个中国都发生了重大变化。 大约在1998年，我们离开了西藏。 1997年至1998年间，被认为是管控相对较松的时期，宗教自由度有所增加， 许多寺院重新开放，人们被允许出家。 人们还可以与印度方面取得联系。 许多人前往印度，也有许多人从印度回来。 那段时间，最重要的事件是达赖喇嘛尊者的特使访问了西藏。 所有这些都发生在同一个世纪里。 当我离开西藏后，对境内发生的事情几乎一无所知 。 幸运的是，现在有了互联网，我们可以通过网络了解到很多关于西藏的情况 。 在早些年，想要知道境内发生了什么是非常困难的 。 由于我一直住在境外，我可以根据自己的经历学到很多关于外部世界的知识 。 因此，即便是在我的书中，各种事件也是根据我的亲身经历按顺序记录的 。
+
+西藏之声： 谢谢您，仁波切 您能告诉我们的观众，阿嘉仁波切究竟是谁吗？
+
+阿嘉仁波切： 我的名字叫阿嘉仁波切。 “阿嘉”在安多方言中是“父亲”的意思。 我出生在一个叫青海湖的地方，属于安多的贝斯（音译）地区。 我的父母都是蒙古人。 我的祖父是藏人，这也是为什么我与西藏有着深厚的联系。 当我2岁时，我被带到塔尔寺，被认定为阿嘉仁波切的转世。 在我之前有七世阿嘉仁波切，他们都有各自的名字、历史和传承。 我成为了第八世阿嘉仁波切。 阿嘉的意思是，我们有个塔尔寺，该寺是宗喀巴大师的诞生地 而阿嘉仁波切被认为是宗喀巴大师父亲的转世。 因此，“阿嘉”这个名字就源于此。 与此相关的，我再分享一些童年的故事。 我小时候住在牧区。 我的父亲和兄弟们过去常常买盐，装在牦牛背上。 他们把盐运到集市和农耕区，换取青稞、小麦、面条和其他生活必需品。 然后将这些东西运回牧区。 这就是他们的生活方式。 我们作为蒙古人住在帐篷里。 那不是典型的游牧帐篷，而是普通的帐篷，我就出生在那个帐篷里。 大约在我2岁的时候，寻访小组开始寻找第七世阿嘉仁波切的转世灵童。 第七世仁波切于1948年圆寂。 当寻访队来到这里时，他们正在列名单，我的名字也在其中。 后来到了塔尔寺，当时第十世班禅大师刚刚举行完坐床典礼，正住在塔尔寺，因为他当时还无法前往日喀则的扎什伦布寺。 还有其他背景故事，我也会分享。 班禅仁波切当时只有12岁，按常理来说他还是个孩子。 当寻访小组把候选名单放在桌上，询问转世灵童是否在名单中时，他用笔指着我的名字说：“就是这一个。” 这里还有一些背景故事 。 当时班禅仁波切虽然指认了我，但由于仁波切的经师是我的舅舅（嘉雅རྒྱ་ཡག་རིན་པོ་ཆེ་）仁波切当时也在塔尔寺，他请求进行第二次核实 。 再次核实时，我的名字重新出现，这才最终确定下来，我被正式认证为八世阿嘉仁波切。 按藏历和蒙历计算，我两岁时被正式认定为八世阿嘉仁波切。 随后我被迎请至塔尔寺上师府邸举行坐床典礼 。 由于我年纪太小，父母留在那里照顾我。 我有11个兄弟姐妹，但现在只剩下三个了 ，其他都已去世。 当时我最小的两个弟弟也被送来陪...</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">专访新抵印度的西藏前政治犯南木吉</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2024-08-01</span>
+            </div>
+          </div>
+          <div class="news-card-body">top features chinese simple
+
+专访新抵印度的西藏前政治犯南木吉
+
+By
+
+vot.org
+
+01/08/2024
+
+5017
+
+相关文章
+
+<span data-mce-type="bookmark" style="   " class="mce_SELRES_start">﻿</span>
+
+前一篇文章
+中共宣布对支持西藏的美国众议员麦戈文实施制裁
+下一篇文章
+星期四 01/08/2024
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">藏台人权连线理事长吴豪人会见流亡藏人团体代表时进行的短讲：关于台湾与世界的现状分析</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2023-11-18</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+评说西藏
+
+藏台人权连线理事长吴豪人会见流亡藏人团体代表时进行的短讲：关于台湾与世界的现状分析
+
+By
+
+vot.org
+
+18/11/2023
+
+16496
+
+相关文章
+
+【西藏之声2023年11月18日报道】“西藏台湾人权连线”理事长吴豪人教授近日与藏台连线同事及“香港边城青年”代表一同到访印北达兰萨拉藏人社区。在与“西藏青年会”及“西藏妇女会”等藏人民间团体代表会面时，吴豪人教授以“关于台湾与世界的现状分析”为主题进行短讲。以下为短讲文字稿，经吴豪人教授授权刊登于此。
+
+图源：维基百科
+
+在举世喧腾所谓“第四次台海危机”的今日，唯一行所无事，持续日常饮食男女的，正就是台湾。
+
+台海危机与保卫台湾都令人关切。然而台湾的危机，只是中国的武力威胁与政治经济打压吗？很可能。客观而言，只要没有中国这个恶邻威胁，台湾立刻就能够成为一个普通的中等国家，人民过着普通的中等生活。但什么是“普通、中等”呢？以目前的世界标准而言，普通，就是人民贫富悬殊、政府滥权卸责、国会乱斗无能、司法怠惰无耻，但仍然保有形式上的主权。加盟联合国的１９３个国家，至少有１５０个以上的国家属于“普通”，其中前段班的５０国属于“中等”。而且，他们对于中国意欲吞并台湾的霸权主义，都噤声不语，只因自顾不暇。
+
+但是台湾不是经济、军事大国吗？台湾不是人权法治民主大国吗？为什么在中国的武力威胁与政治打压解除之后，台湾不会成为先进国，却反将沦为普通的中等国家呢？其实如此预测，还是过度乐观的预测。对于民主法治国家而言，外患从来不是亡国的主因。如同马基维利所言，共和国即使因外患──通常必然是君主独裁国──而一时亡国，但曾经享有自由的记忆，是不会消灭的，所以，也就不会真正的灭亡。台湾真正的危机，并不是独裁国家中国的威胁，而是丧失自由民主的信念、丧失对公民权利的坚持。香港的沦亡，已经让我们知道“没有主权，就没有人权”，但是绝大多数的“普通国”处境，同时也让我们了解了“没有人权，主权也是假的”。
+
+冷战之后，由于新自由主义与资本主义的全球化过于猖獗，对于中国更采取了绥靖主义二十年，致使中国全面拉低了世界的人权水准，几乎回到了１９３９年。与上世纪９０年代相比，很明显的，欧盟与英美日韩的人权标准，堪称堕落。这些民主先进国家，在惊觉中国“赤纳粹化”之后，原本应该成为台湾最坚强的盟友；可是由于对人权底线的失手与堕落，却形成一种奇妙的危机：民主国家逐渐朝向中国与俄罗斯的深渊堕去。我们不能期待这些盟友与中俄共享同一个价值，又与中俄真正对立。一个失去民主自由活力的国家，不分左右都能随时准备好投降。富人、左胶跟黑道，都不会抵抗洒钱共匪──看香港和台湾就知道了。所以我们应该简单回顾、盘点台湾的人权现况。
+
+简言之，从1980年以来，不断监督国家体制的台湾公民社会力量，2016年之后，不是被收编，就是被修理，萎缩变质，力量明显持续衰退。如今化身“抗疫+抗中大神”的政府，差不多没有任何公民社会力量足以牵制了。最大的证据，便是台湾政府对转型正义的怠惰。
+
+转型正义最大的困难，就是必须与时间赛跑。但如今，台湾政府则是与时间嬉闹、漫步、回旋起舞。不时的还回首来时路，依依不舍的倒退噜走几步。显然打算以拖待变，无论原汉的转型正义，都绝对不玩真的。至于以总统之尊称颂蒋经国，显然是这个时代的台湾社会“知识与精神俱都劣化”的征兆。
+
+当然，转型正义在台湾无法实践，也不只是政客的怠惰。
+
+以美国为首的自由民主国家，对于赤纳粹中共的围堵，不会太成功。理由在于中国共产党统治的中国，早就不再只是乔治欧威尔《1984》型阴森森的反乌托邦，而已经大量掺入了阿道夫赫胥黎,《美丽新世界》型的欲望城市诱惑。后者完全可以与全球化资本主义共存共荣。武汉肺炎之后，各国朝着小型纳粹/监控国家前进的趋势已成。此时高谈人权，大家都不免羞耻。责备起中国，也未免心虚。结果又将出现1984与美丽新世界合流的全球化现象。
+
+在这个长期悲观稳定、短期热闹混沌的时代里，转型正义——冷战和平下的产物——得以实践的时机，也远比我们想像的、更早结束了。更严苛更惨烈的新未来，正在我们眼前笑吟吟的殷勤探看。
+
+思想与价值青黄不接，才是现今台湾最大的危机。而这个危机，需要公民社会重整旗鼓。而公民社会的思想利器，也不再是阶级、不再是民族，而是人权与人性尊严的想像力。在阶级与民族的矛盾中，假设上世纪80年代的辩证成果是想像一个from red to green的时代，如今，就该是想像一个from capital-Marxism to human dignity的时代。
+
+台湾号称已经民主化，其实有关人权──特别是公民权的概念，仍然停留在训政时期，无法有效抵抗来自国家三权的权力滥用。这种“训政情结”，可以上溯到普鲁士德国与明治日本。一言以蔽之，便是“国家强大...</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">“统一思想”是中共发动第二次文革的口号，西藏将会在世界历史上被抹掉吗？</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2023-11-04</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+评说西藏
+
+“统一思想”是中共发动第二次文革的口号，西藏将会在世界历史上被抹掉吗？
+
+By
+
+vot.org
+
+04/11/2023
+
+17379
+
+相关文章
+
+【西藏之声2023年11月04日报道】西藏在历史上是一个拥有独立宗教与语言文字、医学、历算等完整体系的国家，同时因为它独特的山川河流地理环境，在亚洲地缘政治中扮演着重要角色。而中共非法入侵西藏数十年的时间里，在中共实施高度统一14亿人口思想的政策下，西藏宗教文化包括母语教育与传统习俗遭到前所未有的挑战，几乎面临灭绝，同时西藏生态环境也面临着巨大的挑战，也给西藏周边国家带来潜在的威胁。
+
+网络图片
+
+自中共掌权以后，试图将其统治下的西藏与东突厥斯坦、南蒙古等在内的55个“少数民族”的语言文字都同化成单一的语言文字。目前55个民族内拥有自己民族语言文字的屈指可数，在历史上蒙古曾统治中国四百多年，而如今在中共统治下的南蒙古会使用母语沟通的只占该民族的三分之一。
+
+中共在西藏发动第二次文革
+
+近年来中共透过在西藏建设大量的殖民寄宿学校，强制将百万藏人儿童与他们的父母、社会隔离，集中实施同化政策，根除西藏新一代对本民族母语、宗教文化与身份的认同。西藏甘孜州从今年九月份，全面禁止各学校教授母语课程，阿坝地区部分学校已经开始禁止学校教授藏文课程。据
+报道
+，当局也计划在2025年以前全面禁止阿坝地区的母语教育课程。
+
+近年从中共在西藏甘孜等地区招收的公务员数据显示，招收最多的单位是宣传部与宗教管理局、武警辅警等岗位，从中可发现当局在西藏实施的基本政策。宣传部在西藏对内宣传爱国教育，反对“分裂国家统一”人士，包括诋毁藏人心中的达赖喇嘛尊者的形象；对外宣传西藏民族和谐，宗教信仰自由等形象。宗教管理局旨在管控西藏各大寺院的僧人，监视他们的言行举止，阻止未成年藏人出家，干涉各个寺院的高僧转世事务，阻止寺院举行各种法会等等。而大量招收武警与辅警是为了进一步镇压西藏的民众，剥夺基本人权，直至他们完全被同化。
+
+西藏五明佛学院堪布慈诚罗珠曾在一次演讲时表示，在刚过去的20世纪里数已千计的语言文字消失在这个世上，并且目前每两周内世上就会消失一种语言，未来在百年的时间里世上将会消失50%以上的语言。因此，他强调，语言文字是一个民族存在的根本象征，并呼吁广大藏人同胞珍惜自己民族的语言文字如同保护自己眼睛一般。
+
+合成图片
+
+中共虚假宣传西藏
+
+中共当局为了进一步巩固在西藏的统治地位，进一步封锁西藏边境的出入，同时修建中国通往西藏的高速公路与铁路以及机场，这既是为了向外扩张，也是为了开采西藏的资源。中共当局同时为了更好的管控藏人牧民与掠夺他们世代居住的牧场，强制将牧民集中安置在西藏的主要交通道路两旁，并欺骗中国前往西藏旅游的民众与稀少的外国游客，宣称这是他们为了提高西藏牧民生活而提供的福利。中共还要求牧民感恩共产党，在屋顶悬挂中国国旗、客厅悬挂以习近平为主的中共领袖像。
+
+不仅如此，中共要求藏人庆祝中国的重要节日。在西藏甘孜州雅江县等地区，中共当局组织藏人“庆祝”中华人民共和国国庆日，并要求每个乡派出一支民间歌舞团队，举行歌舞比赛等活动，以聚集的民众为背景，制造藏人民众庆祝国庆的虚假氛围，来对外歪曲宣传藏人感恩中共共产党的假象。
+
+中共还利用西藏网络红人来宣传“爱国教育”。西藏理塘一叫丁真的牧民，因长相英俊而在中国的社交平台抖音上走红。中共宣传部抓住这个千载难逢的机遇，将丁真以极低的工资签署至宣传部旗下。西藏理塘县等地区夏至的赛马习俗也被当局冠名为“庆祝”八一建军节，活动场地也被装饰成爱国题材氛围，悬挂大量国旗，让活动选手手持中国国旗。中共宣传部今年还在成都发布新闻会指出；“丁真珍珠将率110位本地牧民群众组成的马队巡游理塘县城，游客可在街边领略人与马的盛装风采。”
+
+每当西藏发生藏人为了表达不满中共高压政策而自焚等事件时，西藏不少地区都会为了向他们表达哀悼，简化西藏最隆重的新年节日，主动取消村内氛围活跃的歌舞赛马等活动，纪念逝者为西藏人权、宗教信仰、维护母语教育和保护生态环境而牺牲，同时也是以这样无声的方式抗议中共。
+
+中共大肆破坏西藏的生态环境
+
+中共在西藏的各大河流上建造大量水电站，以及水坝，破坏河流原有的环境。据科学研究显示，此类大型水坝加剧了西藏的气候变化，而且造成了地震等自然灾害的隐患。中共毫不顾忌西藏与西藏下游国家的生态环境，用所谓的“南水北调”工程将从长江下游、中游和上游分别向北方调水，连通长江、淮河、黄河、海河四大流域，构建起“四横三纵、南北调配、东西互济”的水资源配置格局。此举遭到邻国们强烈谴责与反对。同时中共还继续开采西藏原本就脆弱的生态环境。
+
+西藏宗教传统文化在海外弘扬传播
+
+自中共非法入侵西藏，强迫藏人签署所谓的“十七条和平协议”，并又单方面撕毁，导致...</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">【藏人谈西藏】中国为何将西藏的英译“Tibet”强行改为“Xizang”?</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2023-10-14</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+评说西藏
+
+【藏人谈西藏】中国为何将西藏的英译“Tibet”强行改为“Xizang”?
+
+By
+
+vot.org
+
+14/10/2023
+
+17078
+
+相关文章
+
+【西藏之声2023年10月14日报道】“中国西藏环喜马拉雅”国际合作论坛4日至6日在西藏林芝举行，值得注意的是，论坛中西藏的英译改用“Xizang”，但中国的英译依然延用“China”，中共党媒给出的说法是“依法办事”。若从一个藏人的角度分析中共的这一波操作，这是一种不知羞耻且毫无结果的做法。国际社会不会因为中共说改名就改名，要是如此，珠峰早就不叫“mount Everest”了。如果说将“Tibet”改为“Xizang”是依法办事，那么中国的英译也应被改为“Zhongguo”。
+
+西藏地图
+
+中共日前在西藏林芝举办了“第三届中国西藏环喜马拉雅国际合作论坛”，值得注意的是，论坛中，西藏的英译不再延用“Tibet”，而是采用汉语拼音“Xizang”。中共党媒给出的说法是，“依法办事”。
+
+按照中共的思路，中国的英译应该是“Zhongguo”而不是“China”，香港的英译应该是“Xianggang”而不是“Hongkong”，同样澳门也应该被英译为“Aomen”，而不是“Macau”。
+
+而在此前，中共统战部曾在中国社交平台微信上刊文，对中共官方将西藏的英译“Tibet”改为“Xizang”一事进行狡辩，称“Tibet”的译法给国际社会正确认识西藏地理范围“产生了严重误导”。
+
+文章声称当前需使用“能够准确表达中国立场的西藏一词英文译法”，摆脱西方和分裂势力在涉藏话语上的“概念陷阱”，建立中国在国际涉藏话语体系中的“主导地位”。此外，达赖喇嘛等人对使用汉语拼音“Xizang”作为西藏的英译提出批评，恰恰说明这种译法“击中了分裂势力的话语要害”。
+
+从以上话语中就可以看出，中共对西藏的英文名进行改名确实是出于政治目的，是为了在国际上夺回“更多的涉藏话语权”，同时以击中所谓“西方和分裂分子”的要害来否认事实。这的确很符合中共一贯的做法，那就是“凡是敌人反对的，它们就要拥护；凡是敌人拥护的，它们就要反对。”，哪怕是搬起石头砸自己的脚。
+
+西藏的英译一直都是“Tibet”，“Tibet”除了指当前狭义的西藏自治区外，还涵盖了青海、四川、甘肃、云南省的涉藏州县，而藏人的英译则是“Tibetan”。
+
+这不仅是国际社会的共识，也是联合国等国际组织在公文上所普遍使用的英译。中共近年来对西藏英译的一番操作只会适得其反，因为国际社会不吃中共这套“狸猫换太子”的把戏，只会认为中共正在企图合法化对西藏的殖民统治。
+
+藏人行政中央智库“西藏政策研究中心”主任达瓦才仁在接受西藏之声采访时就曾指出，中共为了将统治西藏合法化，设立研究西藏文化等机构，试图改变国际上的研究藏文化机构的风向，派遣大量人员在国际上的西藏学术相关会议和活动中，试图灌输中国语术，改变他们对西藏的观点。
+
+但无论如何，对英语为官方语言的国家来说，西藏的英译始终是“Tibet”，至于中共口中的“Xizang”只能在《环球时报》英文版等中共党媒的报道中出现，境内外藏人不会因为毫无信誉的中共大外宣窜写几遍“Xizang”就认同自己是中国人，除非中共能够成功将中国的英译改为“Zhongguo ”。
+
+荡秋
+
+Tags
+【藏人谈西藏】中国为何将西藏的英译“Tibet”强行改为“Xizang”?
+
+前一篇文章
+星期五  13/10/2023
+下一篇文章
+星期六 14/10/2023
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">【藏人谈西藏】中共对西藏到底做了什么？</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2023-06-03</span>
+            </div>
+          </div>
+          <div class="news-card-body">text simple
+评说西藏
+
+【藏人谈西藏】中共对西藏到底做了什么？
+
+By
+
+vot.org
+
+03/06/2023
+
+16108
+
+相关文章
+
+【西藏之声2023年06月03日报道】西藏各个寺院终究被迫悬挂与佛教毫无关联的五星红旗，和与佛祖毫无关系的中共历代“领袖”的照片。西藏正在逐渐地失去它原有的色彩。中共在西藏求同存异的时代已过去，消除异己的同化时代已开启。
+
+西藏之声图片
+
+自中共1959年吞并西藏以来，西藏就进入了永无宁日的黑暗时代，藏人不仅失去了国土，就连基本的人权也被剥夺了。
+
+中共除了对西藏的国土情有独钟以外，对于西藏的人文似乎谈不上有一点点的兴趣。因为西藏浓厚的宗教文化一点也不符合中共的无神理论，从某种意义上来讲，它们是对立的。按照中共一贯的做法，凡是与它对立，不符合其利益的都要根除，永绝后患。正因如此，在这过去的七十多年，西藏无数个寺院与佛像被毁，无数个僧尼被迫还俗，所有和平抗议中共暴政的僧尼都被打入了监狱，寺院终究被迫悬挂与佛教毫无关联的五星红旗，和与佛祖毫无关系的中共历代“领袖”的照片。西藏的僧尼透过不同的途径试图与中共沟通，但等来的确实中共变本加厉的打压。最终，西藏的僧俗不得不用汽油点燃了自己，希望自己身上的火焰能够“照亮”中共生而为人的良心，希望其放过西藏。
+
+西藏除了拥有著名的藏传佛教以外，还拥有完整的语言体系。藏文不仅记录了完整的佛教经文，它还完整地记录了西藏的历史、藏人在医学方面所获得的成就，以及藏人对于整个宇宙的了解。但这一获得世界承认能够描述任何东西的语言体系在中共眼里不值一提不说，中共还要用中文替代完全藏文，这样中共就能毫无语言障碍地向藏人传达它的指示，使藏人完全听从自己。为了达到这一目的，中共已开始在西藏儿童身上下手，开始设立寄宿制学校汉化藏人儿童，在这些小孩还未学会藏语之前预先教授中文，计划在不久的未来将藏人完全汉化。所有提倡藏语的藏人作家及教育家等都成了中共的阶下之囚。
+
+中共为了掩盖其在西藏所犯的反人类罪行，干脆利落地直接对外封锁了西藏，在不允许任何外国人入境西藏的同时，也不允许任何藏人出境。大部分境内藏人都不知道中国护照长什么样，有些藏人一辈子除了中国人以外都没见过第二个外国人。
+
+尽管国际社会时刻关注着西藏议题，但随着中共将中国打造成了世界的工厂。国际社会越来越依赖中国的经济，因此在这资本主义盛行的年代，中国的经济规模似乎成了中共牵制国际社会的点子。即使是不久前在日本广岛召开G7会议的七国集团，虽然发表联合声明，明确对中共侵犯西藏人权的行径表达了担忧，但也不寻求与中国脱钩，只寻求去风险。G7的这种说辞恰好说明了中国的经济实力确实能够影响到G7的决策，即使它们自己也经常受到来自中共方面的威胁与挑战。
+
+但无论如何，西藏境内藏人不曾失去信心，在境外流亡的达赖喇嘛尊者与同胞成了他们最后的救命稻草，是他们仅存的希望。而达赖喇嘛尊者与流亡藏人也不负众望向世人极好地展示了藏文化的魅力。藏文化中的和平与慈悲理念在达赖喇嘛尊者的努力推广下确实得到了世人的肯定与追随。
+
+而用权施展狼性的中共已开始走下坡线，一旦失权，再无翻身之日，终将成为中国及世界历史的黑点，就像法西斯一样永远被后人所唾弃。
+
+荡秋
+
+Tags
+【藏人谈西藏】中共对西藏到底做了什么？
+
+前一篇文章
+星期五  02/06/2023
+下一篇文章
+星期六 03/06/2023
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="cn.vot.org">
+          <div class="news-card-header">
+            <div class="news-card-title">（音档）有吐蕃编译社出版达赖喇嘛文集平和与和平</div>
+            <div class="news-card-meta">
+              <span class="source-tag vot">西藏之声</span>
+              <span>2004-04-02</span>
+            </div>
+          </div>
+          <div class="news-card-body">audio headlines
+演讲荟萃节目
+
+（音档）有吐蕃编译社出版达赖喇嘛文集平和与和平
+
+By
+
+admin
+
+02/04/2004
+
+12831
+
+相关文章
+
+（阅读）请收听由吐蕃编译社出版发行的达赖喇嘛文集“平和与和平”
+
+图片翻拍自藏人行政中央
+
+Audio Player
+00:00
+00:00
+00:00
+Use Up/Down Arrow keys to increase or decrease volume.
+
+Tags
+有吐蕃编译社出版达赖喇嘛文集平衡与和平
+
+前一篇文章
+（音档）末法时代——藏传佛教的社会功能及毁坏
+下一篇文章
+（音档）中藏谈判的迫切性
+
+最新文章
+
+中国异见人士在英国报警求助翻译时遭遇“亲中共”翻译刁难
+
+01/06/2026
+
+美国会议员提出《确保西藏未来法案》
+
+29/05/2026
+
+美国、澳大利亚及台湾政要相继致函祝贺藏人行政中央司政边巴次仁连任
+
+29/05/2026
+
+美国纽约市将第63街更名“萨迦大悲路” ，藏传佛法中心获认可
+
+28/05/2026
+
+藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职
+
+27/05/2026
+
+欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全
+
+27/05/2026</div>
+        </div>
+        <div class="news-card" data-source="voachinese.com">
+          <div class="news-card-header">
+            <div class="news-card-title">边巴次仁连任西藏流亡政府最高行政长官，美国祝贺流亡藏人社区选举</div>
+            <div class="news-card-meta">
+              <span class="source-tag voa">美国之音</span>
+              <span>2026-05-28</span>
+            </div>
+          </div>
+          <div class="news-card-body">在流亡藏人社区举行的选举中当选连任的边巴次仁星期三(5月27日)宣誓就任，开始新一届藏人行政中央(CTA)司政任期。美国政府就流亡藏人举行选举和边巴次仁再次当选司政表示祝贺。
+边巴次仁在印度达兰萨拉举行的就职典礼上，在流亡西藏精神领袖达赖喇嘛面前宣誓就任。流亡藏人社区今年2月1日在全球27个国家同步举行初选，现任司政边巴次仁以超过61%的得票率避免了决选。
+美国国务院负责民主、人权和劳工事务的助理国务卿莱利·巴恩斯(Riley Barnes)星期三发表声明说：“祝贺藏人行政中央及流亡藏人社区顺利举行选举，祝贺边巴次仁再次当选藏人行政中央司政。美国将继续与民主选举出的藏人领袖保持接触，以支持各地的藏人。”
+巴恩斯兼任美国西藏事务特别协调员。
+边巴次仁在就职典礼讲话中承诺坚持达赖喇嘛制定的“中间路线”，“以非暴力、对话、互利及可持续的方式，寻求解决藏中冲突。”他表示，在西藏问题尚未解决之前，藏人行政中央“将继续以坚定而冷静的态度，与中国政府维持接触与沟通。同时，也将通过多种策略，持续提升国际社会对‘中间道路’的认同与支持”。
+边巴次仁说，藏人行政中央将继续在国际上就达赖喇嘛转世、西藏历史地位等问题揭露中国政府的“歪曲宣传与恶意图谋”。他还提到，中国政府正以法律为依托，推行他所说的“灭绝性政策”，而藏人行政中央“必须在国际及各国层面，针对‘种族灭绝’与‘危害人类罪’等议题，更加积极地运用智慧与力量，共同加以应对。”
+藏人流亡政府在2011年更名为“藏人行政中央”。达赖喇嘛在这一年宣布卸去政治权力。藏人流亡政府内阁首长原称“噶伦赤巴”，从2001年起，由流亡藏人直选产生。2012年这一职务改称“司政”。
+边巴次仁1967年出生在印度，曾任流亡藏人议会议员、达赖喇嘛驻华盛顿代表等职务。他在2021年首次当选司政。</div>
+        </div>
+        <div class="news-card" data-source="voachinese.com">
+          <div class="news-card-header">
+            <div class="news-card-title">美议员跨党推出法案，强化持续对藏人支持与接触</div>
+            <div class="news-card-meta">
+              <span class="source-tag voa">美国之音</span>
+              <span>2026-05-27</span>
+            </div>
+          </div>
+          <div class="news-card-body">华盛顿 — 
+
+
+两名美国国会众议员跨党推出法案，旨在强化美国对西藏人民追求人权与尊严这一愿景的承诺。法案还将授权美国政府在第十四世达赖喇嘛圆寂后，继续与西藏流亡政府--藏人行政中央(Central Tibetan Administration，CTA)--保持接触。
+长期关注西藏事务的民主党联邦众议员吉姆·麦戈文(Jim McGovern)和国会众议院外交事务委员会荣退主席迈克尔·麦考尔(Michael McCaul) 提出名为《确保西藏未来法》(Assuring the Future of Tibet Act)的议案。该议案重申美国对西藏人权、自决权及民选领导层的支持。
+“国会长期以来一直致力于解决西藏与中国之间的争端，”来自麻萨诸塞州的民主党联邦众议员麦戈文星期二(5月26日)在一份声明中说，“遗憾的是，达赖喇嘛不会永远与我们同在。我们必须确保美国政府拥有必要的权威和手段，继续为西藏人民的基本人权发声。为此，我们必须支持西藏流亡政府，将其视为西藏人民合法的、经民主选举产生的代表。”
+“数十年前，达赖喇嘛及其追随者为逃离中国共产党迫害，历经千辛万苦逃往印度；时至今日，中共仍在不断威胁藏人的信仰与自由，”来自德克萨斯州的共和党联邦众议员麦考尔说，“正如我访问达兰萨拉时向尊者承诺的那样，美国将始终支持藏人追求自决。我很自豪能支持这项重要议案，以此永久巩固我们对西藏人民的承诺，并确保与西藏民主领导层之间牢不可破的纽带。”
+这项法案的提出被视为国会两党近年来持续推动涉藏政策的最新举措。
+根据该法案内容，美国将确立一项政策：通过直接渠道，以及通过由西藏人民民主选举产生的领导人和宗教文化领袖，与西藏人民保持接触。法案还指出，藏人行政中央体现了达赖喇嘛所建立的西藏人民治理体系的延续性；支持西藏人民依据国际法自由行使包括自决权在内的基本人权和普世权利；并重申美国致力于推动解决西藏与中国之间的争端，并将此视为符合美国战略利益的事务。
+此外，法案还倡导赋予藏人行政中央在联合国体系及相关国际机构中的观察员地位，并主张美国政府以更高级别接待藏人行政中央官员，给予相应外交礼遇，包括提供外交安保、特权及豁免待遇等。
+根据美国立法程序，该法案将首先由众议院外交事务委员会审查，议员们可对法案内容进行讨论、修改并提出建议。若该委员会批准，法案随后将提交众议院全体进行辩论和表决。
+一部法案需由参众两院分别通过文字一致的版本并交由总统签署，方能成为法律。
+美国政府行政部门和国会一直通过发布年度报告和制定相关法案以及发表声明等方式，持续关注中国政府在西藏的治理方式及西藏人权问题。
+国务院今年4月发布的最新报告称，虽然2025年，美国驻华大使馆的领事官员获准对西藏自治区进行了自2019年以来的首次正式访问，但是中国政府那些一贯阻碍美国外交官、官员、记者及游客前往西藏自治区及西藏自治区以外藏区的法规与程序依然如故。美国外交官、记者、研究人员及美籍藏人在试图访藏时仍面临困难。
+近年来，国会通过多项涉藏法案，内容涵盖支持藏人人权、宗教自由，以及文化保护，包括2020年的《西藏政策与支持法案》，强调达赖喇嘛转世应由藏人自行决定，不受中国政府干预。
+来自佛罗里达州的共和党联邦参议员里克·斯科特(Rick Scott)与俄勒冈州的民主党联邦参议员杰夫·默克利(Jeff Merkley)今年4月联袂提出了《西藏暴行认定法案》(Tibet Atrocities Determination Act)。这项立法要求美国国务卿就中国是否正在针对藏人实施种族灭绝或危害人类罪行做出正式认定。
+今年2月，在庆祝藏历新年之际，美国国务院宣布，任命负责民主、人权与劳工事务的助理国务卿莱利·巴恩斯(Riley M. Barnes)兼任美国西藏事务特别协调员。巴恩斯曾于2019年和2025年访问印度达兰萨拉，并与西藏流亡政府领导人举行会晤。
+今年3月，民主党联邦众议员麦戈文与众议院外交事务委员会亚太小组主席金映玉(Young Kim)率领10名跨党派议员致函巴恩斯，就美国涉藏政策与行动提出建议，内容包括推动恢复汉藏对话、防止中国干预达赖喇嘛转世认定，以及加强对藏人行政中央的支持等。
+议员们在信中表示，“西藏事务特别协调员”一职长期以来象征着美国两党对西藏人民争取人权、民主与自由事业的坚定支持。“这不仅体现了美国的价值观和普世人权原则，也有助于维护美国利益，抵御中国共产党的影响力。”</div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="../index.html" class="btn btn-outline">← 返回总览</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.7.0/dist/index.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script>
+var FONT_BODY='SimSun',FONT_H1='SimHei',FONT_H2='KaiTi',FONT_SIZE=32,LINE_SP=580,INDENT_FL=640;
+var MARGIN_T=2098,MARGIN_B=1984,MARGIN_L=1588,MARGIN_R=1474,A4W=11906,A4H=16838;
+function makeDoc(ps,fn){var d=new docx.Document({sections:[{properties:{page:{size:{width:A4W,height:A4H},margin:{top:MARGIN_T,bottom:MARGIN_B,left:MARGIN_L,right:MARGIN_R}}},children:ps}]});docx.Packer.toBlob(d).then(function(b){saveAs(b,fn)})}
+function exportAnalysisDocx(){var b=document.querySelector('.card .export-btn');if(b){b.disabled=true;b.textContent='生成中...'}var ps=[];var ds='2026年06月02日';ps.push(new docx.Paragraph({children:[new docx.TextRun({text:'深度研判分析报告',font:FONT_H1,size:40,bold:true})],alignment:docx.AlignmentType.CENTER,spacing:{after:200,line:LINE_SP}}));ps.push(new docx.Paragraph({children:[new docx.TextRun({text:ds,font:FONT_BODY,size:28})],alignment:docx.AlignmentType.CENTER,spacing:{after:400,line:LINE_SP}}));var ns=document.querySelectorAll('.report-paper h3.section-title,.report-paper h4.sub-title,.report-paper p');for(var i=0;i<ns.length;i++){var n=ns[i];if(n.tagName==='H3'){ps.push(new docx.Paragraph({children:[new docx.TextRun({text:n.textContent.trim(),font:FONT_H1,size:FONT_SIZE,bold:true})],spacing:{before:300,after:150,line:LINE_SP}}))}else if(n.tagName==='H4'){ps.push(new docx.Paragraph({children:[new docx.TextRun({text:n.textContent.trim(),font:FONT_H2,size:FONT_SIZE})],spacing:{before:200,after:100,line:LINE_SP}}))}else{var t=n.textContent.trim();if(t){ps.push(new docx.Paragraph({children:[new docx.TextRun({text:t,font:FONT_BODY,size:FONT_SIZE})],spacing:{line:LINE_SP},indent:{firstLine:INDENT_FL}}))}}}makeDoc(ps,'深度研判分析报告_'+ds+'.docx');if(b)setTimeout(function(){b.disabled=false;b.textContent='导出 DOCX'},2000)}
+function exportNewsDocx(){var btns=document.querySelectorAll('.export-btn');var b=btns[btns.length-1];if(b){b.disabled=true;b.textContent='生成中...'}var ps=[];var ds='2026年06月02日';ps.push(new docx.Paragraph({children:[new docx.TextRun({text:'新闻报道汇总',font:FONT_H1,size:40,bold:true})],alignment:docx.AlignmentType.CENTER,spacing:{after:200,line:LINE_SP}}));ps.push(new docx.Paragraph({children:[new docx.TextRun({text:ds,font:FONT_BODY,size:28})],alignment:docx.AlignmentType.CENTER,spacing:{after:400,line:LINE_SP}}));var cs=document.querySelectorAll('.news-card');for(var i=0;i<cs.length;i++){var c=cs[i];var t=c.querySelector('.news-card-title');if(t){ps.push(new docx.Paragraph({children:[new docx.TextRun({text:t.textContent.trim(),font:FONT_BODY,size:FONT_SIZE,bold:true})],spacing:{before:200,after:100,line:LINE_SP}}))}var bd=c.querySelector('.news-card-body');if(bd){var bt=bd.textContent.trim();if(bt){var pa=bt.split(/\n+/);for(var k=0;k<pa.length;k++){var pv=pa[k].trim();if(pv){ps.push(new docx.Paragraph({children:[new docx.TextRun({text:pv,font:FONT_BODY,size:FONT_SIZE})],spacing:{line:LINE_SP},indent:{firstLine:INDENT_FL}}))}}}}ps.push(new docx.Paragraph({children:[new docx.TextRun({text:'----------------------------------------',font:FONT_BODY,size:20,color:'CCCCCC'})],spacing:{before:100,after:100},alignment:docx.AlignmentType.CENTER}))}}makeDoc(ps,'新闻报道汇总_'+ds+'.docx');if(b)setTimeout(function(){b.disabled=false;b.textContent='导出 DOCX'},2000)}
+</script>
+<script>
+function animateCount(el,t,d){var s=0,st=null;function step(ts){if(!st)st=ts;var p=Math.min((ts-st)/d,1);var e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*t);if(p<1)requestAnimationFrame(step);else el.textContent=t}requestAnimationFrame(step)}
+window.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.stat-card .stat-value').forEach(function(el){var t=el.textContent.trim();var n=parseInt(t);if(!isNaN(n)&&n>0){el.textContent='0';setTimeout(function(){animateCount(el,n,1200)},200)}});
+    var meta=document.querySelector('.top-header .meta');if(meta){var c=document.createElement('span');c.className='clock-display';meta.insertBefore(c,meta.firstChild);function uc(){var n=new Date();c.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}uc();setInterval(uc,1000)}
+    document.querySelectorAll('.dist-bar-fill').forEach(function(el){var w=el.style.width;el.style.width='0';setTimeout(function(){el.style.width=w},300)});
+});
+</script>
+</body>
+</html>

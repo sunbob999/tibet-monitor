@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>监测日报 - 2026-07-09</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --bg-dark:#060a17;--bg-mid:#0a1024;--bg-panel:rgba(14,22,45,0.85);--bg-card:rgba(22,32,58,0.65);
+    --border-glow:rgba(0,212,255,0.3);--border-soft:rgba(100,130,180,0.15);--border-mid:rgba(0,212,255,0.12);
+    --cyan:#00d4ff;--cyan-light:#5ce8ff;--cyan-dim:#0891b2;--blue:#3b82f6;--green:#10b981;
+    --amber:#f59e0b;--red:#ef4444;--pink:#ec4899;--purple:#a855f7;
+    --text-main:#e8edf5;--text-body:#c5d1e0;--text-dim:#7a8ba3;--text-muted:#4a5b75;
+    --shadow-glow:0 0 24px rgba(0,212,255,0.1);
+    --shadow-card:0 4px 30px rgba(0,0,0,0.5);
+    --grad-cyan:linear-gradient(135deg,#0891b2,#00d4ff);
+}
+@font-face{font-family:'Orbitron';src:url('https://fonts.gstatic.com/s/orbitron/v29/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWg.woff2') format('woff2');font-display:swap}
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    background:var(--bg-dark);color:var(--text-main);min-height:100vh;line-height:1.8;
+    position:relative;overflow-x:hidden;
+}
+/* === 装饰背景层 === */
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+    background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+    background-size:50px 50px;
+}
+.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+    background:
+        radial-gradient(ellipse 800px 400px at 15% 0%,rgba(0,100,200,0.15) 0%,transparent 60%),
+        radial-gradient(ellipse 600px 300px at 85% 30%,rgba(0,180,255,0.08) 0%,transparent 60%),
+        radial-gradient(ellipse 700px 350px at 50% 100%,rgba(10,80,180,0.1) 0%,transparent 60%);
+}
+.bg-scanline{position:fixed;top:0;left:0;width:100%;height:2px;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent);
+    animation:scan 8s linear infinite;
+}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+body > *:not(.bg-grid):not(.bg-glow):not(.bg-scanline){position:relative;z-index:2}
+/* === 链接 === */
+a{color:var(--cyan);text-decoration:none;transition:color .2s}
+a:hover{color:var(--cyan-light);text-decoration:underline}
+/* === 顶部标题栏 === */
+.top-header{
+    background:linear-gradient(90deg,rgba(8,16,40,0.98),rgba(12,24,50,0.98));
+    color:var(--text-main);padding:0 32px;height:64px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;
+    border-bottom:1px solid var(--border-glow);
+    box-shadow:0 2px 30px rgba(0,212,255,0.12);
+    backdrop-filter:blur(12px);
+}
+.top-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 10%,var(--cyan) 50%,transparent 90%);opacity:.6;
+}
+.top-header h1{font-size:1.15rem;font-weight:600;letter-spacing:1.5px}
+.top-header h1 a{color:var(--text-main)}
+.top-header h1 a:hover{color:var(--cyan)}
+.top-header .meta{display:flex;align-items:center;gap:20px;font-size:.8rem;color:var(--text-dim)}
+.top-header a{color:var(--text-dim)}
+.top-header a:hover{color:var(--cyan);text-decoration:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;box-shadow:0 0 10px var(--green)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+.clock-display{font-family:'Orbitron',monospace;font-size:.78rem;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 8px rgba(0,212,255,0.3)}
+/* === 主容器 === */
+.container{max-width:1120px;margin:0 auto;padding:32px 32px}
+/* === 统计卡片行 === */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.stat-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:12px;padding:20px 24px;
+    box-shadow:var(--shadow-card);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+    animation:fadeUp .6s ease-out backwards;
+}
+.stat-card:nth-child(1){animation-delay:.1s}
+.stat-card:nth-child(2){animation-delay:.2s}
+.stat-card:nth-child(3){animation-delay:.3s}
+.stat-card:nth-child(4){animation-delay:.4s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* 顶部光线 */
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.6;
+}
+/* 底部进度条 */
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:60%;
+    background:linear-gradient(90deg,var(--cyan),transparent);opacity:.3;border-radius:0 2px 2px 0;
+}
+.stat-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateY(-3px)}
+.stat-card:hover::after{width:100%;opacity:.6;transition:all .4s}
+.stat-card .stat-label{font-size:.72rem;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px}
+.stat-card .stat-value{font-size:2rem;font-weight:700;color:var(--text-main);font-family:'Orbitron',sans-serif}
+.stat-card .stat-sub{font-size:.7rem;color:var(--text-muted);margin-top:6px}
+.stat-card.accent .stat-value{color:var(--cyan);text-shadow:0 0 16px rgba(0,212,255,0.5)}
+.stat-card.accent::after{background:linear-gradient(90deg,var(--cyan),transparent)}
+.stat-card.green .stat-value{color:var(--green);text-shadow:0 0 16px rgba(16,185,129,0.5)}
+.stat-card.green::after{background:linear-gradient(90deg,var(--green),transparent)}
+.stat-card.amber .stat-value{color:var(--amber);text-shadow:0 0 16px rgba(245,158,11,0.5)}
+.stat-card.amber::after{background:linear-gradient(90deg,var(--amber),transparent)}
+.stat-card.red .stat-value{color:var(--red);text-shadow:0 0 16px rgba(239,68,68,0.5)}
+.stat-card.red::after{background:linear-gradient(90deg,var(--red),transparent)}
+/* === 来源分布可视化 === */
+.source-dist{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;animation:fadeUp .6s ease-out .5s backwards}
+.dist-card{flex:1;min-width:140px;background:var(--bg-card);border:1px solid var(--border-soft);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow-card);transition:all .25s;position:relative;overflow:hidden}
+.dist-card:hover{border-color:var(--border-glow);transform:translateY(-2px)}
+.dist-card .dist-bar{height:4px;border-radius:2px;margin-top:10px;overflow:hidden;background:rgba(255,255,255,0.05)}
+.dist-card .dist-bar-fill{height:100%;border-radius:2px;transition:width 1s ease-out}
+.dist-card .dist-name{font-size:.78rem;color:var(--text-dim);letter-spacing:.5px}
+.dist-card .dist-num{font-size:1.6rem;font-weight:700;font-family:'Orbitron',sans-serif;margin-top:4px}
+/* === 通用卡片（带角标装饰） === */
+.card{
+    background:var(--bg-panel);
+    border:1px solid var(--border-soft);
+    border-radius:12px;padding:30px 34px;
+    box-shadow:var(--shadow-card);margin-bottom:28px;
+    backdrop-filter:blur(8px);
+    position:relative;
+    animation:fadeUp .6s ease-out backwards;
+}
+/* 四角L型装饰 */
+.card::before,.card::after{content:'';position:absolute;width:16px;height:16px;border:2px solid var(--cyan);opacity:.4;pointer-events:none}
+.card::before{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:12px 0 0 0}
+.card::after{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 12px 0}
+.card-title{
+    font-size:1.15rem;font-weight:600;color:var(--cyan);
+    margin-bottom:20px;padding-bottom:16px;
+    border-bottom:1px solid var(--border-mid);
+    text-shadow:0 0 12px rgba(0,212,255,0.25);
+    letter-spacing:1px;
+    display:flex;align-items:center;gap:8px;
+}
+.card-title::before{content:'';display:inline-block;width:4px;height:18px;background:var(--grad-cyan);border-radius:2px;box-shadow:0 0 8px rgba(0,212,255,0.4)}
+/* === 分析报告正文 === */
+.report-paper{line-height:2.2;font-size:.95rem;color:var(--text-body)}
+.report-paper p{margin-bottom:18px;text-indent:2em}
+.report-paper p:first-child{padding:14px 20px;background:rgba(0,212,255,0.05);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;text-indent:2em;margin-bottom:22px}
+.report-paper .section-title{
+    font-size:1.1rem;font-weight:700;color:var(--cyan);
+    margin:32px 0 16px;padding:8px 16px;
+    border-left:4px solid var(--cyan);text-indent:0;
+    text-shadow:0 0 10px rgba(0,212,255,0.2);
+    background:linear-gradient(90deg,rgba(0,212,255,0.06),transparent);
+    border-radius:0 6px 6px 0;
+}
+.report-paper .sub-title{font-weight:600;color:#a5c4f0;margin:18px 0 10px;text-indent:0;font-size:.98rem}
+/* === 新闻卡片 === */
+.news-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:12px;overflow:hidden;
+    box-shadow:var(--shadow-card);margin-bottom:18px;
+    transition:all .3s;
+    position:relative;
+    animation:fadeUp .5s ease-out backwards;
+}
+.news-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateX(4px)}
+/* 左侧色条 */
+.news-card[data-source="tibet.com"]{border-left:3px solid var(--blue)}
+.news-card[data-source="cn.vot.org"]{border-left:3px solid var(--pink)}
+.news-card[data-source="voachinese.com"]{border-left:3px solid var(--green)}
+.news-card[data-source="rfa.org"]{border-left:3px solid var(--purple)}
+.news-card-header{
+    padding:16px 24px;
+    border-bottom:1px solid var(--border-soft);
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:8px;
+    background:linear-gradient(90deg,rgba(15,25,50,0.6),rgba(20,30,55,0.3));
+}
+.news-card-title{font-size:.95rem;font-weight:600;color:var(--text-main);flex:1}
+.news-card-meta{display:flex;gap:12px;font-size:.75rem;color:var(--text-dim);align-items:center}
+.news-card-body{padding:18px 24px;font-size:.875rem;line-height:2.1;color:var(--text-body);max-height:600px;overflow-y:auto}
+.news-card-body::-webkit-scrollbar{width:5px}
+.news-card-body::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+.news-card-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.3);border-radius:3px}
+/* === 来源标签 === */
+.source-tag{display:inline-block;padding:3px 12px;border-radius:4px;font-size:.7rem;font-weight:600;letter-spacing:.5px}
+.source-tag.tibet{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.4)}
+.source-tag.vot{background:rgba(236,72,153,0.15);color:#f472b6;border:1px solid rgba(236,72,153,0.4)}
+/* === 按钮 === */
+.btn{display:inline-block;padding:8px 22px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--grad-cyan);color:#060a17;font-weight:600}
+.btn-primary:hover{box-shadow:0 0 20px rgba(0,212,255,0.5);text-decoration:none;color:#060a17}
+.btn-primary:disabled{background:var(--text-muted);cursor:not-allowed;box-shadow:none}
+.btn-outline{background:transparent;color:var(--text-dim);border:1px solid var(--border-soft)}
+.btn-outline:hover{background:var(--bg-card);border-color:var(--border-glow);color:var(--cyan);text-decoration:none}
+/* === 底部导航 === */
+.nav-footer{display:flex;justify-content:center;gap:16px;padding:32px 0;border-top:1px solid var(--border-soft);margin-top:32px}
+/* === 归档列表 === */
+.archive-list{display:flex;flex-direction:column;gap:10px}
+.archive-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;
+    background:var(--bg-card);
+    border:1px solid var(--border-soft);
+    border-radius:10px;box-shadow:var(--shadow-card);
+    transition:all .25s;
+}
+.archive-item:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow),var(--shadow-card);transform:translateX(4px)}
+.archive-date{font-size:1rem;font-weight:600;color:var(--cyan);min-width:120px;font-family:'Orbitron',sans-serif}
+.archive-info{font-size:.8rem;color:var(--text-dim);flex:1}
+.archive-btn{font-size:.8rem}
+/* === 导出按钮 === */
+.export-btn{
+    display:inline-block;margin-left:14px;padding:6px 18px;
+    font-size:13px;color:#060a17;
+    background:var(--grad-cyan);
+    border:none;border-radius:5px;cursor:pointer;vertical-align:middle;font-weight:600;
+    transition:all .2s;
+}
+.export-btn:hover{box-shadow:0 0 16px rgba(0,212,255,0.5)}
+.export-btn:active{background:var(--cyan-dim)}
+.export-btn:disabled{background:var(--text-muted);cursor:not-allowed;box-shadow:none}
+/* === 返回顶部 === */
+.back-top{text-align:right;margin-top:16px}
+.back-top a{color:var(--text-dim);font-size:13px}
+.back-top a:hover{color:var(--cyan)}
+/* === 目录 === */
+.toc{background:var(--bg-card);border:1px solid var(--border-soft);border-radius:12px;padding:22px 28px;margin-bottom:24px;box-shadow:var(--shadow-card)}
+.toc h2{font-size:17px;margin-bottom:12px;color:var(--cyan)}
+.toc a{display:block;color:var(--text-body);text-decoration:none;padding:6px 0;font-size:14px;transition:all .2s;padding-left:12px;border-left:2px solid transparent}
+.toc a:hover{color:var(--cyan);text-decoration:none;border-left-color:var(--cyan);padding-left:16px}
+/* === 来源分区 === */
+.source-section{background:rgba(14,22,45,0.4);border-radius:10px;padding:22px;margin-bottom:18px;border:1px solid var(--border-soft);position:relative}
+.source-section h3{font-size:16px;margin-bottom:16px}
+.article-item{background:var(--bg-card);border-radius:8px;padding:16px;margin-bottom:12px;border:1px solid var(--border-soft);transition:all .25s}
+.article-item:hover{border-color:var(--border-glow)}
+.article-item h4{font-size:15px;margin:8px 0;color:var(--text-main)}
+.article-header{margin-bottom:6px}
+.tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;margin-right:8px;font-weight:600}
+.date{color:var(--text-muted);font-size:12px}
+.body-text{font-size:13px;color:var(--text-body);max-height:500px;overflow-y:auto;white-space:pre-wrap;line-height:1.9}
+.body-text::-webkit-scrollbar{width:5px}
+.body-text::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+.body-text::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.3);border-radius:3px}
+.no-content{color:var(--text-muted);font-style:italic;font-size:14px}
+/* === 页脚 === */
+.footer{text-align:center;padding:28px;color:var(--text-muted);font-size:12px}
+.footer p{margin:4px 0}
+/* === 打印 === */
+@media print{
+    .top-header,.nav-footer,.no-print,.export-btn,.bg-grid,.bg-glow,.bg-scanline{display:none!important}
+    body{background:#fff!important;color:#000!important}
+    .container{padding:0!important}
+    .card,.news-card,.stat-card,.archive-item{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
+    .card::before,.card::after{display:none!important}
+    .card-title,.section-title,.stat-value,.news-card-title,.archive-date{color:#000!important;text-shadow:none!important}
+    .report-paper,.news-card-body,.body-text{color:#333!important}
+    .report-paper p:first-child{background:none!important;border-left:3px solid #333!important}
+}
+@media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .container{padding:16px}
+    .card{padding:20px}
+}
+
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-glow"></div><div class="bg-scanline"></div>
+<div class="top-header"><h1><a href="../index.html">境外涉藏信息监测平台</a> &nbsp;/&nbsp; 2026-07-09</h1><div class="meta"><span><span class="live-dot"></span> 数据已同步</span></div></div>
+<div class="container"><div class="stats-row"><div class="stat-card accent"><div class="stat-label">监测网站数</div><div class="stat-value">1</div><div class="stat-sub">tibet.com</div></div><div class="stat-card green"><div class="stat-label">当日收录报道</div><div class="stat-value">3</div><div class="stat-sub">tibet:3</div></div><div class="stat-card amber"><div class="stat-label">日期范围</div><div class="stat-value">07-06~08</div><div class="stat-sub">近3天</div></div><div class="stat-card red"><div class="stat-label">威胁等级</div><div class="stat-value">中高</div><div class="stat-sub">司政出访</div></div></div>
+<div class="source-dist"><div class="dist-card" style="border-left:3px solid #3b82f6"><div class="dist-name">藏人行政中央</div><div class="dist-num" style="color:#3b82f6">3</div><div class="dist-bar"><div class="dist-bar-fill" style="width:100%;background:#3b82f6"></div></div></div><div class="dist-card" style="border-left:3px solid #ec4899"><div class="dist-name">西藏之声</div><div class="dist-num" style="color:#ec4899">0</div><div class="dist-bar"><div class="dist-bar-fill" style="width:0%;background:#ec4899"></div></div></div><div class="dist-card" style="border-left:3px solid #10b981"><div class="dist-name">美国之音</div><div class="dist-num" style="color:#10b981">0</div><div class="dist-bar"><div class="dist-bar-fill" style="width:0%;background:#10b981"></div></div></div><div class="dist-card" style="border-left:3px solid #a855f7"><div class="dist-name">自由亚洲</div><div class="dist-num" style="color:#a855f7">0</div><div class="dist-bar"><div class="dist-bar-fill" style="width:0%;background:#a855f7"></div></div></div></div>
+<div class="card"><div class="card-title">分析研判日报</div><div class="report-paper"><p>2026年07月09日，针对涉藏关键字“西藏、藏人、达赖”的信息，现将有关情况报告如下：</p><p>本周核心事件为司政边巴次仁连任后首次大规模出访拉达克，走访索南林藏人定居点、图伯特儿童村及老人院。第十八届图伯特人民议会持续运作。</p><p><h3 class="section-title">一、基本概述</h3></p><p><h4 class="sub-title">（一）司政边巴次仁访问拉达克</h4>三天</p><p>7月6日至8日，司政在拉达克展开三天正式访问。行程包括视察索南林藏人定居点各营地、走访图伯特儿童村、慰问老人院。司政重申噶厦对边境藏人社区的承诺，强调将推动更多资源向边境倾斜。拉达克是流亡藏人重要定居区域，同时地处中印边境战略要地。</p><p><h4 class="sub-title">（二）第十八届议会持续运作</h4></p><p>议会自6月1日成立以来进入常态化运作。议长卓玛次仁部署国际游说和社区建设议题，副议长堪布索朗丹培强调文化传承。议员深入选区调研。</p><p>二、分析研判</p><p><h4 class="sub-title">（一）司政拉达克访问的战略意图</h4></p><p>司政连任后首次大规模出访选择拉达克具有多重意图：一是强化边境藏人社区政治认同；二是借拉达克地缘战略位置提升藏人行政中央在中印边境议题上的存在感；三是为国际游说积累实地调研素材。拉达克2026年4月曾爆发全面罢工，印度强化前沿部署，司政此行时机选择值得密切关注。</p><p><h4 class="sub-title">（二）议会运作进入常态化</h4></p><p>第十八届议会成立月余即进入常态化运作，显示政治体制运转顺畅。议长卓玛次仁作为首位女性议长，工作部署侧重国际游说和社区建设，与司政外访行程形成内外呼应。</p><p>分析认为，本周涉藏信息呈现“司政出访+议会运作”双线并行态势，藏人行政中央正系统推进新一届任期政治议程。拉达克访问后续效应、《确保西藏未来法案》审议进展值得持续跟踪。</p></div></div>
+<div class="card"><div class="card-title">新闻报道汇总</div><div class="news-card" data-source="tibet.com"><div class="news-card-header"><div class="news-card-title">司政边巴次仁继续展开拉达克访问行程</div><div class="news-card-meta"><span class="source-tag tibet">藏人行政中央</span><span>2026-07-08</span></div></div><div class="news-card-body">7月8日司政边巴次仁在拉达克第三天访问，走访索南林藏人定居点四营地、图伯特儿童村及老人院。视察基础设施，鼓励学生学藏语，慰问流亡藏人。此次访问是连任后首次大规模出访，凸显对边境藏人社区重视。拉达克地处中印边境战略要地。</div></div>
+<div class="news-card" data-source="tibet.com"><div class="news-card-header"><div class="news-card-title">司政边巴次仁抵达拉达克展开正式访问</div><div class="news-card-meta"><span class="source-tag tibet">藏人行政中央</span><span>2026-07-06</span></div></div><div class="news-card-body">7月6日司政抵达拉达克展开正式访问，连任后首次。视察索南林定居点首批营地，与社区领袖讨论发展、就业、教育议题。</div></div>
+<div class="news-card" data-source="tibet.com"><div class="news-card-header"><div class="news-card-title">第十八届图伯特人民议会持续运作</div><div class="news-card-meta"><span class="source-tag tibet">藏人行政中央</span><span>2026-07-07</span></div></div><div class="news-card-body">议会自6月1日成立以来持续运作。议长卓玛次仁部署国际游说和社区建设，副议长堪布索朗丹培强调文化传承。议员深入选区调研。</div></div>
+</div>
+<div class="nav-footer"><a href="../index.html" class="btn btn-outline">← 返回总览</a></div></div>
+<script>function aC(e,t,d){var s=0,st=null;function p(ts){if(!st)st=ts;var r=Math.min((ts-st)/d,1);var e2=1-Math.pow(1-r,3);e.textContent=Math.floor(e2*t);if(r<1)requestAnimationFrame(p);else e.textContent=t}requestAnimationFrame(p)}window.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".stat-card .stat-value").forEach(function(e){var t=e.textContent.trim();var n=parseInt(t);if(!isNaN(n)&&n>0){e.textContent="0";setTimeout(function(){aC(e,n,1200)},200)}});var m=document.querySelector(".top-header .meta");if(m){var c=document.createElement("span");c.className="clock-display";m.insertBefore(c,m.firstChild);function u(){var n=new Date();c.textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")+":"+String(n.getSeconds()).padStart(2,"0")}u();setInterval(u,1000)}document.querySelectorAll(".dist-bar-fill").forEach(function(e){var w=e.style.width;e.style.width="0";setTimeout(function(){e.style.width=w},300)})});</script>
+</body>
+</html>

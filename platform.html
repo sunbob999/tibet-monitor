@@ -566,16 +566,26 @@
     <div class="module-panel" id="module-ai">
       <div class="ai-layout">
         <div class="glass-panel chat-panel">
-          <div class="section-title">AI 分析智能体 · 对话交互</div>
+          <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">AI 分析智能体 · 对话交互<button onclick="toggleSettings()" style="background:none;border:1px solid rgba(255,255,255,.15);color:var(--text-dim);padding:4px 10px;border-radius:8px;font-size:11px;cursor:pointer;">⚙ API设置</button></div>
           <div class="chat-messages" id="chatMessages">
             <div class="msg ai">
               您好，我是涉藏信息分析智能体。<br/>
-              我可以帮您：生成分析研判日报、下达采集任务、查询历史情报。
+              我可以帮您：<strong>调取日报、态势分析、重点情报研判、来源对比</strong>。<br/>
+              <span style="color:var(--text-dim);font-size:11px;">基于平台10份日报、117篇情报数据工作。点击⚙配置API后即可使用。</span>
               <div class="m-time">刚刚</div>
             </div>
           </div>
+          <div id="aiSettingsPanel" style="display:none;padding:12px 16px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.06);">
+            <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">配置大模型API（OpenAI兼容格式）</div>
+            <div style="display:flex;gap:8px;flex-direction:column;">
+              <input id="apiBase" placeholder="API地址，如 https://api.siliconflow.cn/v1" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;width:100%;" />
+              <input id="apiKey" placeholder="API密钥" type="password" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;width:100%;" />
+              <input id="apiModel" placeholder="模型名，如 Qwen/Qwen2.5-7B-Instruct" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;width:100%;" />
+              <button onclick="saveSettings()" style="background:rgba(0,212,255,.15);border:1px solid rgba(0,212,255,.3);color:#00d4ff;padding:6px 0;border-radius:8px;font-size:12px;cursor:pointer;width:100%;">保存配置</button>
+            </div>
+          </div>
           <div class="ai-input-area">
-            <input class="ai-input" id="aiInput" placeholder="输入分析指令，如：生成本周舆情研判报告..." />
+            <input class="ai-input" id="aiInput" placeholder="输入分析指令，如：查询7月9日日报内容..." />
             <button class="ai-send" onclick="sendMessage()">发送</button>
           </div>
         </div>
@@ -761,42 +771,214 @@ navItems.forEach(item => {
   });
 });
 
-// ===== AI 对话 =====
-function sendMessage() {
-  const input = document.getElementById('aiInput');
-  const text = input.value.trim();
-  if (!text) return;
+// ===== AI 对话 - 真实大模型API集成 =====
 
+// 知识库：平台全部数据上下文
+const KB_CONTEXT = `你是"涉藏信息预警推送平台"的分析智能体。平台数据如下：
+
+【平台概况】
+- 名称：涉藏信息预警推送平台(tibet-monitor)
+- 地址：https://sunbob999.github.io/tibet-monitor/
+- 采集频率：每五分钟一次
+- 监测4个境外涉藏信息源：
+  1. 藏人行政中央官网(tibet.com) - 藏人行政中央官方发布
+  2. 西藏之声(cn.vot.org) - 流亡藏人媒体
+  3. 美国之音中文(voachinese.com) - 美国政府资助中文媒体
+  4. 自由亚洲电台(rfa.org) - 美国政府资助亚洲媒体
+
+【日报列表】（10份，可在平台reports/目录下查看）
+- 2026-07-09：3篇(藏人行政中央2 + 西藏之声1)，主题：司政拉达克访问、议会运作
+- 2026-06-02：约20篇(四大来源全覆盖)，主题：议会选举、司政就职、国际祝贺、美国涉藏法案、环境/language议题
+- 2026-05-28：约15篇，主题：司政就职典礼、国际嘉宾致辞
+- 2026-05-27：多篇(西藏之声为主)，主题：体育局长被查、欧盟安全会议、人权观察警告
+- 2026-05-26：多篇，主题：境内管控、文化/language
+- 2026-05-25：多篇，主题：议会选举后续
+- 2026-05-22：多篇，主题：司政研讨会、AI管控、女性赋权
+- 2026-05-21：多篇，主题：环境议题
+- 2026-05-20：多篇，主题：教育/language
+- 2026-05-18：多篇，主题：综合监测
+
+【重点文章摘要】
+1. 第十八届西藏人民议会议员宣誓就职，卓玛次仁当选首位女性议长(2026-06-01,VOT)
+2. 司政边巴次仁连任就职典礼，数千藏人及国际嘉宾出席(2026-05-28,VOT)
+3. 欧盟安全会议前夕，人权观察警告中共威权扩张威胁欧洲安全(2026-05-27,VOT)
+4. 西藏自治区体育局长尼玛次仁涉嫌严重违纪违法被查(2026-05-27,VOT)
+5. 美国会议员提出《确保西藏未来法案》(2026-06-02,VOA)
+6. 边巴次仁连任西藏流亡政府最高行政长官(2026-06-02,VOA)
+7. 中共透过AI平台将西藏管控数字化与智能化(2026-05-22,VOT)
+8. 司政边巴次仁抵达拉达克展开正式访问(2026-07-09,藏人行政)
+9. 第十八届图伯特人民议会常务委员会召开首次会议(2026-06-02,藏人行政)
+10. 藏人作家曝光迪庆藏文使用乱象：藏语学校关闭(2026-06-02,VOT)
+
+【统计】
+- 累计情报：117篇
+- 来源分布：VOT约40篇(34%), VOA约35篇(30%), 藏人行政约25篇(21%), RFA约17篇(15%)
+- 推送部门：5个(公安厅12条、宣传部8条、统战部6条、网信办4条、国安厅3条)
+
+【功能说明】
+- 查询日报：输入日期如"7月9日"或"2026-07-09"可查看对应日报摘要
+- 态势分析：对近期数据做综合研判
+- 重点情报：识别高危/高关注度内容
+- 来源对比：分析不同来源的信息倾向差异
+- 推送统计：查看各部门推送情况
+回复时使用中文，简洁专业，如需查看完整日报请提供对应链接。`;
+
+// API配置（localStorage持久化）
+function getApiConfig() {
+  return {
+    base: localStorage.getItem('ai_api_base') || '',
+    key: localStorage.getItem('ai_api_key') || '',
+    model: localStorage.getItem('ai_api_model') || ''
+  };
+}
+function saveSettings() {
+  localStorage.setItem('ai_api_base', document.getElementById('apiBase').value.trim());
+  localStorage.setItem('ai_api_key', document.getElementById('apiKey').value.trim());
+  localStorage.setItem('ai_api_model', document.getElementById('apiModel').value.trim());
+  toggleSettings();
+  addAiMsg('✅ API配置已保存。现在可以开始对话了。');
+}
+function toggleSettings() {
+  const p = document.getElementById('aiSettingsPanel');
+  const cfg = getApiConfig();
+  if (p.style.display === 'none') {
+    p.style.display = 'block';
+    document.getElementById('apiBase').value = cfg.base;
+    document.getElementById('apiKey').value = cfg.key;
+    document.getElementById('apiModel').value = cfg.model;
+  } else {
+    p.style.display = 'none';
+  }
+}
+
+// 聊天历史（上下文窗口）
+let chatHistory = [];
+
+function addAiMsg(html) {
   const chat = document.getElementById('chatMessages');
+  const aiMsg = document.createElement('div');
+  aiMsg.className = 'msg ai';
+  aiMsg.innerHTML = html + '<div class="m-time">刚刚</div>';
+  chat.appendChild(aiMsg);
+  chat.scrollTop = chat.scrollHeight;
+}
 
-  // 用户消息
+function addUserMsg(text) {
+  const chat = document.getElementById('chatMessages');
   const userMsg = document.createElement('div');
   userMsg.className = 'msg user';
   userMsg.innerHTML = text + '<div class="m-time">刚刚</div>';
   chat.appendChild(userMsg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('aiInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addUserMsg(text);
   input.value = '';
+  chatHistory.push({role:'user', content: text});
 
-  // AI 回复
-  setTimeout(() => {
-    const replies = {
-      '生成': '正在为您生成研判日报…\n\n📊 <strong>本周涉藏舆情研判</strong>\n\n• 威胁等级：中高（多线并行）\n• 主要来源：VOA(35篇) > VOT(32篇) > RFA(28篇)\n• 关注焦点：涉藏法案、人权声明、文化保护\n• 态势判断：境外媒体持续炒作，需加强监测\n\n日报已生成，是否推送至手机终端？',
-      '分析': '🔍 <strong>威胁态势分析</strong>\n\n当前4个监测源站中，VOA和RFA为涉藏负面信息主要策源地。近期美涉藏法案相关报道频次上升37%，预计未来一周将持续发酵。建议提升采集频率至每6小时一次。',
-      '采集': '⚡ <strong>紧急采集任务已下达</strong>\n\n任务ID：TASK-20260709-003\n采集源：VOA、RFA\n关键词：涉藏法案、人权、达赖\n预计完成时间：5分钟内\n完成后自动推送至分析组。',
-    };
+  const cfg = getApiConfig();
+  if (!cfg.base || !cfg.key || !cfg.model) {
+    addAiMsg('⚠️ 未配置API。请点击右上角 <strong>⚙ API设置</strong> 配置大模型接口。<br><br>支持任何OpenAI兼容API：<br>• SiliconFlow (api.siliconflow.cn)<br>• DeepSeek (api.deepseek.com)<br>• 智谱GLM (open.bigmodel.cn)<br>• 其他兼容端点');
+    return;
+  }
 
-    let reply = '收到您的指令，正在处理中…';
-    for (const [k, v] of Object.entries(replies)) {
-      if (text.includes(k)) { reply = v; break; }
+  // 显示"思考中..."
+  const chat = document.getElementById('chatMessages');
+  const thinkingMsg = document.createElement('div');
+  thinkingMsg.className = 'msg ai';
+  thinkingMsg.id = 'thinkingMsg';
+  thinkingMsg.innerHTML = '🧠 正在分析中...<div class="m-time">--</div>';
+  chat.appendChild(thinkingMsg);
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const messages = [
+      {role: 'system', content: KB_CONTEXT},
+      ...chatHistory.slice(-10)  // 最近10轮上下文
+    ];
+
+    const resp = await fetch(cfg.base + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + cfg.key
+      },
+      body: JSON.stringify({
+        model: cfg.model,
+        messages: messages,
+        stream: true,
+        temperature: 0.7,
+        max_tokens: 2048
+      })
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      thinkingMsg.remove();
+      addAiMsg('❌ API请求失败: ' + resp.status + ' - ' + errText.substring(0,200));
+      chatHistory.pop(); // 移除失败的用户消息
+      return;
     }
 
+    // 流式读取
+    thinkingMsg.remove();
     const aiMsg = document.createElement('div');
     aiMsg.className = 'msg ai';
-    aiMsg.innerHTML = reply + '<div class="m-time">刚刚</div>';
+    aiMsg.innerHTML = '<div class="m-time">刚刚</div>';
     chat.appendChild(aiMsg);
-    chat.scrollTop = chat.scrollHeight;
-  }, 600 + Math.random() * 800);
 
-  chat.scrollTop = chat.scrollHeight;
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let fullReply = '';
+    let buffer = '';
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, {stream:true});
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // 保留不完整行
+
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') break;
+        try {
+          const json = JSON.parse(data);
+          const delta = json.choices?.[0]?.delta?.content || '';
+          if (delta) {
+            fullReply += delta;
+            aiMsg.innerHTML = formatReply(fullReply) + '<div class="m-time">刚刚</div>';
+            chat.scrollTop = chat.scrollHeight;
+          }
+        } catch(e) { /* 跳过解析错误 */ }
+      }
+    }
+
+    chatHistory.push({role:'assistant', content: fullReply});
+
+  } catch(err) {
+    const tm = document.getElementById('thinkingMsg');
+    if (tm) tm.remove();
+    addAiMsg('❌ 网络错误: ' + err.message + '<br><br>提示：如遇CORS跨域限制，请确认API端点支持浏览器直接调用，或使用代理服务。');
+    chatHistory.pop();
+  }
+}
+
+// 格式化回复（简易markdown→HTML）
+function formatReply(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/• /g, '• ')
+    .replace(/\n/g, '<br/>')
+    .replace(/https?:\/\/[^\s<]+/g, '<a href="$&" target="_blank" style="color:#00d4ff;">$&</a>');
 }
 
 function quickCmd(cmd) {

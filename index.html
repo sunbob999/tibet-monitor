@@ -3,125 +3,1045 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>境外涉藏信息监测平台</title>
+<title>境外涉藏信息监测平台 - 大屏展示</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Microsoft YaHei','PingFang SC',sans-serif; background:#f0f2f5; color:#333; }
-.header { background: linear-gradient(135deg,#1a237e,#283593); color:#fff; padding:24px 32px; }
-.header h1 { font-size:24px; margin-bottom:8px; }
-.header .update { font-size:13px; opacity:0.8; }
-.container { max-width:1200px; margin:0 auto; padding:24px; }
-.cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:24px; }
-.card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.08); text-align:center; }
-.card .num { font-size:36px; font-weight:700; margin:8px 0; }
-.card .label { color:#666; font-size:14px; }
-.card .num.danger { color:#e74c3c; }
-.card .num.warn { color:#f39c12; }
-.card .num.safe { color:#27ae60; }
-.card .num.blue { color:#3498db; }
-.section { background:#fff; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-.section h2 { font-size:18px; margin-bottom:16px; padding-bottom:8px; border-bottom:2px solid #1a237e; }
-.article-card { background:#f8f9fa; border-radius:8px; padding:12px 16px; margin-bottom:10px; }
-.article-card h4 { font-size:14px; margin:8px 0 4px; }
-.source-tag { display:inline-block; padding:2px 8px; border-radius:4px; color:#fff; font-size:11px; margin-right:8px; }
-.date-tag { color:#999; font-size:12px; }
-.report-list { list-style:none; }
-.report-list li { padding:10px 16px; margin:4px 0; border-radius:6px; background:#f8f9fa; }
-.report-list li a { text-decoration:none; color:#1a237e; font-size:14px; }
-.report-list li a:hover { text-decoration:underline; }
-.footer { text-align:center; padding:20px; color:#999; font-size:12px; }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+:root {
+    --bg-primary: #0a0e27;
+    --bg-secondary: #111638;
+    --bg-card: rgba(17, 22, 56, 0.85);
+    --border-glow: rgba(0, 194, 255, 0.3);
+    --border-glow-strong: rgba(0, 194, 255, 0.6);
+    --accent-cyan: #00c2ff;
+    --accent-blue: #4d7cff;
+    --accent-green: #00e396;
+    --accent-red: #ff4560;
+    --accent-orange: #feb019;
+    --accent-purple: #9b59b6;
+    --accent-pink: #ff6b9d;
+    --text-primary: #e8eaf6;
+    --text-secondary: rgba(232, 234, 246, 0.6);
+    --font-tech: 'Orbitron', monospace;
+    --font-cn: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-cn);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ===== 背景动效 ===== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(0, 194, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(77, 124, 255, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(155, 89, 182, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== 网格线背景 ===== */
+.grid-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(0, 194, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 194, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== 头部 ===== */
+.header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 28px 40px 20px;
+    border-bottom: 1px solid var(--border-glow);
+    background: linear-gradient(180deg, rgba(0, 194, 255, 0.06) 0%, transparent 100%);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.header-clock {
+    font-family: var(--font-tech);
+    font-size: 14px;
+    color: var(--accent-cyan);
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(0, 194, 255, 0.5);
+}
+
+.header-update {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.header h1 {
+    font-family: var(--font-cn);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    position: relative;
+}
+
+.header-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 4px;
+    margin-top: 6px;
+}
+
+.header-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-blue), var(--accent-purple), transparent);
+    margin-top: 18px;
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* ===== 主布局 ===== */
+.dashboard {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    padding: 24px 28px;
+    max-width: 1920px;
+    margin: 0 auto;
+    min-height: calc(100vh - 140px);
+}
+
+/* ===== 面板通用 ===== */
+.panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+}
+
+.panel-title .icon {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-cyan);
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.panel-title .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-glow-strong), transparent);
+}
+
+/* ===== 左侧面板 ===== */
+.left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== 统计卡片 ===== */
+.stat-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.stat-card {
+    background: rgba(0, 194, 255, 0.04);
+    border: 1px solid rgba(0, 194, 255, 0.15);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 194, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 194, 255, 0.15);
+}
+
+.stat-card .label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.stat-card .number {
+    font-family: var(--font-tech);
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.stat-card .number.cyan { color: var(--accent-cyan); text-shadow: 0 0 30px rgba(0, 194, 255, 0.4); }
+.stat-card .number.blue { color: var(--accent-blue); text-shadow: 0 0 30px rgba(77, 124, 255, 0.4); }
+.stat-card .number.red { color: var(--accent-red); text-shadow: 0 0 30px rgba(255, 69, 96, 0.4); }
+.stat-card .number.green { color: var(--accent-green); text-shadow: 0 0 30px rgba(0, 227, 150, 0.4); }
+.stat-card .number.orange { color: var(--accent-orange); text-shadow: 0 0 30px rgba(254, 176, 25, 0.4); }
+.stat-card .number.purple { color: var(--accent-purple); text-shadow: 0 0 30px rgba(155, 89, 182, 0.4); }
+
+.stat-card .unit {
+    font-family: var(--font-cn);
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+/* ===== 威胁等级 ===== */
+.threat-panel {
+    text-align: center;
+}
+
+.threat-level {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 32px;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.threat-level.high {
+    background: rgba(255, 69, 96, 0.12);
+    border: 1px solid rgba(255, 69, 96, 0.3);
+}
+
+.threat-icon {
+    width: 16px;
+    height: 16px;
+    background: var(--accent-red);
+    border-radius: 50%;
+    animation: threat-pulse 1.5s infinite;
+}
+
+@keyframes threat-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 69, 96, 0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(255, 69, 96, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 69, 96, 0); }
+}
+
+.threat-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-red);
+    letter-spacing: 4px;
+}
+
+/* ===== 来源分布 ===== */
+.source-dist {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.source-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.source-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.source-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.source-bar-wrap {
+    flex: 1.5;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.source-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.5s ease;
+    position: relative;
+}
+
+.source-bar::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.source-count {
+    font-family: var(--font-tech);
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 30px;
+    text-align: right;
+}
+
+/* ===== 中间区域 ===== */
+.center-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== 最新报道 ===== */
+.article-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 8px;
+    max-height: calc(100vh - 480px);
+}
+
+.article-list::-webkit-scrollbar { width: 4px; }
+.article-list::-webkit-scrollbar-track { background: transparent; }
+.article-list::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
+
+.article-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s;
+    cursor: default;
+}
+
+.article-item:hover {
+    background: rgba(0, 194, 255, 0.05);
+    border-color: var(--border-glow);
+}
+
+.article-rank {
+    font-family: var(--font-tech);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    min-width: 28px;
+    text-align: center;
+    line-height: 1.4;
+    opacity: 0.6;
+}
+
+.article-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.article-date {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-tech);
+    letter-spacing: 1px;
+}
+
+.article-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ===== 今日概览 ===== */
+.today-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.today-stat {
+    text-align: center;
+    padding: 16px 10px;
+    background: rgba(0, 194, 255, 0.03);
+    border: 1px solid rgba(0, 194, 255, 0.1);
+    border-radius: 10px;
+}
+
+.today-stat .site-name {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.today-stat .count {
+    font-family: var(--font-tech);
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.today-stat .count.tibet { color: var(--accent-blue); text-shadow: 0 0 20px rgba(77, 124, 255, 0.3); }
+.today-stat .count.vot { color: var(--accent-pink); text-shadow: 0 0 20px rgba(255, 107, 157, 0.3); }
+.today-stat .count.voa { color: var(--accent-green); text-shadow: 0 0 20px rgba(0, 227, 150, 0.3); }
+.today-stat .count.rfa { color: var(--accent-purple); text-shadow: 0 0 20px rgba(155, 89, 182, 0.3); }
+
+/* ===== 日报入口 ===== */
+.report-entry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0, 194, 255, 0.08), rgba(77, 124, 255, 0.08));
+    border: 1px solid var(--border-glow-strong);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--accent-cyan);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    transition: all 0.3s;
+}
+
+.report-entry:hover {
+    background: linear-gradient(135deg, rgba(0, 194, 255, 0.15), rgba(77, 124, 255, 0.15));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 194, 255, 0.2);
+}
+
+/* ===== 右侧面板 ===== */
+.right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== 历史日报列表 ===== */
+.report-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    max-height: calc(100vh - 480px);
+    padding-right: 4px;
+}
+
+.report-list::-webkit-scrollbar { width: 3px; }
+.report-list::-webkit-scrollbar-track { background: transparent; }
+.report-list::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
+
+.report-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.report-item:hover {
+    background: rgba(0, 194, 255, 0.06);
+    border-color: var(--border-glow);
+    transform: translateX(-4px);
+}
+
+.report-item.active {
+    background: rgba(254, 176, 25, 0.08);
+    border-color: rgba(254, 176, 25, 0.3);
+}
+
+.report-date {
+    font-family: var(--font-tech);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    letter-spacing: 1px;
+}
+
+.report-item.active .report-date {
+    color: var(--accent-orange);
+}
+
+.report-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.report-arrow {
+    margin-left: auto;
+    color: var(--accent-cyan);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.report-item:hover .report-arrow {
+    opacity: 1;
+}
+
+/* ===== 监测信息 ===== */
+.monitor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.info-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.info-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* ===== 趋势图 ===== */
+.trend-chart {
+    width: 100%;
+    height: 120px;
+    position: relative;
+}
+
+/* ===== 底部 ===== */
+.footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 16px;
+    border-top: 1px solid var(--border-glow);
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.panel { animation: fadeInUp 0.6s ease-out; }
+.left-col .panel:nth-child(1) { animation-delay: 0.1s; }
+.left-col .panel:nth-child(2) { animation-delay: 0.2s; }
+.left-col .panel:nth-child(3) { animation-delay: 0.3s; }
+.center-col .panel:nth-child(1) { animation-delay: 0.15s; }
+.center-col .panel:nth-child(2) { animation-delay: 0.25s; }
+.right-col .panel:nth-child(1) { animation-delay: 0.2s; }
+.right-col .panel:nth-child(2) { animation-delay: 0.3s; }
+.right-col .panel:nth-child(3) { animation-delay: 0.4s; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 1400px) {
+    .dashboard {
+        grid-template-columns: 280px 1fr 280px;
+        gap: 16px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    .article-list { max-height: 500px; }
+    .report-list { max-height: 400px; }
+}
 </style>
 </head>
 <body>
+<div class="grid-bg"></div>
+
+<!-- 头部 -->
 <div class="header">
+    <div class="header-top">
+        <div class="header-clock" id="clock"></div>
+        <div class="header-update">更新时间: 2026年05月28日 09:00</div>
+    </div>
     <h1>境外涉藏信息监测平台</h1>
-    <div class="update">更新时间: 2026年05月28日</div>
+    <div class="header-sub">OVERSEAS TIBET-RELATED INFORMATION MONITORING SYSTEM</div>
+    <div class="header-line"></div>
 </div>
-<div class="container">
-    <div class="cards">
-        <div class="card">
-            <div class="label">监测网站数</div>
-            <div class="num blue">4</div>
+
+<!-- 主看板 -->
+<div class="dashboard">
+    <!-- 左侧 -->
+    <div class="left-col">
+        <!-- 核心数据 -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>核心数据</span>
+                <span class="line"></span>
+            </div>
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="label">监测网站</div>
+                    <div class="number cyan">4</div>
+                    <div class="unit">个</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">累计报道</div>
+                    <div class="number blue" id="total-count">94</div>
+                    <div class="unit">篇</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">今日新增</div>
+                    <div class="number green" id="today-count">24</div>
+                    <div class="unit">篇</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">监测天数</div>
+                    <div class="number orange">11</div>
+                    <div class="unit">天</div>
+                </div>
+            </div>
         </div>
-        <div class="card">
-            <div class="label">累计报道数</div>
-            <div class="num blue">51</div>
+
+        <!-- 威胁等级 -->
+        <div class="panel threat-panel">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>威胁等级</span>
+                <span class="line"></span>
+            </div>
+            <div class="threat-level high">
+                <span class="threat-icon"></span>
+                <span class="threat-text">高风险</span>
+            </div>
+            <p style="margin-top:12px;font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                涉藏核心网站活跃度持续高位<br>美涉藏立法加速推进
+            </p>
         </div>
-        <div class="card">
-            <div class="label">监测日期范围</div>
-            <div class="num" style="font-size:20px">2026-05-22 ~ 2026-05-27</div>
-        </div>
-        <div class="card">
-            <div class="label">当前威胁等级</div>
-            <div class="num" style="color:#e74c3c">高风险</div>
+
+        <!-- 来源分布 -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>来源分布</span>
+                <span class="line"></span>
+            </div>
+            <div class="source-dist">
+                <div class="source-item">
+                    <div class="source-color" style="background:var(--accent-blue);box-shadow:0 0 8px rgba(77,124,255,0.5);"></div>
+                    <div class="source-name">藏人行政中央官网</div>
+                    <div class="source-bar-wrap">
+                        <div class="source-bar" style="width:37.5%;background:linear-gradient(90deg,rgba(77,124,255,0.3),rgba(77,124,255,0.8));"></div>
+                    </div>
+                    <div class="source-count" style="color:var(--accent-blue);">9</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-color" style="background:var(--accent-pink);box-shadow:0 0 8px rgba(255,107,157,0.5);"></div>
+                    <div class="source-name">西藏之声</div>
+                    <div class="source-bar-wrap">
+                        <div class="source-bar" style="width:33.3%;background:linear-gradient(90deg,rgba(255,107,157,0.3),rgba(255,107,157,0.8));"></div>
+                    </div>
+                    <div class="source-count" style="color:var(--accent-pink);">8</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-color" style="background:var(--accent-purple);box-shadow:0 0 8px rgba(155,89,182,0.5);"></div>
+                    <div class="source-name">自由亚洲电台</div>
+                    <div class="source-bar-wrap">
+                        <div class="source-bar" style="width:25%;background:linear-gradient(90deg,rgba(155,89,182,0.3),rgba(155,89,182,0.8));"></div>
+                    </div>
+                    <div class="source-count" style="color:var(--accent-purple);">6</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-color" style="background:var(--accent-green);box-shadow:0 0 8px rgba(0,227,150,0.5);"></div>
+                    <div class="source-name">美国之音中文</div>
+                    <div class="source-bar-wrap">
+                        <div class="source-bar" style="width:4.2%;background:linear-gradient(90deg,rgba(0,227,150,0.3),rgba(0,227,150,0.8));"></div>
+                    </div>
+                    <div class="source-count" style="color:var(--accent-green);">1</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h2>📊 最新日报 (2026-05-28)</h2>
-        <p style="margin-bottom:12px; color:#666;">本期共收录 <strong>18</strong> 篇报道（tibet.com: 9 | cn.vot.org: 8 | voachinese.com: 1 | rfa.org: 0）</p>
-        <p style="margin-bottom:16px;"><a href="reports/2026-05-28.html" style="color:#1a237e;font-weight:700;text-decoration:none;font-size:16px;">📄 查看完整日报 →</a></p>
-        
-        <div class="article-card">
-            <span class="source-tag" style="background:#3498db">藏人行政中央官网</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>边巴次仁宣誓就任藏人行政中央第十七届噶厦司政</h4>
+    <!-- 中间 -->
+    <div class="center-col">
+        <!-- 今日概览 -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>今日数据概览</span>
+                <span class="line"></span>
+            </div>
+            <div class="today-summary">
+                <div class="today-stat">
+                    <div class="site-name">TIBET.COM</div>
+                    <div class="count tibet">9</div>
+                </div>
+                <div class="today-stat">
+                    <div class="site-name">CN.VOT.ORG</div>
+                    <div class="count vot">8</div>
+                </div>
+                <div class="today-stat">
+                    <div class="site-name">VOACHINESE</div>
+                    <div class="count voa">1</div>
+                </div>
+                <div class="today-stat">
+                    <div class="site-name">RFA.ORG</div>
+                    <div class="count rfa">6</div>
+                </div>
+            </div>
         </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#3498db">藏人行政中央官网</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>藏人行政中央第十七届噶厦司政宣誓就职典礼讲话</h4>
+
+        <!-- 最新报道 -->
+        <div class="panel" style="flex:1;">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>最新涉藏报道</span>
+                <span class="line"></span>
+                <a href="reports/2026-05-28.html" style="margin-left:auto;font-size:12px;color:var(--accent-cyan);text-decoration:none;letter-spacing:1px;">查看完整日报 &rarr;</a>
+            </div>
+            <div class="article-list">
+
+                <div class="article-item">
+                    <div class="article-rank">01</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(77,124,255,0.2);color:var(--accent-blue);border:1px solid rgba(77,124,255,0.3);">藏人行政中央官网</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">边巴次仁宣誓就任藏人行政中央第十七届噶厦司政</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">02</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(77,124,255,0.2);color:var(--accent-blue);border:1px solid rgba(77,124,255,0.3);">藏人行政中央官网</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">藏人行政中央第十七届噶厦司政宣誓就职典礼讲话</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">03</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(255,107,157,0.2);color:var(--accent-pink);border:1px solid rgba(255,107,157,0.3);">西藏之声</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">04</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(0,227,150,0.2);color:var(--accent-green);border:1px solid rgba(0,227,150,0.3);">美国之音中文</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">美议员跨党推出法案，强化持续对藏人支持与接触</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">05</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(77,124,255,0.2);color:var(--accent-blue);border:1px solid rgba(77,124,255,0.3);">藏人行政中央官网</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">台湾举行第三届萨嘎达瓦庆典　弘扬图伯特宗教与文化艺术</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">06</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(255,107,157,0.2);color:var(--accent-pink);border:1px solid rgba(255,107,157,0.3);">西藏之声</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">"西藏自治区"体育局长尼玛次仁因"涉嫌"严重违纪违法被查</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">07</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(255,107,157,0.2);color:var(--accent-pink);border:1px solid rgba(255,107,157,0.3);">西藏之声</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">08</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(255,107,157,0.2);color:var(--accent-pink);border:1px solid rgba(255,107,157,0.3);">西藏之声</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">加拿大议员：支持藏人自由、自治与宗教信仰自由</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">09</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(77,124,255,0.2);color:var(--accent-blue);border:1px solid rgba(77,124,255,0.3);">藏人行政中央官网</span>
+                            <span class="article-date">2026-05-26</span>
+                        </div>
+                        <div class="article-title">智利及萨尔瓦多国会议员访问图伯特人民议会</div>
+                    </div>
+                </div>
+
+                <div class="article-item">
+                    <div class="article-rank">10</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="source-badge" style="background:rgba(155,89,182,0.2);color:var(--accent-purple);border:1px solid rgba(155,89,182,0.3);">自由亚洲电台</span>
+                            <span class="article-date">2026-05-27</span>
+                        </div>
+                        <div class="article-title">第八届"西藏独立理念者大会"召开，呼吁印度承认西藏独立</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#3498db">藏人行政中央官网</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>台湾举行第三届萨嘎达瓦庆典　弘扬图伯特宗教与文化艺术</h4>
-        </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#27ae60">美国之音中文</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>美议员跨党推出法案，强化持续对藏人支持与接触</h4>
-        </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#e91e63">西藏之声</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>藏人行政中央第十七届内阁司政边巴次仁正式宣誓就职</h4>
-        </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#e91e63">西藏之声</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>“西藏自治区”体育局长尼玛次仁因“涉嫌”严重违纪违法被查</h4>
-        </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#e91e63">西藏之声</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>欧盟安全会议前夕，人权观察警告：中共威权扩张威胁欧洲安全</h4>
-        </div>
-        <div class="article-card">
-            <span class="source-tag" style="background:#e91e63">西藏之声</span>
-            <span class="date-tag">2026-05-27</span>
-            <h4>加拿大议员：支持藏人自由、自治与宗教信仰自由</h4>
-        </div>
+
+        <!-- 日报入口 -->
+        <a class="report-entry" href="reports/2026-05-28.html">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            查看完整日报 &rarr;
+        </a>
     </div>
 
-    <div class="section">
-        <h2>📅 历史日报列表</h2>
-        <ul class="report-list">
-            <li style="background:#fff3cd;border-left:3px solid #f39c12;"><a href="reports/2026-05-28.html">2026-05-28 日报</a></li>
-<li ><a href="reports/2026-05-27.html">2026-05-27 日报</a></li>
-<li ><a href="reports/2026-05-26.html">2026-05-26 日报</a></li>
-<li ><a href="reports/2026-05-25.html">2026-05-25 日报</a></li>
-<li ><a href="reports/2026-05-22.html">2026-05-22 日报</a></li>
-<li ><a href="reports/2026-05-21.html">2026-05-21 日报</a></li>
-<li ><a href="reports/2026-05-20.html">2026-05-20 日报</a></li>
-<li ><a href="reports/2026-05-18.html">2026-05-18 日报</a></li>
+    <!-- 右侧 -->
+    <div class="right-col">
+        <!-- 历史日报 -->
+        <div class="panel" style="flex:1;">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>历史日报</span>
+                <span class="line"></span>
+            </div>
+            <div class="report-list">
+                <a class="report-item active" href="reports/2026-05-28.html">
+                    <span class="report-date">2026-05-28</span>
+                    <span class="report-label">24篇 | 高风险</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-27.html">
+                    <span class="report-date">2026-05-27</span>
+                    <span class="report-label">17篇 | 高风险</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-26.html">
+                    <span class="report-date">2026-05-26</span>
+                    <span class="report-label">6篇 | 中等</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-25.html">
+                    <span class="report-date">2026-05-25</span>
+                    <span class="report-label">4篇 | 低风险</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-22.html">
+                    <span class="report-date">2026-05-22</span>
+                    <span class="report-label">10篇 | 高风险</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-21.html">
+                    <span class="report-date">2026-05-21</span>
+                    <span class="report-label">5篇 | 中等</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-20.html">
+                    <span class="report-date">2026-05-20</span>
+                    <span class="report-label">7篇 | 中等</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+                <a class="report-item" href="reports/2026-05-18.html">
+                    <span class="report-date">2026-05-18</span>
+                    <span class="report-label">8篇 | 中等</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+            </div>
+        </div>
 
-        </ul>
-    </div>
-
-    <div class="footer">
-        <p>境外涉藏信息监测平台 | 数据来源参考4个境外涉藏网站 | 2026年05月28日</p>
+        <!-- 监测信息 -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon"></span>
+                <span>监测配置</span>
+                <span class="line"></span>
+            </div>
+            <div class="monitor-info">
+                <div class="info-row">
+                    <span class="info-label">数据范围</span>
+                    <span class="info-value">2026-05-18 ~ 05-28</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">爬取方式</span>
+                    <span class="info-value">RSS + Playwright</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">更新频率</span>
+                    <span class="info-value">每日 09:00 自动</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">部署平台</span>
+                    <span class="info-value">GitHub Pages</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">公网地址</span>
+                    <span class="info-value" style="color:var(--accent-cyan);font-size:11px;">sunbob999.github.io/tibet-monitor</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- 底部 -->
+<div class="footer">
+    境外涉藏信息监测平台 &nbsp;|&nbsp; 数据来源：4个境外涉藏网站 &nbsp;|&nbsp; 自动化采集与研判分析
+</div>
+
+<script>
+// 实时时钟
+function updateClock() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = String(now.getMonth() + 1).padStart(2, '0');
+    var d = String(now.getDate()).padStart(2, '0');
+    var h = String(now.getHours()).padStart(2, '0');
+    var min = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('clock').textContent = y + '-' + m + '-' + d + ' ' + h + ':' + min + ':' + s;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// 数字递增动画
+function animateNumber(el, target, duration) {
+    var start = 0;
+    var startTime = null;
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// 页面加载后启动数字动画
+window.addEventListener('load', function() {
+    animateNumber(document.getElementById('total-count'), 94, 2000);
+    animateNumber(document.getElementById('today-count'), 24, 1500);
+});
+</script>
 </body>
 </html>

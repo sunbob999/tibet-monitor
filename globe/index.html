@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3D Globe</title>
+<style>
+html,body{position:absolute;width:100%;height:100%;margin:0;overflow:hidden;background:transparent;cursor:grab;font-family:sans-serif}
+.world{position:absolute;width:100%;height:100%;cursor:pointer;cursor:move;cursor:grab}
+.world-bg{position:absolute;width:100%;height:100%;background-position:50% 50%;background-size:cover;opacity:.3}
+.world-globe{position:absolute;left:50%;top:50%;width:0;height:0}
+.world-globe-pole{position:absolute;width:400px;height:400px;left:-200px;top:-200px;border-radius:50%;background-color:#fff}
+.world-globe-doms-container{position:absolute;left:50%;top:50%;width:0;height:0}
+.world-globe-halo{position:absolute;left:50%;top:50%;width:560px;height:545px;margin-left:-280px;margin-top:-270px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+</head>
+<body>
+<div class="world">
+<div class="world-bg"></div>
+<div class="world-globe">
+<div class="world-globe-pole"></div>
+<div class="world-globe-doms-container"></div>
+<div class="world-globe-halo"></div>
+</div>
+</div>
+<script>
+// Fake dat.GUI and Stats to avoid modifying script.js
+var dat={GUI:function(){this.add=function(){return this};return this}};
+var Stats=function(){this.begin=function(){};this.end=function(){};this.domElement={style:{}};return this};
+</script>
+<script src="css_globe_PerspectiveTransform.js"></script>
+<script src="TweenMax.min.js"></script>
+<script src="script.js"></script>
+<script>
+// Add report markers after globe init
+window.addEventListener('load',function(){
+setTimeout(function(){
+var reports=parent._globeReports||[];
+var globe=document.querySelector('.world-globe-doms-container');
+reports.forEach(function(r){
+var m=document.createElement('div');
+m.style.cssText='position:absolute;width:14px;height:14px;border-radius:50%;background:#00d4ff;box-shadow:0 0 12px #00d4ff,0 0 24px rgba(0,212,255,.5);cursor:pointer;z-index:100;transition:transform .3s';
+m.title=r.date+' | '+r.count+'篇';
+m.onclick=function(){parent.location.href='reports/'+r.date+'.html'};
+var lat=r.lat||30+Math.random()*30;
+var lng=r.lng||70+Math.random()*60;
+var radius=200;
+var phi=(90-lat)*Math.PI/180;
+var theta=(lng+180)*Math.PI/180;
+m.style.left=(radius*Math.sin(phi)*Math.cos(theta))+'px';
+m.style.top=(-radius*Math.cos(phi))+'px';
+var pulse=document.createElement('div');
+pulse.style.cssText='position:absolute;inset:-4px;border-radius:50%;border:2px solid #00d4ff;opacity:.5;animation:gp 2s infinite';
+m.appendChild(pulse);
+globe.appendChild(m);
+});
+var st=document.createElement('style');
+st.textContent='@keyframes gp{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.5);opacity:0}}';
+document.head.appendChild(st);
+},1000);
+});
+</script>
+</body>
+</html>

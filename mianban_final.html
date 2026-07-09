@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涉藏信息预警推送平台 | 大屏监控</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --frost: rgba(255, 255, 255, 0.04);
+    --frost-border: rgba(255, 255, 255, 0.08);
+    --frost-hover: rgba(255, 255, 255, 0.07);
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-title: #f1f5f9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 动态背景 */
+  .bg-layer {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .bg-grid {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(60px, 60px); }
+  }
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+  }
+  .bg-orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--accent), transparent);
+    top: -200px; right: -100px;
+    animation: orbFloat1 15s ease-in-out infinite;
+  }
+  .bg-orb-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--accent2), transparent);
+    bottom: -150px; left: -100px;
+    animation: orbFloat2 18s ease-in-out infinite;
+  }
+  .bg-orb-3 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, var(--warning), transparent);
+    top: 40%; left: 30%;
+    animation: orbFloat3 20s ease-in-out infinite;
+  }
+  @keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-60px, 50px) scale(1.1); }
+    66% { transform: translate(30px, -30px) scale(0.9); }
+  }
+  @keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, -40px) scale(1.15); }
+    66% { transform: translate(-40px, 20px) scale(0.85); }
+  }
+  @keyframes orbFloat3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-30px, -40px) scale(1.2); }
+  }
+  .bg-particles {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: particleFloat 8s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes particleFloat {
+    0% { opacity: 0; transform: translateY(100vh) scale(1); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-10vh) scale(0.3); }
+  }
+
+  /* 主容器 */
+  .main-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* 顶部标题栏 */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+    background: var(--frost);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.5;
+  }
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #e2e8f0, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .status-dot {
+    width: 10px; height: 10px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--success);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .status-text {
+    font-size: 14px;
+    color: var(--success);
+    font-weight: 500;
+  }
+  .time-display {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 15px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  /* 网格布局 */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* 毛玻璃面板 */
+  .glass-panel {
+    background: var(--frost);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    padding: 14px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .glass-panel:hover {
+    background: var(--frost-hover);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  .glass-panel::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-title);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-title::before {
+    content: '';
+    width: 3px; height: 15px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+  }
+
+  /* 指标卡片区域 */
+  .metrics-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .metric-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 22px;
+  }
+  .metric-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .metric-value {
+    font-size: 36px;
+    font-weight: 800;
+    font-family: 'Consolas', 'Monaco', monospace;
+    background: linear-gradient(135deg, #f1f5f9, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .metric-trend {
+    font-size: 12px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .trend-up { color: var(--danger); }
+  .trend-down { color: var(--success); }
+  .trend-stable { color: var(--warning); }
+
+  /* 左栏 */
+  .left-col { grid-column: 1; display: flex; flex-direction: column; gap: 16px; }
+
+  /* 中栏 - 地球 */
+  .globe-col {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .globe-container {
+    flex: 1;
+    border-radius: 16px;
+    border: 1px solid var(--frost-border);
+    background: var(--frost);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+  }
+  .globe-container:active { cursor: grabbing; }
+  .globe-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .globe-container canvas {
+    display: block;
+  }
+  .globe-title-overlay {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    z-index: 3;
+    pointer-events: none;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-title);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .globe-title-overlay::before {
+    content: '';
+    width: 4px; height: 18px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+  }
+  .globe-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    pointer-events: none;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  /* 右栏 */
+  .right-col { grid-column: 3; display: flex; flex-direction: column; gap: 16px; }
+
+  /* 威胁评估 */
+  .threat-level {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0;
+    gap: 24px;
+  }
+  .threat-gauge {
+    position: relative;
+    width: 120px; height: 120px;
+  }
+  .threat-gauge svg { transform: rotate(-90deg); }
+  .threat-label-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .threat-score {
+    font-size: 36px;
+    font-weight: 800;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--warning);
+  }
+  .threat-text {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .threat-info { text-align: left; }
+  .threat-info h3 {
+    font-size: 18px;
+    color: var(--warning);
+    margin-bottom: 4px;
+  }
+  .threat-info p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* 来源分布 */
+  .source-bars { display: flex; flex-direction: column; gap: 10px; }
+  .source-item { display: flex; flex-direction: column; gap: 3px; }
+  .source-header { display: flex; justify-content: space-between; font-size: 12px; }
+  .source-name { color: var(--text); font-weight: 500; }
+  .source-count { color: var(--text-dim); }
+  .source-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .source-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.5s ease;
+  }
+
+  /* 趋势图 */
+  .trend-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; padding-top: 8px; }
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--accent), rgba(0, 212, 255, 0.2));
+    border-radius: 4px 4px 0 0;
+    transition: height 1.5s ease;
+    position: relative;
+  }
+  .chart-bar-label {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .chart-bar-value {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* 最新情报 */
+  .intel-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; min-height: 0; }
+  .intel-list::-webkit-scrollbar { width: 4px; }
+  .intel-list::-webkit-scrollbar-track { background: transparent; }
+  .intel-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  .intel-item {
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .intel-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .intel-item.new { border-left: 2px solid var(--danger); }
+  .intel-meta { display: flex; gap: 12px; font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+  .intel-source { color: var(--accent); }
+  .intel-title { color: var(--text); font-weight: 500; }
+  .intel-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-weight: 500;
+  }
+  .badge-new { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+  .badge-warn { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+  /* 日报档案 */
+  .archive-list { display: flex; flex-direction: column; gap: 5px; max-height: 140px; overflow-y: auto; }
+  .archive-list::-webkit-scrollbar { width: 4px; }
+  .archive-list::-webkit-scrollbar-track { background: transparent; }
+  .archive-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  .archive-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    font-size: 13px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .archive-item:hover { background: rgba(255,255,255,0.05); }
+  .archive-date { color: var(--text); font-weight: 500; }
+  .archive-count { color: var(--text-dim); font-size: 12px; }
+
+  /* 系统配置 */
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .config-item { display: flex; flex-direction: column; gap: 2px; }
+  .config-key { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+  .config-val { font-size: 13px; color: var(--text); font-weight: 500; }
+  .config-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .config-tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+  }
+
+  /* 响应式 */
+  @media (max-width: 1400px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr 1.3fr 1fr;
+    }
+    .metrics-section { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 1100px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr 1fr;
+      height: auto;
+    }
+    .globe-col { grid-column: 1 / -1; min-height: 500px; }
+    .left-col, .right-col { grid-column: span 1; }
+    .metrics-section { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .metrics-section { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 18px; }
+  }
+
+  .bar-row { margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<!-- 动态背景 -->
+<div class="bg-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-particles" id="particles"></div>
+</div>
+
+<!-- 主容器 -->
+<div class="main-container">
+
+  <!-- 顶部标题栏 -->
+  <header class="header">
+    <div class="header-title">
+      <div class="header-icon">🛡️</div>
+      <div>
+        <h1>涉藏信息预警推送平台</h1>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-dot"></div>
+      <span class="status-text">系统运行中</span>
+      <span class="time-display" id="liveTime">--</span>
+    </div>
+  </header>
+
+  <!-- 核心指标区 -->
+  <div class="metrics-section">
+    <div class="glass-panel metric-card">
+      <span class="metric-label">监测站点</span>
+      <span class="metric-value" id="metricSites">4</span>
+      <span class="metric-trend trend-stable">◆ 覆盖 VOA / RFA / VOT / 藏人行政</span>
+    </div>
+    <div class="glass-panel metric-card">
+      <span class="metric-label">累计情报</span>
+      <span class="metric-value" id="metricTotal">117</span>
+      <span class="metric-trend trend-up">▲ +3 条 今日</span>
+    </div>
+    <div class="glass-panel metric-card">
+      <span class="metric-label">今日新增</span>
+      <span class="metric-value" id="metricToday" style="background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text;">3</span>
+      <span class="metric-trend trend-up">▲ 3 条待审</span>
+    </div>
+    <div class="glass-panel metric-card">
+      <span class="metric-label">监控天数</span>
+      <span class="metric-value" id="metricDays">53</span>
+      <span class="metric-trend trend-stable">◆ 连续运行</span>
+    </div>
+  </div>
+
+  <!-- 主仪表区 -->
+  <div class="dashboard-grid">
+
+    <!-- 左栏 -->
+    <div class="left-col">
+      <!-- 威胁评估 -->
+      <div class="glass-panel" style="flex:0 0 auto;">
+        <div class="panel-title">威胁评估</div>
+        <div class="threat-level">
+          <div class="threat-gauge">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#f59e0b" stroke-width="8"
+                stroke-dasharray="326.7" stroke-dashoffset="108.9" stroke-linecap="round"/>
+            </svg>
+            <div class="threat-label-center">
+              <div class="threat-score">中高</div>
+              <div class="threat-text">威胁等级</div>
+            </div>
+          </div>
+          <div class="threat-info">
+            <h3>多线并行态势</h3>
+            <p>4 个来源站点持续<br/>产生涉藏相关报道，<br/>需保持关注。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 来源分布 -->
+      <div class="glass-panel" style="flex:1;">
+        <div class="panel-title">来源分布</div>
+        <div class="source-bars">
+          <div class="source-item">
+            <div class="source-header"><span class="source-name">VOA 美国之音</span><span class="source-count">35 条</span></div>
+            <div class="source-bar"><div class="source-fill" style="width: 0%; background: linear-gradient(90deg, #00d4ff, #0ea5e9);" data-width="85%"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-header"><span class="source-name">RFA 自由亚洲电台</span><span class="source-count">28 条</span></div>
+            <div class="source-bar"><div class="source-fill" style="width: 0%; background: linear-gradient(90deg, #7c3aed, #8b5cf6);" data-width="68%"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-header"><span class="source-name">VOT 西藏之声</span><span class="source-count">32 条</span></div>
+            <div class="source-bar"><div class="source-fill" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #f97316);" data-width="78%"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-header"><span class="source-name">藏人行政中央官网</span><span class="source-count">22 条</span></div>
+            <div class="source-bar"><div class="source-fill" style="width: 0%; background: linear-gradient(90deg, #ef4444, #dc2626);" data-width="55%"></div></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="panel-title" style="margin-top:8px;">近15日情报趋势</div>
+          <div class="trend-chart">
+            <div class="chart-bar" style="height: 0px;" data-height="40%"><span class="chart-bar-value">4</span><span class="chart-bar-label">7/01</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="65%"><span class="chart-bar-value">6</span><span class="chart-bar-label">7/02</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="30%"><span class="chart-bar-value">3</span><span class="chart-bar-label">7/03</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="55%"><span class="chart-bar-value">5</span><span class="chart-bar-label">7/04</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="50%"><span class="chart-bar-value">5</span><span class="chart-bar-label">7/05</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="20%"><span class="chart-bar-value">2</span><span class="chart-bar-label">7/06</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="75%"><span class="chart-bar-value">7</span><span class="chart-bar-label">7/07</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="45%"><span class="chart-bar-value">4</span><span class="chart-bar-label">7/08</span></div>
+            <div class="chart-bar" style="height: 0px;" data-height="35%"><span class="chart-bar-value">3</span><span class="chart-bar-label">7/09</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中栏 - 3D地球 -->
+    <div class="globe-col">
+      <div class="globe-container" id="globeContainer">
+        <div class="globe-title-overlay">全球态势感知</div>
+        <div class="globe-hint">🖱 拖拽旋转 · 滚轮缩放 · 光线汇聚北京监测中心</div>
+      </div>
+    </div>
+
+    <!-- 右栏 -->
+    <div class="right-col">
+      <!-- 最新情报 -->
+      <div class="glass-panel" style="flex:1.4;">
+        <div class="panel-title">最新情报 <span style="font-size:11px;color:var(--danger);">● LIVE</span></div>
+        <div class="intel-list"><div class="intel-item new" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-07-09.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">藏人行政</span> · 2026-07-09</div><div class="intel-title">司政边巴次仁继续展开拉达克访问行程 <span class="intel-badge badge-new">NEW</span></div></div><div class="intel-item new" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-06-02.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">VOA</span> · 2026-06-02</div><div class="intel-title">第十八届图伯特人民议会成立 正副议长宣誓就职 <span class="intel-badge badge-new">NEW</span></div></div><div class="intel-item new" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-28.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">RFA</span> · 2026-05-28</div><div class="intel-title">司政边巴次仁连任就职 国际政要致贺 <span class="intel-badge badge-new">NEW</span></div></div><div class="intel-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-27.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">VOT</span> · 2026-05-27</div><div class="intel-title">美国会议员推出《确保西藏未来法》</div></div><div class="intel-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-26.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">藏人行政</span> · 2026-05-26</div><div class="intel-title">藏人行政中央议会选举结果公布</div></div><div class="intel-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-25.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">VOA</span> · 2026-05-25</div><div class="intel-title">拉美国会议员访问图伯特人民议会</div></div><div class="intel-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-22.html')" style="cursor:pointer"><div class="intel-meta"><span class="intel-source">RFA</span> · 2026-05-22</div><div class="intel-title">司政出席美国独立250周年招待会</div></div></div></div>
+      </div>
+
+      <!-- 日报档案 + 系统配置 -->
+      <div class="glass-panel" style="flex:0 0 auto;">
+        <div class="panel-title">日报档案 · 10 份</div>
+        <div class="archive-list"><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-07-09.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-07-09</span><span class="archive-count">3 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-06-02.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-06-02</span><span class="archive-count">20 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-28.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-28</span><span class="archive-count">24 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-27.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-27</span><span class="archive-count">17 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-26.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-26</span><span class="archive-count">6 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-25.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-25</span><span class="archive-count">4 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-22.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-22</span><span class="archive-count">5 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-21.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-21</span><span class="archive-count">3 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-20.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-20</span><span class="archive-count">4 条</span></div><div class="archive-item" onclick="window.open('https://sunbob999.github.io/tibet-monitor/reports/2026-05-18.html')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,212,255,.06)';this.style.transform='translateX(4px)'" onmouseout="this.style.background='';this.style.transform=''"><span class="archive-date">2026-05-18</span><span class="archive-count">2 条</span></div></div>
+      </div>
+
+      <div class="glass-panel" style="flex:0 0 auto;">
+        <div class="panel-title">系统配置</div>
+        <div class="config-grid">
+          <div class="config-item">
+            <span class="config-key">数据源</span>
+            <span class="config-val">4 个境外网站</span>
+          </div>
+          <div class="config-item">
+            <span class="config-key">采集频率</span>
+            <span class="config-val">每五分钟一次</span>
+          </div>
+          <div class="config-item">
+            <span class="config-key">时间范围</span>
+            <span class="config-val">近 7 天</span>
+          </div>
+          <div class="config-item">
+            <span class="config-key">监控范围</span>
+            <span class="config-val">全球</span>
+          </div>
+        </div>
+        <div class="config-tags">
+          <span class="config-tag">西藏</span>
+          <span class="config-tag">藏人</span>
+          <span class="config-tag">达赖</span>
+          <span class="config-tag">HTML 98.7%</span>
+          <span class="config-tag">1,152 次提交</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Three.js -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ============ 时钟 ============
+function updateTime() {
+  const now = new Date();
+  document.getElementById('liveTime').textContent =
+    now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0') + ' ' +
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0') + ':' +
+    String(now.getSeconds()).padStart(2,'0');
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+// ============ 粒子背景 ============
+(function() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 8 + 's';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.width = (1 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    c.appendChild(p);
+  }
+})();
+
+// ============ 动画 ============
+function animateBars() {
+  document.querySelectorAll('.source-fill').forEach(bar => {
+    const w = bar.getAttribute('data-width');
+    if (w) bar.style.width = w;
+  });
+  document.querySelectorAll('.chart-bar').forEach(bar => {
+    const h = bar.getAttribute('data-height');
+    if (h) bar.style.height = h;
+  });
+}
+function animateCount(el, target, duration) {
+  let cur = 0, inc = target / (duration / 16);
+  const t = setInterval(() => {
+    cur += inc;
+    if (cur >= target) { el.textContent = target; clearInterval(t); }
+    else el.textContent = Math.floor(cur);
+  }, 16);
+}
+window.addEventListener('DOMContentLoaded', () => {
+  animateBars();
+  setTimeout(() => {
+    animateCount(document.getElementById('metricSites'), 4, 1000);
+    animateCount(document.getElementById('metricTotal'), 117, 1500);
+    animateCount(document.getElementById('metricToday'), 3, 800);
+    animateCount(document.getElementById('metricDays'), 53, 1200);
+  }, 300);
+});
+
+// ============ 3D 地球 ============
+const container = document.getElementById('globeContainer');
+const w = container.clientWidth;
+const h = container.clientHeight;
+
+// 渲染器
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(w, h);
+container.appendChild(renderer.domElement);
+
+// 场景与相机
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+camera.position.z = 3.2;
+
+// 光照
+const ambientLight = new THREE.AmbientLight(0x404080, 1.2);
+scene.add(ambientLight);
+const sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+sunLight.position.set(5, 3, 5);
+scene.add(sunLight);
+const fillLight = new THREE.DirectionalLight(0x4466aa, 0.4);
+fillLight.position.set(-3, -1, -2);
+scene.add(fillLight);
+
+// 星空
+const starsGeom = new THREE.BufferGeometry();
+const starsCount = 800;
+const starsPos = new Float32Array(starsCount * 3);
+for (let i = 0; i < starsCount; i++) {
+  starsPos[i * 3] = (Math.random() - 0.5) * 20;
+  starsPos[i * 3 + 1] = (Math.random() - 0.5) * 20;
+  starsPos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+}
+starsGeom.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
+const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.02, transparent: true, opacity: 0.7 });
+const stars = new THREE.Points(starsGeom, starsMat);
+scene.add(stars);
+
+// 地球组
+const earthGroup = new THREE.Group();
+scene.add(earthGroup);
+
+// 地球纹理 - Canvas绘制程序化纹理
+function createEarthTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 1024;
+  const ctx = canvas.getContext('2d');
+
+  // 海洋底色
+  const oceanGrad = ctx.createLinearGradient(0, 0, 0, 1024);
+  oceanGrad.addColorStop(0, '#1a3a5c');
+  oceanGrad.addColorStop(0.3, '#1e4d7a');
+  oceanGrad.addColorStop(0.5, '#1a5080');
+  oceanGrad.addColorStop(0.7, '#1e4d7a');
+  oceanGrad.addColorStop(1, '#1a3a5c');
+  ctx.fillStyle = oceanGrad;
+  ctx.fillRect(0, 0, 2048, 1024);
+
+  // 海洋纹理
+  for (let i = 0; i < 5000; i++) {
+    const x = Math.random() * 2048;
+    const y = Math.random() * 1024;
+    ctx.fillStyle = `rgba(${20 + Math.random() * 40}, ${60 + Math.random() * 40}, ${100 + Math.random() * 50}, ${0.02 + Math.random() * 0.04})`;
+    ctx.beginPath();
+    ctx.arc(x, y, 1 + Math.random() * 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 大陆形状 (简化经纬度坐标映射到 canvas)
+  ctx.fillStyle = '#3a6b35';
+  
+  // 北美洲
+  ctx.beginPath();
+  ctx.moveTo(180, 80); ctx.lineTo(280, 70); ctx.lineTo(340, 100);
+  ctx.lineTo(370, 180); ctx.lineTo(350, 280); ctx.lineTo(300, 360);
+  ctx.lineTo(260, 380); ctx.lineTo(220, 340); ctx.lineTo(200, 280);
+  ctx.lineTo(170, 200); ctx.lineTo(160, 140); ctx.closePath();
+  ctx.fill();
+
+  // 南美洲
+  ctx.beginPath();
+  ctx.moveTo(320, 400); ctx.lineTo(350, 420); ctx.lineTo(360, 500);
+  ctx.lineTo(340, 580); ctx.lineTo(310, 620); ctx.lineTo(290, 580);
+  ctx.lineTo(300, 500); ctx.lineTo(310, 450); ctx.closePath();
+  ctx.fill();
+
+  // 欧洲
+  ctx.fillStyle = '#4a8c3f';
+  ctx.beginPath();
+  ctx.moveTo(620, 160); ctx.lineTo(680, 150); ctx.lineTo(720, 170);
+  ctx.lineTo(750, 200); ctx.lineTo(720, 260); ctx.lineTo(680, 280);
+  ctx.lineTo(640, 260); ctx.lineTo(600, 220); ctx.lineTo(590, 180); ctx.closePath();
+  ctx.fill();
+
+  // 非洲
+  ctx.fillStyle = '#5a7a30';
+  ctx.beginPath();
+  ctx.moveTo(630, 300); ctx.lineTo(680, 290); ctx.lineTo(730, 320);
+  ctx.lineTo(750, 400); ctx.lineTo(740, 500); ctx.lineTo(700, 580);
+  ctx.lineTo(660, 600); ctx.lineTo(630, 550); ctx.lineTo(620, 450);
+  ctx.lineTo(610, 350); ctx.closePath();
+  ctx.fill();
+
+  // 亚洲
+  ctx.fillStyle = '#4a7a38';
+  ctx.beginPath();
+  ctx.moveTo(780, 130); ctx.lineTo(900, 100); ctx.lineTo(1050, 120);
+  ctx.lineTo(1150, 160); ctx.lineTo(1200, 220); ctx.lineTo(1180, 300);
+  ctx.lineTo(1100, 340); ctx.lineTo(1000, 350); ctx.lineTo(920, 310);
+  ctx.lineTo(860, 280); ctx.lineTo(820, 240); ctx.lineTo(780, 190); ctx.closePath();
+  ctx.fill();
+
+  // 印度
+  ctx.fillStyle = '#558a40';
+  ctx.beginPath();
+  ctx.moveTo(940, 280); ctx.lineTo(980, 270); ctx.lineTo(1010, 290);
+  ctx.lineTo(1020, 340); ctx.lineTo(1000, 380); ctx.lineTo(960, 370);
+  ctx.lineTo(930, 330); ctx.closePath();
+  ctx.fill();
+
+  // 东南亚群岛
+  ctx.fillStyle = '#4a8035';
+  ctx.beginPath();
+  ctx.moveTo(1060, 340); ctx.lineTo(1120, 330); ctx.lineTo(1160, 360);
+  ctx.lineTo(1140, 400); ctx.lineTo(1080, 410); ctx.lineTo(1050, 380); ctx.closePath();
+  ctx.fill();
+
+  // 日本
+  ctx.beginPath();
+  ctx.moveTo(1180, 200); ctx.lineTo(1190, 230); ctx.lineTo(1180, 260); ctx.lineTo(1170, 230); ctx.closePath();
+  ctx.fill();
+
+  // 澳大利亚
+  ctx.fillStyle = '#8a7030';
+  ctx.beginPath();
+  ctx.moveTo(1100, 520); ctx.lineTo(1200, 510); ctx.lineTo(1260, 540);
+  ctx.lineTo(1280, 600); ctx.lineTo(1240, 640); ctx.lineTo(1160, 650);
+  ctx.lineTo(1100, 620); ctx.lineTo(1080, 570); ctx.closePath();
+  ctx.fill();
+
+  // 新西兰
+  ctx.beginPath();
+  ctx.moveTo(1300, 680); ctx.lineTo(1320, 690); ctx.lineTo(1310, 720); ctx.lineTo(1290, 700); ctx.closePath();
+  ctx.fill();
+
+  // 中亚
+  ctx.fillStyle = '#6a9050';
+  ctx.beginPath();
+  ctx.moveTo(800, 200); ctx.lineTo(850, 190); ctx.lineTo(880, 210);
+  ctx.lineTo(870, 250); ctx.lineTo(830, 260); ctx.lineTo(790, 240); ctx.closePath();
+  ctx.fill();
+
+  // 中东
+  ctx.fillStyle = '#8a8540';
+  ctx.beginPath();
+  ctx.moveTo(730, 260); ctx.lineTo(770, 250); ctx.lineTo(790, 280);
+  ctx.lineTo(770, 310); ctx.lineTo(740, 300); ctx.closePath();
+  ctx.fill();
+
+  // 青藏高原
+  ctx.fillStyle = '#7a8050';
+  ctx.beginPath();
+  ctx.moveTo(930, 240); ctx.lineTo(960, 235); ctx.lineTo(980, 250);
+  ctx.lineTo(990, 275); ctx.lineTo(960, 285); ctx.lineTo(930, 275); ctx.closePath();
+  ctx.fill();
+
+  // 大陆细节纹路
+  ctx.fillStyle = 'rgba(80, 140, 60, 0.3)';
+  for (let i = 0; i < 3000; i++) {
+    ctx.beginPath();
+    ctx.arc(Math.random() * 2048, Math.random() * 1024, 0.5 + Math.random() * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 冰盖
+  ctx.fillStyle = 'rgba(220, 235, 250, 0.7)';
+  ctx.fillRect(0, 0, 2048, 35);
+  ctx.fillRect(0, 950, 2048, 74);
+
+  return new THREE.CanvasTexture(canvas);
+}
+
+// 云层纹理
+function createCloudTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(255,255,255,0)';
+  ctx.fillRect(0, 0, 1024, 512);
+  
+  for (let i = 0; i < 2000; i++) {
+    ctx.fillStyle = `rgba(255,255,255,${0.01 + Math.random() * 0.08})`;
+    ctx.beginPath();
+    ctx.arc(Math.random() * 1024, Math.random() * 512, 5 + Math.random() * 15, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  // 云带
+  for (let band = 0; band < 5; band++) {
+    const y = 150 + band * 60 + (Math.random() - 0.5) * 40;
+    for (let i = 0; i < 200; i++) {
+      ctx.fillStyle = `rgba(255,255,255,${0.03 + Math.random() * 0.1})`;
+      ctx.beginPath();
+      ctx.arc(Math.random() * 1024, y + (Math.random() - 0.5) * 30, 8 + Math.random() * 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  
+  return new THREE.CanvasTexture(canvas);
+}
+
+// 地球球体
+const earthTex = createEarthTexture();
+const earthGeom = new THREE.SphereGeometry(1, 72, 54);
+const earthMat = new THREE.MeshPhongMaterial({
+  map: earthTex,
+  specular: 0x222244,
+  shininess: 8,
+});
+const earth = new THREE.Mesh(earthGeom, earthMat);
+earthGroup.add(earth);
+
+// 云层
+const cloudTex = createCloudTexture();
+const cloudGeom = new THREE.SphereGeometry(1.01, 72, 54);
+const cloudMat = new THREE.MeshPhongMaterial({
+  map: cloudTex,
+  transparent: true,
+  opacity: 0.35,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+const clouds = new THREE.Mesh(cloudGeom, cloudMat);
+earthGroup.add(clouds);
+
+// 大气光晕
+const glowGeom = new THREE.SphereGeometry(1.08, 72, 54);
+const glowMat = new THREE.ShaderMaterial({
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    void main() {
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vNormal = normalize(mat3(modelMatrix) * normal);
+      vPosition = worldPos.xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    void main() {
+      vec3 viewDir = normalize(cameraPosition - vPosition);
+      float rim = 1.0 - abs(dot(vNormal, viewDir));
+      float glow = pow(rim, 3.5) * 0.5;
+      gl_FragColor = vec4(0.0, 0.6, 1.0, glow * 0.6);
+    }
+  `,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+const glowMesh = new THREE.Mesh(glowGeom, glowMat);
+earthGroup.add(glowMesh);
+
+// ============ 汇聚光线系统 ============
+// 经纬度转3D坐标
+function latLngToVec3(lat, lng, radius) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lng + 180) * Math.PI / 180;
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta)
+  );
+}
+
+// 汇聚点：北京（监测中心）
+const TARGET_LAT = 39.9, TARGET_LNG = 116.4;
+const targetPos = latLngToVec3(TARGET_LAT, TARGET_LNG, 1.02);
+
+// 目标点标记（脉冲光点）
+const targetGlowGeom = new THREE.SphereGeometry(0.025, 16, 16);
+const targetGlowMat = new THREE.MeshBasicMaterial({ color: 0x00ddff, transparent: true, opacity: 0.9, depthWrite: false });
+const targetGlow = new THREE.Mesh(targetGlowGeom, targetGlowMat);
+targetGlow.position.copy(targetPos);
+earthGroup.add(targetGlow);
+
+// 外圈光晕
+const targetRingGeom = new THREE.RingGeometry(0.03, 0.042, 64);
+const targetRingMat = new THREE.MeshBasicMaterial({ color: 0x00ddff, transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false });
+const targetRing = new THREE.Mesh(targetRingGeom, targetRingMat);
+targetRing.position.copy(targetPos);
+targetRing.lookAt(new THREE.Vector3(0, 0, 0));
+earthGroup.add(targetRing);
+
+// 光源列表（8个监测节点 → 北京），更多节点更高级
+const beamSources = [
+  { name: '华盛顿',  lat: 38.9,  lng: -77.0,  color: 0xff4444, delay: 0.0 },
+  { name: '伦敦',    lat: 51.5,  lng: -0.1,   color: 0xff66aa, delay: 0.7 },
+  { name: '达兰萨拉',lat: 32.2,  lng: 76.3,   color: 0xff6600, delay: 1.4 },
+  { name: '日内瓦',  lat: 46.2,  lng: 6.1,    color: 0xff9933, delay: 2.1 },
+  { name: '新德里',  lat: 28.6,  lng: 77.2,   color: 0xffcc00, delay: 2.8 },
+  { name: '首尔',    lat: 37.6,  lng: 127.0,  color: 0xffaa00, delay: 3.5 },
+  { name: '东京',    lat: 35.7,  lng: 139.7,  color: 0x00ccff, delay: 4.2 },
+  { name: '堪培拉',  lat: -35.3, lng: 149.1,  color: 0x66ff66, delay: 4.9 },
+];
+
+const BEAM_CYCLE = 5.6; // 总周期
+const allBeams = [];
+
+beamSources.forEach((src) => {
+  const startPos = latLngToVec3(src.lat, src.lng, 1.02);
+
+  // 贝塞尔曲线：起点→更高弧线中点→终点
+  const mid = new THREE.Vector3().addVectors(startPos, targetPos).multiplyScalar(0.5);
+  mid.normalize().multiplyScalar(1.80); // 弧线高出球面 1.80R
+  const curve = new THREE.QuadraticBezierCurve3(startPos.clone(), mid, targetPos.clone());
+
+  // 采样曲线点
+  const SEGMENTS = 150;
+  const curvePoints = curve.getPoints(SEGMENTS);
+
+  // ---- 细光滑主线 ----
+  const lineGeom = new THREE.BufferGeometry();
+  const linePositions = new Float32Array(curvePoints.length * 3);
+  curvePoints.forEach((p, i) => {
+    linePositions[i * 3] = p.x;
+    linePositions[i * 3 + 1] = p.y;
+    linePositions[i * 3 + 2] = p.z;
+  });
+  lineGeom.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+  lineGeom.setDrawRange(0, 0);
+
+  const lineMat = new THREE.LineBasicMaterial({ color: src.color, transparent: true, opacity: 0.85, linewidth: 1 });
+  const line = new THREE.Line(lineGeom, lineMat);
+  earthGroup.add(line);
+
+  // ---- 外发光辉线（略粗透明）----
+  const glowGeom = new THREE.BufferGeometry();
+  glowGeom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
+  glowGeom.setDrawRange(0, 0);
+  const glowLineMat = new THREE.LineBasicMaterial({
+    color: src.color,
+    transparent: true,
+    opacity: 0.25,
+    depthTest: true,
+  });
+  const glowLine = new THREE.Line(glowGeom, glowLineMat);
+  earthGroup.add(glowLine);
+
+  // ---- 飞行光点（头部）----
+  const headGeom = new THREE.SphereGeometry(0.01, 8, 8);
+  const headMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthWrite: false });
+  const head = new THREE.Mesh(headGeom, headMat);
+  earthGroup.add(head);
+
+  // ---- 拖尾粒子群（更少但更精致）----
+  const TRAIL_COUNT = 18;
+  const trailParts = [];
+  for (let i = 0; i < TRAIL_COUNT; i++) {
+    const tGeom = new THREE.SphereGeometry(0.003, 4, 4);
+    const tMat = new THREE.MeshBasicMaterial({ color: src.color, transparent: true, opacity: 0, depthWrite: false });
+    const tMesh = new THREE.Mesh(tGeom, tMat);
+    earthGroup.add(tMesh);
+    trailParts.push({ mesh: tMesh, offset: i / TRAIL_COUNT });
+  }
+
+  allBeams.push({
+    src, curve, curvePoints, segments: SEGMENTS,
+    line, lineGeom, lineMat,
+    glowLine, glowLineGeom: glowGeom, glowLineMat,
+    head, headMat,
+    trailParts,
+    delay: src.delay,
+  });
+});
+
+// ---- 全球密集装饰散点 ----
+const scatterDots = [];
+const scatterLocations = [
+  // 北美
+  { lat: 40.7, lng: -74.0 }, { lat: 34.0, lng: -118.2 }, { lat: 41.9, lng: -87.6 },
+  { lat: 29.8, lng: -95.4 }, { lat: 45.5, lng: -73.6 }, { lat: 49.3, lng: -123.1 },
+  { lat: 33.6, lng: -112.1 }, { lat: 39.7, lng: -105.0 },
+  // 南美
+  { lat: -23.5, lng: -46.6 }, { lat: -34.6, lng: -58.4 }, { lat: -12.0, lng: -77.0 },
+  // 欧洲
+  { lat: 48.9, lng: 2.3 }, { lat: 52.5, lng: 13.4 }, { lat: 41.9, lng: 12.5 },
+  { lat: 40.4, lng: -3.7 }, { lat: 55.8, lng: 37.6 }, { lat: 59.3, lng: 18.1 },
+  { lat: 52.4, lng: 21.0 }, { lat: 50.1, lng: 8.7 },
+  // 非洲
+  { lat: -26.2, lng: 28.0 }, { lat: 30.0, lng: 31.2 }, { lat: -1.3, lng: 36.8 },
+  { lat: 5.6, lng: -0.2 }, { lat: -33.9, lng: 18.4 },
+  // 中东
+  { lat: 25.2, lng: 55.3 }, { lat: 35.7, lng: 51.4 }, { lat: 33.3, lng: 44.4 },
+  { lat: 31.2, lng: 29.9 },
+  // 中亚/南亚
+  { lat: 41.3, lng: 69.2 }, { lat: 43.2, lng: 76.9 }, { lat: 27.7, lng: 85.3 },
+  { lat: 23.8, lng: 90.4 }, { lat: 13.8, lng: 100.5 },
+  // 东南亚/大洋洲
+  { lat: 1.3, lng: 103.8 }, { lat: -6.2, lng: 106.8 }, { lat: 14.6, lng: 121.0 },
+  { lat: -37.8, lng: 145.0 }, { lat: -41.3, lng: 174.8 },
+  // 东亚
+  { lat: 31.2, lng: 121.5 }, { lat: 30.5, lng: 114.3 }, { lat: 22.5, lng: 114.1 },
+  { lat: 39.1, lng: 117.2 }, { lat: 34.3, lng: 108.9 },
+];
+
+scatterLocations.forEach((loc, i) => {
+  const pos = latLngToVec3(loc.lat, loc.lng, 1.02);
+  const sGeom = new THREE.SphereGeometry(0.005, 4, 4);
+  const hue = 0.5 + (i % 20) * 0.02;
+  const sColor = new THREE.Color().setHSL(hue % 1, 0.8, 0.5 + Math.random() * 0.3);
+  const sMat = new THREE.MeshBasicMaterial({ color: sColor, transparent: true, opacity: 0.5 + Math.random() * 0.4, depthWrite: false });
+  const sMesh = new THREE.Mesh(sGeom, sMat);
+  sMesh.position.copy(pos);
+  sMesh.userData = { baseOpacity: sMat.opacity, phase: Math.random() * Math.PI * 2, speed: 1 + Math.random() * 2 };
+  earthGroup.add(sMesh);
+  scatterDots.push(sMesh);
+});
+
+// ============ 交互 ============
+let isDragging = false;
+let prevMouse = { x: 0, y: 0 };
+let rotationSpeed = { x: 0, y: 0 };
+let autoRotate = true;
+const autoRotateSpeed = 0.15;
+
+container.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  autoRotate = false;
+  prevMouse.x = e.clientX;
+  prevMouse.y = e.clientY;
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - prevMouse.x;
+  const dy = e.clientY - prevMouse.y;
+  rotationSpeed.x = dy * 0.005;
+  rotationSpeed.y = dx * 0.005;
+  prevMouse.x = e.clientX;
+  prevMouse.y = e.clientY;
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  setTimeout(() => { autoRotate = true; }, 2000);
+});
+
+container.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  camera.position.z += e.deltaY * 0.003;
+  camera.position.z = Math.max(1.8, Math.min(6, camera.position.z));
+});
+
+// 触摸支持
+container.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  autoRotate = false;
+  prevMouse.x = e.touches[0].clientX;
+  prevMouse.y = e.touches[0].clientY;
+});
+
+container.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - prevMouse.x;
+  const dy = e.touches[0].clientY - prevMouse.y;
+  rotationSpeed.x = dy * 0.005;
+  rotationSpeed.y = dx * 0.005;
+  prevMouse.x = e.touches[0].clientX;
+  prevMouse.y = e.touches[0].clientY;
+});
+
+container.addEventListener('touchend', () => {
+  isDragging = false;
+  setTimeout(() => { autoRotate = true; }, 2000);
+});
+
+// ============ 渲染循环 ============
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt = Math.min(clock.getDelta(), 0.1);
+  const t = performance.now() * 0.001;
+
+  // 自动旋转
+  if (autoRotate) {
+    earthGroup.rotation.y += autoRotateSpeed * dt;
+  } else {
+    // 惯性减速
+    earthGroup.rotation.x += rotationSpeed.x;
+    earthGroup.rotation.y += rotationSpeed.y;
+    rotationSpeed.x *= 0.95;
+    rotationSpeed.y *= 0.95;
+  }
+
+  // 云层旋转（稍快）
+  clouds.rotation.y += 0.02 * dt;
+
+  // 星空旋转
+  stars.rotation.y += 0.01 * dt;
+  stars.rotation.x += 0.003 * dt;
+
+  // 全球散点脉冲
+  const elapsed = performance.now() * 0.001;
+  scatterDots.forEach(dot => {
+    const ud = dot.userData;
+    const pulse = 0.6 + Math.sin(elapsed * ud.speed + ud.phase) * 0.4;
+    dot.material.opacity = ud.baseOpacity * pulse;
+    dot.scale.setScalar(0.7 + pulse * 0.6);
+  });
+
+  // 目标点脉冲
+  const tp = 0.85 + Math.sin(elapsed * 4.5) * 0.35;
+  targetGlow.scale.setScalar(tp);
+  targetGlowMat.opacity = 0.5 + Math.sin(elapsed * 3.5) * 0.5;
+  targetRing.scale.setScalar(0.7 + Math.sin(elapsed * 5) * 0.5);
+  targetRingMat.opacity = 0.25 + Math.sin(elapsed * 3.5) * 0.25;
+
+  // 更新汇聚光线
+  allBeams.forEach((beam) => {
+    const localT = (elapsed + beam.delay) % BEAM_CYCLE;
+    
+    // 分段：
+    // 0→2.0s 生长, 2.0→2.5s 保持,
+    // 2.5→3.5s 尾部追到头（尾部消失，头部留目的地）
+    // 3.5→5.6s 完全消失等待
+    let headProgress = 0; // 头部位置 0→1
+    let tailStart = 0;    // 尾部起始位置 0→1
+
+    if (localT <= 2.0) {
+      // 生长：头部前进，尾部不动
+      const t = localT / 2.0;
+      headProgress = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      tailStart = 0;
+    } else if (localT <= 2.5) {
+      // 保持：整条线在
+      headProgress = 1;
+      tailStart = 0;
+    } else if (localT <= 3.5) {
+      // 尾部追赶：头部留在目的地，尾部从源头开始追向头部
+      headProgress = 1;
+      const chaseT = (localT - 2.5) / 1.0; // 1秒追完
+      tailStart = 1 - Math.pow(1 - chaseT, 2); // easeOutQuad 尾部加速消失在目的地
+    } else {
+      // 完全消失等待
+      headProgress = 0;
+      tailStart = 0;
+    }
+
+    const visible = headProgress > 0.01;
+    const tailIdx = Math.floor(tailStart * beam.segments);
+    const headCount = Math.floor(headProgress * beam.segments) + 1;
+    const drawCount = Math.max(1, headCount - tailIdx);
+
+    // 头部位置
+    const exactIdx = headProgress * beam.segments;
+    const idx = Math.min(Math.floor(exactIdx), beam.segments);
+    const frac = exactIdx - idx;
+    const headPos = (idx >= beam.segments)
+      ? beam.curvePoints[beam.segments].clone()
+      : new THREE.Vector3().lerpVectors(
+          beam.curvePoints[idx],
+          beam.curvePoints[Math.min(idx + 1, beam.segments)],
+          frac
+        );
+
+    // 更新主线（从 tailIdx 开始画 drawCount 个点）
+    beam.lineGeom.setDrawRange(tailIdx, drawCount);
+    beam.line.visible = visible && drawCount > 1;
+    beam.lineMat.opacity = visible ? 0.85 : 0;
+
+    // 更新辉线
+    beam.glowLineGeom.setDrawRange(tailIdx, drawCount);
+    beam.glowLine.visible = visible && drawCount > 1;
+    beam.glowLineMat.opacity = visible ? 0.2 : 0;
+
+    // 头部光点
+    beam.head.position.copy(headPos);
+    beam.head.visible = headProgress > 0.02;
+    beam.headMat.opacity = headProgress > 0.03 ? 1 : 0;
+    const headPulse = 0.5 + Math.sin(elapsed * 15 + beam.delay * 8) * 0.5;
+    beam.head.scale.setScalar(0.7 + headPulse * 1.0);
+
+    // 拖尾粒子
+    beam.trailParts.forEach(tp => {
+      const tpIndex = Math.max(tailStart, headProgress - tp.offset - 0.015);
+      const tpExact = tpIndex * beam.segments;
+      const tpIdx = Math.floor(tpExact);
+      const tpFrac = tpExact - tpIdx;
+      
+      if (tpIdx >= beam.segments || tpIdx < 0 || tpIndex >= headProgress || headProgress < 0.02) {
+        tp.mesh.visible = false;
+        return;
+      }
+      
+      const tpPos = new THREE.Vector3().lerpVectors(
+        beam.curvePoints[tpIdx],
+        beam.curvePoints[Math.min(tpIdx + 1, beam.segments)],
+        tpFrac
+      );
+      tp.mesh.position.copy(tpPos);
+      tp.mesh.visible = true;
+      const distToHead = tp.offset;
+      tp.mesh.material.opacity = (distToHead < 0.10 ? 0.9 : 0.25) * Math.min(headProgress * 1.2, 1);
+      tp.mesh.scale.setScalar(0.5 + (1 - distToHead) * 1.5);
+    });
+  });
+
+  renderer.render(scene, camera);
+}
+
+// 响应式
+window.addEventListener('resize', () => {
+  const nw = container.clientWidth;
+  const nh = container.clientHeight;
+  renderer.setSize(nw, nh);
+  camera.aspect = nw / nh;
+  camera.updateProjectionMatrix();
+});
+
+animate();
+
+// 尝试加载真实NASA卫星纹理
+const texLoader = new THREE.TextureLoader();
+texLoader.load(
+  'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+  (texture) => {
+    earth.material.map = texture;
+    earth.material.needsUpdate = true;
+    console.log('[Globe] 真实纹理加载成功');
+  },
+  undefined,
+  () => { console.log('[Globe] 使用程序化纹理'); }
+);
+
+console.log('[Globe] 3D地球初始化完成');
+</script>
+
+<style>a#goPlatform{position:fixed;bottom:28px;right:28px;z-index:101;display:flex;align-items:center;gap:8px;padding:14px 24px;background:rgba(10,14,23,.85);backdrop-filter:blur(24px);border:1px solid rgba(0,212,255,.15);border-radius:14px;color:#00d4ff;text-decoration:none;font-size:.8rem;font-weight:600;letter-spacing:1px;box-shadow:0 4px 28px rgba(0,0,0,.45);transition:all .35s}a#goPlatform:hover{border-color:rgba(245,158,11,.5);color:#f59e0b;transform:translateY(-2px);box-shadow:0 6px 32px rgba(245,158,11,.2)}.archive-item:hover{background:rgba(0,212,255,.06)!important}.intel-item:hover{background:rgba(0,212,255,.04)!important;border-color:rgba(0,212,255,.15)!important}</style><a href="platform.html" id="goPlatform">→ 信息推送平台</a>
+</body>
+</html>

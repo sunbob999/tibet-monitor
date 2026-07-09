@@ -3,225 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>境外涉藏信息监测平台 - 大屏指挥中心</title>
+<title>涉藏信息推送预警平台</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#050818;--panel:rgba(12,20,45,.85);--card:rgba(20,30,55,.6);--cyan:#00d4ff;--border:rgba(0,212,255,.2);--t1:#e8edf5;--t2:#c5d1e0;--t3:#7a8ba3;--t4:#4a5b75}
-body{font-family:'Microsoft YaHei',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;position:relative}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(0,100,200,.12),transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(0,180,255,.06),transparent 50%);pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+:root{--c:#00d4ff;--bg1:#0a0e27;--bg2:#131a3a;--t1:#eef2ff;--t2:#c5d1e0;--t3:#7a8ba3;--glass:rgba(255,255,255,.04);--glass2:rgba(255,255,255,.06);--br:rgba(255,255,255,.08);--blur:blur(20px)}
+body{font-family:'Microsoft YaHei',sans-serif;background:var(--bg1);color:var(--t1);min-height:100vh;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 600px at 15% 10%,rgba(30,60,140,.25),transparent 60%),radial-gradient(ellipse 800px 500px at 85% 90%,rgba(80,30,120,.15),transparent 60%),radial-gradient(ellipse 600px 400px at 50% 50%,rgba(0,100,180,.08),transparent 60%);z-index:0;pointer-events:none}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:60px 60px;z-index:0;pointer-events:none}
+.scan{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);z-index:99;pointer-events:none;animation:scan 10s linear infinite}
+@keyframes scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
 /* 顶部 */
-.top-bar{position:relative;z-index:10;height:64px;background:linear-gradient(90deg,rgba(8,16,40,.95),rgba(12,24,50,.95));display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--border);box-shadow:0 2px 30px rgba(0,212,255,.1);backdrop-filter:blur(10px)}
-.top-bar h1{font-size:1.2rem;font-weight:600;letter-spacing:2px;background:linear-gradient(90deg,var(--cyan),#5ce8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.top-bar .meta{display:flex;align-items:center;gap:20px;font-size:.8rem;color:var(--t3)}
-.clock{font-family:'Courier New',monospace;font-size:1rem;color:var(--cyan);text-shadow:0 0 10px rgba(0,212,255,.4);letter-spacing:2px}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite;box-shadow:0 0 10px #10b981}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-/* 主布局 */
-.dashboard{position:relative;z-index:1;display:grid;grid-template-columns:300px 1fr 300px;gap:20px;padding:20px;min-height:calc(100vh - 64px)}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;backdrop-filter:blur(8px);box-shadow:0 4px 30px rgba(0,0,0,.4);position:relative}
-.panel::before,.panel::after{content:'';position:absolute;width:14px;height:14px;border:2px solid var(--cyan);opacity:.4}
-.panel::before{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:12px 0 0 0}
-.panel::after{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 12px 0}
-.panel-title{font-size:.9rem;color:var(--cyan);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);text-shadow:0 0 8px rgba(0,212,255,.2);display:flex;align-items:center;gap:6px}
-.panel-title::before{content:'';width:4px;height:16px;background:linear-gradient(180deg,#0891b2,var(--cyan));border-radius:2px}
-/* 统计卡片 */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.stat-card{background:var(--card);border:1px solid rgba(100,130,180,.15);border-radius:10px;padding:16px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.5}
-.stat-card:hover{border-color:var(--border);transform:translateY(-2px)}
-.stat-card .v{font-size:1.8rem;font-weight:700;font-family:'Courier New',monospace}
-.stat-card .l{font-size:.7rem;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
-.stat-card.cyan .v{color:var(--cyan);text-shadow:0 0 12px rgba(0,212,255,.4)}
-.stat-card.green .v{color:#10b981;text-shadow:0 0 12px rgba(16,185,129,.4)}
-.stat-card.amber .v{color:#f59e0b;text-shadow:0 0 12px rgba(245,158,11,.4)}
-.stat-card.red .v{color:#ef4444;text-shadow:0 0 12px rgba(239,68,68,.4)}
-/* 威胁等级 */
-.threat-box{text-align:center;padding:20px 0}
-.threat-ring{width:100px;height:100px;border-radius:50%;border:3px solid;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;position:relative}
-.threat-ring.high{border-color:#ef4444;box-shadow:0 0 20px rgba(239,68,68,.3),inset 0 0 20px rgba(239,68,68,.1)}
-.threat-ring.mid{border-color:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,.3),inset 0 0 20px rgba(245,158,11,.1)}
-.threat-ring span{font-size:1.1rem;font-weight:700}
-.threat-ring.high span{color:#ef4444}
-.threat-ring.mid span{color:#f59e0b}
-.threat-ring::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid currentColor;opacity:.3;animation:expand 2s infinite}
-@keyframes expand{0%{transform:scale(1);opacity:.3}100%{transform:scale(1.3);opacity:0}}
-/* 来源分布 */
-.dist-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 12px;background:var(--card);border-radius:8px;border-left:3px solid}
-.dist-item .name{font-size:.78rem;color:var(--t2);flex:1}
-.dist-item .num{font-size:1.1rem;font-weight:700;font-family:'Courier New',monospace}
-.dist-item .bar{flex:0 0 60px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
-.dist-item .bar-fill{height:100%;border-radius:2px;transition:width 1s}
-/* 地球容器 */
-.earth-section{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:500px;position:relative}
-.earth-wrap{position:relative;width:360px;height:360px;cursor:pointer}
-.earth{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 30% 30%,#1a3a6e,#0a1a3a 40%,#050a20 70%,#020510);position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,100,200,.3),inset -20px -20px 60px rgba(0,0,0,.5),inset 10px 10px 30px rgba(0,100,200,.1);animation:rotateEarth 30s linear infinite}
-@keyframes rotateEarth{from{background-position:0 0}to{background-position:360px 0}}
-.earth::before{content:'';position:absolute;inset:0;border-radius:50%;background-image:linear-gradient(rgba(0,212,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.08) 1px,transparent 1px);background-size:30px 30px}
-.earth::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 70% 70%,transparent 60%,rgba(0,0,0,.4))}
-.earth-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,transparent 55%,rgba(0,212,255,.08) 70%,transparent 80%);pointer-events:none}
-/* 大陆轮廓 (简化SVG) */
-.continent{position:absolute;opacity:.3;pointer-events:none}
-/* 高亮点 */
-.report-point{position:absolute;width:12px;height:12px;border-radius:50%;cursor:pointer;z-index:10;transition:all .3s}
-.report-point::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan),0 0 24px rgba(0,212,255,.5)}
-.report-point::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--cyan);opacity:.6;animation:ping 2s infinite}
-@keyframes ping{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
-.report-point:hover{transform:scale(1.5)}
-.report-point:hover::before{background:#5ce8ff;box-shadow:0 0 20px #5ce8ff}
-.report-point .tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(10,20,45,.95);border:1px solid var(--cyan);border-radius:6px;padding:6px 12px;font-size:.75rem;white-space:nowrap;color:var(--t1);opacity:0;pointer-events:none;transition:opacity .2s}
-.report-point:hover .tooltip{opacity:1}
-/* 来源标记 */
-.source-marker{position:absolute;width:8px;height:8px;border-radius:50%;cursor:pointer;z-index:9}
-.source-marker::before{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:0 0 8px currentColor}
-.source-marker .tip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:rgba(10,20,45,.95);border:1px solid currentColor;border-radius:4px;padding:3px 8px;font-size:.65rem;white-space:nowrap;opacity:0;transition:opacity .2s}
-.source-marker:hover .tip{opacity:1}
-/* 最新报道 */
-.news-feed{margin-top:20px;width:100%;max-width:600px}
-.news-feed .panel-title{margin-bottom:12px}
-.feed-item{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:6px;background:var(--card);border-radius:8px;border-left:3px solid var(--cyan);transition:all .2s;font-size:.8rem}
-.feed-item:hover{transform:translateX(4px);border-color:#5ce8ff}
-.feed-item .tag{font-size:.65rem;padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap}
-.feed-item .date{color:var(--t4);font-size:.7rem;white-space:nowrap}
-.feed-item .title{color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* 历史日报时间线 */
-.timeline{max-height:400px;overflow-y:auto}
-.timeline::-webkit-scrollbar{width:4px}
-.timeline::-webkit-scrollbar-thumb{background:rgba(0,212,255,.3);border-radius:2px}
-.timeline-item{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;background:var(--card);border-radius:8px;border:1px solid rgba(100,130,180,.1);transition:all .25s;cursor:pointer;position:relative}
-.timeline-item:hover{border-color:var(--border);transform:translateX(4px);background:rgba(20,40,70,.8)}
-.timeline-item.active{border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,.15)}
-.timeline-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.timeline-item .dot.active{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
-.timeline-item .dot.normal{background:var(--t4)}
-.timeline-item .info{flex:1}
-.timeline-item .d{font-size:.85rem;color:var(--t1);font-family:'Courier New',monospace}
-.timeline-item .c{font-size:.7rem;color:var(--t3)}
-.timeline-item .arrow{color:var(--t4);transition:color .2s}
-.timeline-item:hover .arrow{color:var(--cyan)}
-/* 配置信息 */
-.config-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(100,130,180,.08);font-size:.78rem}
-.config-item .k{color:var(--t3)}
-.config-item .v{color:var(--t2)}
-/* 扫描线 */
-.scanline{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.4),transparent);z-index:9999;pointer-events:none;animation:scan 8s linear infinite}
-@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
-@media(max-width:1200px){.dashboard{grid-template-columns:1fr}.earth-wrap{width:280px;height:280px}}
+.top{position:relative;z-index:10;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid var(--br)}
+.top h1{font-size:1.4rem;font-weight:700;letter-spacing:3px;background:linear-gradient(90deg,var(--c),#7dd3fc,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 12px rgba(0,212,255,.3))}
+.top .rt{display:flex;align-items:center;gap:24px;font-size:.8rem;color:var(--t3)}
+.clk{font-family:'Courier New',monospace;font-size:1.1rem;color:var(--c);text-shadow:0 0 12px rgba(0,212,255,.4);letter-spacing:3px}
+.dot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:p 2s infinite;box-shadow:0 0 10px #10b981}
+@keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+/* 布局 */
+.main{position:relative;z-index:1;display:grid;grid-template-columns:280px 1fr 280px;gap:16px;padding:16px;min-height:calc(100vh - 72px)}
+.glass{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--br);border-radius:16px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden}
+.glass::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent)}
+.pt{font-size:.85rem;color:var(--c);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:6px;text-shadow:0 0 8px rgba(0,212,255,.15)}
+.pt::before{content:'';width:3px;height:14px;background:linear-gradient(180deg,var(--c),#7dd3fc);border-radius:2px}
+/* 统计 */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.sc{background:var(--glass2);border:1px solid var(--br);border-radius:12px;padding:14px;text-align:center;transition:.3s;position:relative}
+.sc:hover{background:rgba(255,255,255,.08);transform:translateY(-2px);border-color:rgba(0,212,255,.2)}
+.sc .v{font-size:1.7rem;font-weight:700;font-family:'Courier New',monospace}
+.sc .l{font-size:.65rem;color:var(--t3);margin-top:4px;letter-spacing:1px}
+.sc.cy .v{color:var(--c)} .sc.gr .v{color:#10b981} .sc.am .v{color:#f59e0b} .sc.rd .v{color:#ef4444}
+/* 威胁 */
+.thr{text-align:center;padding:16px 0}
+.thr-r{width:90px;height:90px;border-radius:50%;border:3px solid #f59e0b;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 20px rgba(245,158,11,.2),inset 0 0 20px rgba(245,158,11,.08)}
+.thr-r span{font-size:.95rem;font-weight:700;color:#f59e0b}
+.thr-r::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid #f59e0b;opacity:.3;animation:ex 2s infinite}
+@keyframes ex{0%{transform:scale(1);opacity:.3}100%{transform:scale(1.4);opacity:0}}
+/* 分布 */
+.di{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 10px;background:var(--glass2);border-radius:8px;border-left:3px solid}
+.di .n{font-size:.72rem;color:var(--t2);flex:1} .di .v{font-size:1rem;font-weight:700;font-family:'Courier New',monospace}
+.di .b{width:50px;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden} .di .f{height:100%;border-radius:2px;transition:width 1s}
+/* 地球 */
+.earth-area{display:flex;flex-direction:column;align-items:center;min-height:480px}
+.ew{position:relative;width:340px;height:340px;cursor:pointer}
+.eg{position:absolute;inset:-15px;border-radius:50%;background:radial-gradient(circle,transparent 55%,rgba(0,212,255,.06) 70%,transparent 80%);pointer-events:none}
+.eb{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 32% 32%,#1e3a6e,#0a1a3a 45%,#050a20 75%,#020510);position:relative;overflow:hidden;box-shadow:0 0 50px rgba(0,80,180,.25),inset -15px -15px 50px rgba(0,0,0,.5),inset 8px 8px 25px rgba(0,80,180,.1);animation:rot 40s linear infinite}
+@keyframes rot{from{background-position:0 0}to{background-position:340px 0}}
+.eb::before{content:'';position:absolute;inset:0;border-radius:50%;background-image:linear-gradient(rgba(0,212,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.06) 1px,transparent 1px);background-size:28px 28px}
+.eb::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 72% 72%,transparent 55%,rgba(0,0,0,.5))}
+/* 点 */
+.rp{position:absolute;width:12px;height:12px;border-radius:50%;cursor:pointer;z-index:10;transition:.3s}
+.rp::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 24px rgba(0,212,255,.4)}
+.rp::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--c);opacity:.5;animation:pg 2s infinite}
+@keyframes pg{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.5);opacity:0}}
+.rp:hover{transform:scale(1.4)} .rp .tt{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(10,20,45,.9);backdrop-filter:blur(10px);border:1px solid var(--c);border-radius:6px;padding:5px 10px;font-size:.7rem;white-space:nowrap;opacity:0;transition:.2s}
+.rp:hover .tt{opacity:1}
+.sm{position:absolute;width:8px;height:8px;border-radius:50%;cursor:pointer;z-index:9}
+.sm::before{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:0 0 8px currentColor} .sm .tp{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:rgba(10,20,45,.9);backdrop-filter:blur(10px);border:1px solid currentColor;border-radius:4px;padding:3px 8px;font-size:.62rem;white-space:nowrap;opacity:0;transition:.2s}
+.sm:hover .tp{opacity:1}
+/* 报道流 */
+.nf{margin-top:16px;width:100%;max-height:160px;overflow-y:auto}
+.nf::-webkit-scrollbar{width:3px} .nf::-webkit-scrollbar-thumb{background:rgba(0,212,255,.2);border-radius:2px}
+.fi{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:5px;background:var(--glass2);border-radius:8px;border-left:3px solid var(--c);transition:.2s;font-size:.75rem;cursor:pointer}
+.fi:hover{transform:translateX(4px);background:rgba(255,255,255,.08)}
+.fi .tg{font-size:.6rem;padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap} .fi .dt{color:var(--t3);font-size:.65rem;white-space:nowrap} .fi .tt{color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 时间线 */
+.tl{max-height:360px;overflow-y:auto} .tl::-webkit-scrollbar{width:3px} .tl::-webkit-scrollbar-thumb{background:rgba(0,212,255,.2);border-radius:2px}
+.ti{display:flex;align-items:center;gap:8px;padding:9px 10px;margin-bottom:5px;background:var(--glass2);border-radius:8px;border:1px solid var(--br);transition:.25s;cursor:pointer}
+.ti:hover{border-color:rgba(0,212,255,.2);transform:translateX(4px);background:rgba(255,255,255,.07)}
+.ti.on{border-color:var(--c);box-shadow:0 0 10px rgba(0,212,255,.1)} .ti .d{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ti .d.on{background:var(--c);box-shadow:0 0 6px var(--c)} .ti .d.no{background:var(--t3)}
+.ti .i{flex:1} .ti .dt{font-size:.78rem;color:var(--t1);font-family:'Courier New',monospace} .ti .ct{font-size:.65rem;color:var(--t3)} .ti .ar{color:var(--t3);transition:.2s} .ti:hover .ar{color:var(--c)}
+/* 配置 */
+.ci{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--br);font-size:.72rem} .ci .k{color:var(--t3)} .ci .v{color:var(--t2)}
+@media(max-width:1100px){.main{grid-template-columns:1fr}.ew{width:280px;height:280px}}
 </style>
 </head>
 <body>
-<div class="scanline"></div>
-<div class="top-bar">
-<h1>境外涉藏信息监测平台</h1>
-<div class="meta">
-<span class="clock" id="clock">00:00:00</span>
-<span><span class="live-dot"></span> 系统运行中</span>
+<div class="scan"></div>
+<div class="top">
+<h1>涉藏信息推送预警平台</h1>
+<div class="rt"><span class="clk" id="clk">00:00:00</span><span><span class="dot"></span> 系统运行中</span></div>
 </div>
+<div class="main">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div class="glass"><div class="pt">核心数据</div><div class="sg">
+<div class="sc cy"><div class="v" id="v1">4</div><div class="l">监测网站</div></div>
+<div class="sc gr"><div class="v" id="v2">117</div><div class="l">累计报道</div></div>
+<div class="sc am"><div class="v" id="v3">3</div><div class="l">今日新增</div></div>
+<div class="sc rd"><div class="v" id="v4">53</div><div class="l">监测天数</div></div>
+</div></div>
+<div class="glass"><div class="pt">威胁等级</div><div class="thr"><div class="thr-r"><span>中高风险</span></div><p style="font-size:.7rem;color:var(--t3)">司政出访拉达克<br>多线并行态势</p></div></div>
+<div class="glass"><div class="pt">来源分布</div><div id="dl"></div></div>
 </div>
-<div class="dashboard">
-<!-- 左侧 -->
-<div style="display:flex;flex-direction:column;gap:20px">
-<div class="panel">
-<div class="panel-title">核心数据</div>
-<div class="stat-grid">
-<div class="stat-card cyan"><div class="v" id="s-sites">4</div><div class="l">监测网站</div></div>
-<div class="stat-card green"><div class="v" id="s-total">117</div><div class="l">累计报道</div></div>
-<div class="stat-card amber"><div class="v" id="s-today">3</div><div class="l">今日新增</div></div>
-<div class="stat-card red"><div class="v" id="s-days">53</div><div class="l">监测天数</div></div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div class="glass" style="display:flex;flex-direction:column;align-items:center"><div class="pt" style="align-self:flex-start">全球监测视图</div><div class="earth-area"><div class="ew" id="ew"><div class="eg"></div><div class="eb" id="eb"></div></div><p style="margin-top:14px;font-size:.7rem;color:var(--t3);text-align:center">点击高亮点查看日报 · 悬停查看监测站</p></div></div>
+<div class="glass"><div class="pt">最新报道动态</div><div class="nf" id="nf"></div></div>
 </div>
-</div>
-<div class="panel">
-<div class="panel-title">威胁等级</div>
-<div class="threat-box">
-<div class="threat-box">
-<div class="threat-ring mid"><span id="threat-level">中高风险</span></div>
-<p style="font-size:.75rem;color:var(--t3)">司政出访拉达克<br>多线并行态势</p>
-</div>
-</div>
-</div>
-<div class="panel">
-<div class="panel-title">来源分布</div>
-<div id="dist-list"></div>
-</div>
-</div>
-<!-- 中央 -->
-<div style="display:flex;flex-direction:column;align-items:center;gap:20px">
-<div class="panel" style="width:100%;display:flex;flex-direction:column;align-items:center">
-<div class="panel-title" style="align-self:flex-start">全球监测视图</div>
-<div class="earth-section">
-<div class="earth-wrap" id="earth-wrap">
-<div class="earth-glow"></div>
-<div class="earth" id="earth"></div>
-<!-- 高亮点和来源标记由JS动态生成 -->
-</div>
-<p style="margin-top:16px;font-size:.75rem;color:var(--t3);text-align:center">点击地球上的高亮点查看对应日报<br>悬停查看监测站点信息</p>
-</div>
-</div>
-<div class="panel" style="width:100%">
-<div class="panel-title">最新报道动态</div>
-<div id="news-feed" style="max-height:200px;overflow-y:auto"></div>
-</div>
-</div>
-<!-- 右侧 -->
-<div style="display:flex;flex-direction:column;gap:20px">
-<div class="panel" style="flex:1">
-<div class="panel-title">日报时间线</div>
-<div class="timeline" id="timeline"></div>
-</div>
-<div class="panel">
-<div class="panel-title">监测配置</div>
-<div class="config-item"><span class="k">数据源</span><span class="v">4个境外网站</span></div>
-<div class="config-item"><span class="k">爬取频率</span><span class="v">每日09:00</span></div>
-<div class="config-item"><span class="k">关键词</span><span class="v">西藏/藏人/达赖</span></div>
-<div class="config-item"><span class="k">日期范围</span><span class="v">近7天</span></div>
-<div class="config-item"><span class="k">部署方式</span><span class="v">GitHub Pages</span></div>
-<div class="config-item"><span class="k">最后更新</span><span class="v" id="last-update">--</span></div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div class="glass" style="flex:1"><div class="pt">日报时间线</div><div class="tl" id="tl"></div></div>
+<div class="glass"><div class="pt">监测配置</div>
+<div class="ci"><span class="k">数据源</span><span class="v">4个境外网站</span></div>
+<div class="ci"><span class="k">爬取频率</span><span class="v">每日09:00</span></div>
+<div class="ci"><span class="k">关键词</span><span class="v">西藏/藏人/达赖</span></div>
+<div class="ci"><span class="k">日期范围</span><span class="v">近7天</span></div>
+<div class="ci"><span class="k">最后更新</span><span class="v" id="lu">--</span></div>
 </div>
 </div>
 </div>
 <script>
-// 数据
-var reports=[
-{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2}
-];
-var sources=[
-{name:"tibet.com",label:"藏人行政中央",x:68,y:38,color:"#3b82f6"},{name:"cn.vot.org",label:"西藏之声",x:70,y:40,color:"#ec4899"},{name:"voachinese.com",label:"美国之音",x:22,y:36,color:"#10b981"},{name:"rfa.org",label:"自由亚洲",x:24,y:38,color:"#a855f7"}
-];
-var newsItems=[
-{date:"2026-07-08",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁继续展开拉达克访问行程"},{date:"2026-07-07",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会持续运作"},{date:"2026-07-06",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁抵达拉达克展开正式访问"},{date:"2026-06-01",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会议员宣誓就职"},{date:"2026-05-29",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁连任就职 国际政要致贺"}
-];
-// 时钟
-function updateClock(){var n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+":"+String(n.getMinutes()).padStart(2,'0')+":"+String(n.getSeconds()).padStart(2,'0')}
-updateClock();setInterval(updateClock,1000);
-// 数字递增
-function aC(id,t,d){var el=document.getElementById(id);if(!el)return;var s=0,st=null;function p(ts){if(!st)st=ts;var r=Math.min((ts-st)/d,1);var e=1-Math.pow(1-r,3);el.textContent=Math.floor(e*t);if(r<1)requestAnimationFrame(p);else el.textContent=t}requestAnimationFrame(p)}
-setTimeout(function(){
-aC('s-sites',4,800);aC('s-total',117,1200);aC('s-today',3,800);aC('s-days',53,1000);
-},300);
-// 来源分布
-var distHTML='';
-var distData=[{n:'藏人行政中央',c:3,color:'#3b82f6'},{n:'西藏之声',c:0,color:'#ec4899'},{n:'美国之音',c:0,color:'#10b981'},{n:'自由亚洲',c:0,color:'#a855f7'}];
-distData.forEach(function(d){var pct=Math.round(d.c/3*100)||0;distHTML+='<div class="dist-item" style="border-left-color:'+d.color+'"><span class="name">'+d.n+'</span><div class="bar"><div class="bar-fill" style="width:'+pct+'%;background:'+d.color+'"></div></div><span class="num" style="color:'+d.color+'">'+d.c+'</span></div>'});
-document.getElementById('dist-list').innerHTML=distHTML;
-// 来源标记 (地球上)
-var earthWrap=document.getElementById('earth-wrap');
-sources.forEach(function(s){var m=document.createElement('div');m.className='source-marker';m.style.left=s.x+'%';m.style.top=s.y+'%';m.style.color=s.color;m.innerHTML='<div class="tip">'+s.label+'<br>'+s.name+'</div>';earthWrap.appendChild(m)});
-// 日报高亮点 (在地球上的位置, 按日期分散)
-var pointPositions=[
-{x:35,y:45},{x:50,y:35},{x:65,y:55},{x:40,y:60},{x:55,y:40},
-{x:45,y:50},{x:60,y:45},{x:38,y:55},{x:52,y:48},{x:48,y:42}
-];
-reports.forEach(function(r,i){var pos=pointPositions[i%pointPositions.length];var p=document.createElement('div');p.className='report-point';p.style.left=pos.x+'%';p.style.top=pos.y+'%';p.onclick=function(){window.location.href='reports/'+r.date+'.html'};p.innerHTML='<div class="tooltip">'+r.date+' 日报 | '+r.count+'篇</div>';earthWrap.appendChild(p)});
-// 新闻动态
-var newsHTML='';
-newsItems.forEach(function(n){newsHTML+='<div class="feed-item" onclick="window.location.href=\'reports/'+n.date+'.html\'"><span class="tag" style="background:'+n.color+'22;color:'+n.color+'">'+n.tag+'</span><span class="title">'+n.title+'</span><span class="date">'+n.date+'</span></div>'});
-document.getElementById('news-feed').innerHTML=newsHTML;
-// 时间线
-var tlHTML='';
-reports.forEach(function(r,i){tlHTML+='<div class="timeline-item'+(i===0?' active':'')+'" onclick="window.location.href=\'reports/'+r.date+'.html\'"><div class="dot '+(i===0?'active':'normal')+'"></div><div class="info"><div class="d">'+r.date+'</div><div class="c">'+r.count+'篇报道</div></div><span class="arrow">→</span></div>'});
-document.getElementById('timeline').innerHTML=tlHTML;
-// 最后更新
-document.getElementById('last-update').textContent=new Date().toLocaleString('zh-CN');
+var R=[{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2}];var S=[{name:"tibet.com",label:"藏人行政中央",x:68,y:38,color:"#3b82f6"},{name:"cn.vot.org",label:"西藏之声",x:70,y:40,color:"#ec4899"},{name:"voachinese.com",label:"美国之音",x:22,y:36,color:"#10b981"},{name:"rfa.org",label:"自由亚洲",x:24,y:38,color:"#a855f7"}];var N=[{date:"2026-07-08",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁继续展开拉达克访问行程"},{date:"2026-07-07",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会持续运作"},{date:"2026-07-06",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁抵达拉达克展开正式访问"},{date:"2026-06-01",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会议员宣誓就职"},{date:"2026-05-29",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁连任就职 国际政要致贺"}];
+function ck(){var n=new Date();document.getElementById('clk').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}
+ck();setInterval(ck,1000);
+function aC(id,t,d){var e=document.getElementById(id);if(!e)return;var s=0,st=0;function p(ts){if(!st)st=ts;var r=Math.min((ts-st)/d,1);var e2=1-Math.pow(1-r,3);e.textContent=Math.floor(e2*t);if(r<1)requestAnimationFrame(p);else e.textContent=t}requestAnimationFrame(p)}
+setTimeout(function(){aC('v1',4,800);aC('v2',117,1200);aC('v3',3,800);aC('v4',53,1000)},300);
+var dd=[{n:'藏人行政中央',c:3,color:'#3b82f6'},{n:'西藏之声',c:0,color:'#ec4899'},{n:'美国之音',c:0,color:'#10b981'},{n:'自由亚洲',c:0,color:'#a855f7'}];
+var dh='';dd.forEach(function(d){var pct=d.c>0?Math.round(d.c/3*100):0;dh+='<div class="di" style="border-left-color:'+d.color+'"><span class="n">'+d.n+'</span><div class="b"><div class="f" style="width:'+pct+'%;background:'+d.color+'"></div></div><span class="v" style="color:'+d.color+'">'+d.c+'</span></div>'});
+document.getElementById('dl').innerHTML=dh;
+var ew=document.getElementById('ew');
+S.forEach(function(s){var m=document.createElement('div');m.className='sm';m.style.left=s.x+'%';m.style.top=s.y+'%';m.style.color=s.color;m.innerHTML='<div class="tp">'+s.label+'<br>'+s.name+'</div>';ew.appendChild(m)});
+var pp=[{x:35,y:45},{x:50,y:35},{x:65,y:55},{x:40,y:60},{x:55,y:40},{x:45,y:50},{x:60,y:45},{x:38,y:55},{x:52,y:48},{x:48,y:42}];
+R.forEach(function(r,i){var pos=pp[i%pp.length];var p=document.createElement('div');p.className='rp';p.style.left=pos.x+'%';p.style.top=pos.y+'%';p.onclick=function(){window.location.href='reports/'+r.date+'.html'};p.innerHTML='<div class="tt">'+r.date+' | '+r.count+'篇</div>';ew.appendChild(p)});
+var nh='';N.forEach(function(n){nh+='<div class="fi" onclick="location.href=\'reports/'+n.date+'.html\'"><span class="tg" style="background:'+n.color+'22;color:'+n.color+'">'+n.tag+'</span><span class="tt">'+n.title+'</span><span class="dt">'+n.date+'</span></div>'});
+document.getElementById('nf').innerHTML=nh;
+var th='';R.forEach(function(r,i){th+='<div class="ti'+(i===0?' on':'')+'" onclick="location.href=\'reports/'+r.date+'.html\'"><div class="d '+(i===0?'on':'no')+'"></div><div class="i"><div class="dt">'+r.date+'</div><div class="ct">'+r.count+'篇报道</div></div><span class="ar">→</span></div>'});
+document.getElementById('tl').innerHTML=th;
+document.getElementById('lu').textContent=new Date().toLocaleString('zh-CN');
 </script>
 </body>
 </html>

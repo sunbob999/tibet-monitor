@@ -96,7 +96,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <div class="glass"><div class="pt">来源分布</div><div id="dl"></div></div>
 </div>
 <div style="display:flex;flex-direction:column;gap:16px">
-<div class="glass" style="display:flex;flex-direction:column;align-items:center"><div class="pt" style="align-self:flex-start">全球监测视图</div><div class="earth-area"><div class="ew" id="ew"><div class="eg"></div><div class="eb" id="eb"></div></div><p style="margin-top:14px;font-size:.7rem;color:var(--t3);text-align:center">点击高亮点查看日报 · 悬停查看监测站</p></div></div>
+<div class="glass" style="display:flex;flex-direction:column;align-items:center"><div class="pt" style="align-self:flex-start">全球监测视图</div><div class="earth-area"><iframe src="globe/index.html" id="globeFrame" style="width:100%;height:500px;border:none;border-radius:12px;background:transparent" allowfullscreen></iframe><p style="margin-top:8px;font-size:.7rem;color:var(--t3);text-align:center">拖拽旋转地球 · 点击高亮点查看日报</p></div></div>
 <div class="glass"><div class="pt">最新报道动态</div><div class="nf" id="nf"></div></div>
 </div>
 <div style="display:flex;flex-direction:column;gap:16px">
@@ -111,7 +111,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 </div>
 </div>
 <script>
-var R=[{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2}];var S=[{name:"tibet.com",label:"藏人行政中央",x:68,y:38,color:"#3b82f6"},{name:"cn.vot.org",label:"西藏之声",x:70,y:40,color:"#ec4899"},{name:"voachinese.com",label:"美国之音",x:22,y:36,color:"#10b981"},{name:"rfa.org",label:"自由亚洲",x:24,y:38,color:"#a855f7"}];var N=[{date:"2026-07-08",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁继续展开拉达克访问行程"},{date:"2026-07-07",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会持续运作"},{date:"2026-07-06",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁抵达拉达克展开正式访问"},{date:"2026-06-01",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会议员宣誓就职"},{date:"2026-05-29",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁连任就职 国际政要致贺"}];
+var R=[{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2}];var S=[{name:"tibet.com",label:"藏人行政中央",x:68,y:38,color:"#3b82f6"},{name:"cn.vot.org",label:"西藏之声",x:70,y:40,color:"#ec4899"},{name:"voachinese.com",label:"美国之音",x:22,y:36,color:"#10b981"},{name:"rfa.org",label:"自由亚洲",x:24,y:38,color:"#a855f7"}];var N=[{date:"2026-07-08",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁继续展开拉达克访问行程"},{date:"2026-07-07",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会持续运作"},{date:"2026-07-06",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁抵达拉达克展开正式访问"},{date:"2026-06-01",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会议员宣誓就职"},{date:"2026-05-29",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁连任就职 国际政要致贺"}];window._globeReports=R;
 function ck(){var n=new Date();document.getElementById('clk').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}
 ck();setInterval(ck,1000);
 function aC(id,t,d){var e=document.getElementById(id);if(!e)return;var s=0,st=0;function p(ts){if(!st)st=ts;var r=Math.min((ts-st)/d,1);var e2=1-Math.pow(1-r,3);e.textContent=Math.floor(e2*t);if(r<1)requestAnimationFrame(p);else e.textContent=t}requestAnimationFrame(p)}
@@ -119,10 +119,6 @@ setTimeout(function(){aC('v1',4,800);aC('v2',117,1200);aC('v3',3,800);aC('v4',53
 var dd=[{n:'藏人行政中央',c:3,color:'#3b82f6'},{n:'西藏之声',c:0,color:'#ec4899'},{n:'美国之音',c:0,color:'#10b981'},{n:'自由亚洲',c:0,color:'#a855f7'}];
 var dh='';dd.forEach(function(d){var pct=d.c>0?Math.round(d.c/3*100):0;dh+='<div class="di" style="border-left-color:'+d.color+'"><span class="n">'+d.n+'</span><div class="b"><div class="f" style="width:'+pct+'%;background:'+d.color+'"></div></div><span class="v" style="color:'+d.color+'">'+d.c+'</span></div>'});
 document.getElementById('dl').innerHTML=dh;
-var ew=document.getElementById('ew');
-S.forEach(function(s){var m=document.createElement('div');m.className='sm';m.style.left=s.x+'%';m.style.top=s.y+'%';m.style.color=s.color;m.innerHTML='<div class="tp">'+s.label+'<br>'+s.name+'</div>';ew.appendChild(m)});
-var pp=[{x:35,y:45},{x:50,y:35},{x:65,y:55},{x:40,y:60},{x:55,y:40},{x:45,y:50},{x:60,y:45},{x:38,y:55},{x:52,y:48},{x:48,y:42}];
-R.forEach(function(r,i){var pos=pp[i%pp.length];var p=document.createElement('div');p.className='rp';p.style.left=pos.x+'%';p.style.top=pos.y+'%';p.onclick=function(){window.location.href='reports/'+r.date+'.html'};p.innerHTML='<div class="tt">'+r.date+' | '+r.count+'篇</div>';ew.appendChild(p)});
 var nh='';N.forEach(function(n){nh+='<div class="fi" onclick="location.href=\'reports/'+n.date+'.html\'"><span class="tg" style="background:'+n.color+'22;color:'+n.color+'">'+n.tag+'</span><span class="tt">'+n.title+'</span><span class="dt">'+n.date+'</span></div>'});
 document.getElementById('nf').innerHTML=nh;
 var th='';R.forEach(function(r,i){th+='<div class="ti'+(i===0?' on':'')+'" onclick="location.href=\'reports/'+r.date+'.html\'"><div class="d '+(i===0?'on':'no')+'"></div><div class="i"><div class="dt">'+r.date+'</div><div class="ct">'+r.count+'篇报道</div></div><span class="ar">→</span></div>'});

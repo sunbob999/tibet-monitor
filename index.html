@@ -121,10 +121,10 @@ a#goPlatform{position:fixed;bottom:28px;right:28px;z-index:101;display:flex;alig
 var R=[{date:"2026-07-09",count:1},{date:"2026-06-02",count:3},{date:"2026-05-28",count:2},{date:"2026-05-27",count:2},{date:"2026-05-26",count:2},{date:"2026-05-25",count:2},{date:"2026-05-22",count:2},{date:"2026-05-21",count:2},{date:"2026-05-20",count:2},{date:"2026-05-18",count:2};var S=[{name:"tibet.com",label:"藏人行政中央",x:68,y:38,color:"#3b82f6"},{name:"cn.vot.org",label:"西藏之声",x:70,y:40,color:"#ec4899"},{name:"voachinese.com",label:"美国之音",x:22,y:36,color:"#10b981"},{name:"rfa.org",label:"自由亚洲",x:24,y:38,color:"#a855f7"};var N=[{date:"2026-07-08",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁继续展开拉达克访问行程"},{date:"2026-07-07",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会持续运作"},{date:"2026-07-06",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁抵达拉达克展开正式访问"},{date:"2026-06-01",tag:"tibet.com",color:"#3b82f6",title:"第十八届图伯特人民议会议员宣誓就职"},{date:"2026-05-29",tag:"tibet.com",color:"#3b82f6",title:"司政边巴次仁连任就职 国际政要致贺"};window._globeReports=R;
 function ck(){var n=new Date();document.getElementById('ck').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}ck();setInterval(ck,1000);
 function aC(id,t,d){var e=document.getElementById(id);if(!e)return;var s=0,st=0;function p(ts){if(!st)st=ts;var r=Math.min((ts-st)/d,1);var e2=1-Math.pow(1-r,3);e.textContent=Math.floor(e2*t);if(r<1)requestAnimationFrame(p);else e.textContent=t}requestAnimationFrame(p)}
-setTimeout(function(){aC('v1',4,800);aC('v2',117,1200);aC('v3',3,800);aC('v4',53,1000)},300);
+setTimeout(function(){aC('v1',4,800);aC('v2',138,1200);aC('v3',21,800);aC('v4',55,1000)},300);
 
 // 来源分布
-var sd=[{n:'藏人行政中央',c:3,color:'#D48F0A'},{n:'西藏之声',c:0,color:'#E85D75'},{n:'美国之音',c:0,color:'#4895EF'},{n:'自由亚洲',c:0,color:'#7EC8E3'}];
+var sd=[{n:'藏人行政中央',c:6,color:'#D48F0A'},{n:'西藏之声',c:9,color:'#E85D75'},{n:'美国之音',c:0,color:'#4895EF'},{n:'自由亚洲',c:6,color:'#7EC8E3'}];
 var sh='';sd.forEach(function(d){sh+='<div class="si" style="border-left-color:'+d.color+'"><span class="sn">'+d.n+'</span><span class="sv" style="color:'+d.color+'">'+d.c+'</span></div>'});document.getElementById('slist').innerHTML=sh;
 
 // 情报流
@@ -132,7 +132,7 @@ var nh='';N.forEach(function(n){nh+='<div class="fi" onclick="location.href=\'re
 
 // 时间线
 var th='';R.forEach(function(r,i){th+='<div class="wi'+(i===0?' act':'')+'" onclick="location.href=\'reports/'+r.date+'.html\'"><div class="wd '+(i===0?'act':'no')+'"></div><div class="wi-info"><div class="wi-d">'+r.date+'</div><div class="wi-c">'+r.count+'篇情报</div></div><span class="wi-ar">→</span></div>'});document.getElementById('wlist').innerHTML=th;
-document.getElementById('lu').textContent=new Date().toLocaleString('zh-CN');
+document.getElementById('lu').textContent='2026-07-20 09:00 已更新';
 </script>
 </body>
 </html>
